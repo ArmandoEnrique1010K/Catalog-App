@@ -1,10 +1,9 @@
-package com.backend.catalogapp.models.entities;
+package com.backend.catalogapp.entities;
 
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,9 +23,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "product")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_product;
+    private Long id;
 
     // Codigo del producto (se genera de una forma)
     @Column
@@ -37,7 +37,7 @@ public class Product {
 
     // Campo para verificar que si un producto esta en oferta
     @Column
-    private Boolean isOffer;
+    private Boolean inOffer;
 
     // Precio original y precio de oferta
     @Column
@@ -53,29 +53,41 @@ public class Product {
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private Boolean status;
 
+    // Descripción del producto
+    @Column
+    private String description;
+
     // Fecha de ultima edición
     @Column
-    private LocalDateTime lastEditionDate;
+    private LocalDateTime updatedAt;
 
     // Fecha de creación
     @Column
-    private LocalDateTime createDate;
+    private LocalDateTime createdAt;
 
     // Relacion con las otras entidades
 
     // Relacion hacia categoria
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_category")
+    // TODO: Investigar FetchType.LAZY
+    // @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
     // Relacion hacia marca
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_brand")
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
     private Brand brand;
 
     // Relacion hacia imagen
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_image")
+    @OneToOne
+    @JoinColumn(name = "image_id")
     private Image image;
+
+    // Relacion hacia detalles del producto
+    // @OneToOne
+    // @JoinColumn(name = "productDetails_id")
+    // private ProductDetails productDetails;
 
 }

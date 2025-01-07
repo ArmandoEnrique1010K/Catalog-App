@@ -1,10 +1,9 @@
-package com.backend.catalogapp.models.entities;
+package com.backend.catalogapp.entities;
 
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,21 +19,17 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "brand")
-public class Brand {
+@Table(name = "feature")
+public class Feature {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_brand;
+    private Long id;
 
-    // @Column(unique = true, nullable = false)
-    private String name;
+    private String name; // Característica (e.g., "Color", "Peso")
 
-    // @Column(nullable = false)
-    private Boolean status;
-
-    // Relacion hacia productos
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Product> product;
+    // Una caracteristica tiene varios valores asignados
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "feature")
+    private List<Value> values;
 
 }

@@ -1,4 +1,4 @@
-package com.backend.catalogapp.models.entities;
+package com.backend.catalogapp.entities;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,13 +28,13 @@ public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_image;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
 
     @Transient
-    private MultipartFile imagen;
+    private MultipartFile file;
 
     // Relación de uno a uno con producto
     @OneToOne(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

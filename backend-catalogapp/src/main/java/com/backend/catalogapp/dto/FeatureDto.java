@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
-    private Long idCategory;
-    private String nameCategory;
+public class FeatureDto {
+
+    private Long idFeature;
+    private String nameFeature;
+    private Long idValue;
+    private String nameValue;
 }

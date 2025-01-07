@@ -35,19 +35,18 @@ public class Category {
     // @Column(nullable = false)
     private Boolean status;
 
-    // Relacion hacia productos
-    // @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval =
-    // true, fetch = FetchType.LAZY)
-    // private List<Product> product;
-
-    // Relacion hacia caracteristicas (un producto corresponde a una categoria y esa
-    // categoria tiene ciertas caracteristicas)
-
-    // Una caracteristica tiene varios valores asignados
-    // @ManyToMany(cascade = CascadeType.ALL, mappedBy = "category")
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "category_feature", joinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "feature_id", referencedColumnName = "id"))
     private List<Feature> feature;
-
 }
+
+// Relacion hacia productos
+// @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval =
+// true, fetch = FetchType.LAZY)
+// private List<Product> product;
+
+// Relacion hacia caracteristicas (un producto corresponde a una categoria y esa
+// categoria tiene ciertas caracteristicas)
+
+// Una caracteristica tiene varios valores asignados
+// @ManyToMany(cascade = CascadeType.ALL, mappedBy = "category")

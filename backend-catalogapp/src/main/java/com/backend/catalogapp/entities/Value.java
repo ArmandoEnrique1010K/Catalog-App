@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,10 +22,11 @@ public class Value {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String value; // Valor (e.g., "Rojo", "1.5 kg")
-
-    @ManyToOne
-    @JoinColumn(name = "feature_id")
-    private Feature feature;
+    private String name; // Valor (e.g., "Rojo", "1.5 kg")
 
 }
+
+// @ManyToOne
+// @JoinColumn(name = "feature_id")
+// private Feature feature
+// ;

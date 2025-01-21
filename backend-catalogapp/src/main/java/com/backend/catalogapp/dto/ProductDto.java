@@ -1,9 +1,9 @@
 package com.backend.catalogapp.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
+
+import com.backend.catalogapp.entities.Feature;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +31,8 @@ public class ProductDto {
     private String nameCategory;
 
     // Caracteristicas
-    private List<FeatureDto> featureDto;
+    // private List<FeatureDto> featureDto;
+    private Feature feature;
 
     // Marca
     private Long idBrand;

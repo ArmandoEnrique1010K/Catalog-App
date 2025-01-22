@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.backend.catalogapp.entities.Brand;
+import com.backend.catalogapp.models.entities.Brand;
 
 public interface BrandRepository extends JpaRepository<Brand, Long> {
 

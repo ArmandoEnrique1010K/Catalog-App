@@ -1,11 +1,11 @@
-package com.backend.catalogapp.mapper;
+package com.backend.catalogapp.models.dto.mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.backend.catalogapp.dto.FeatureDto;
-import com.backend.catalogapp.dto.ProductDto;
-import com.backend.catalogapp.entities.Product;
+import com.backend.catalogapp.models.dto.FeatureDto;
+import com.backend.catalogapp.models.dto.ProductDto;
+import com.backend.catalogapp.models.entities.Product;
 
 public class ProductDtoMapper {
 
@@ -30,6 +30,7 @@ public class ProductDtoMapper {
         }
 
         // TODO: INVESTIGAR COMO OBTENER LA LISTA DE CARACTERISTICAS
+
         List<FeatureDto> features = product.getCategory().getFeature().stream()
                 .map(feature -> new FeatureDto(feature.getId(), feature.getName(), feature.getValue().getId(),
                         feature.getValue().getName())) // Adjust according to your FeatureDto class
@@ -47,7 +48,6 @@ public class ProductDtoMapper {
                 product.getCreatedAt(),
                 product.getCategory().getId(),
                 product.getCategory().getName(),
-                // private List<FeatureDto> featureDto;
                 features,
                 product.getBrand().getId(),
                 product.getBrand().getName(),

@@ -1,4 +1,4 @@
-package com.backend.catalogapp.responses;
+package com.backend.catalogapp.models.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.backend.catalogapp.dto;
+package com.backend.catalogapp.models.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

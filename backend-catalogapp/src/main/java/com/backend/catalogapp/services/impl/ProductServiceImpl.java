@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.backend.catalogapp.dto.ProductDto;
-import com.backend.catalogapp.entities.Product;
-import com.backend.catalogapp.mapper.ProductDtoMapper;
+import com.backend.catalogapp.models.dto.ProductDto;
+import com.backend.catalogapp.models.dto.mapper.ProductDtoMapper;
+import com.backend.catalogapp.models.entities.Product;
 import com.backend.catalogapp.repositories.ProductRepository;
 import com.backend.catalogapp.services.ProductService;
 

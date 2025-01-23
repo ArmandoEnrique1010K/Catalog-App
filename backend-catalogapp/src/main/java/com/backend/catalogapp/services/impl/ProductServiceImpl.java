@@ -20,9 +20,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> findAllByStatusTrue() {
-        List<Product> products = (List<Product>) productRepository.findByStatusTrue();
-        return products.stream().map(p -> ProductDtoMapper.builder().setProduct(p).build())
-                .collect(Collectors.toList());
+        // List<Product> products = (List<Product>)
+        // productRepository.findByStatusTrue();
+        // return products.stream().map(p ->
+        // ProductDtoMapper.builder().setProduct(p).build())
+        // .collect(Collectors.toList());
+        return null;
     }
 
 }

@@ -35,9 +35,11 @@ public class Category {
     // @Column(nullable = false)
     private Boolean status;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "category_feature", joinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "feature_id", referencedColumnName = "id"))
-    private List<Feature> feature;
+    // @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    // @JoinTable(name = "category_feature", joinColumns = @JoinColumn(name =
+    // "category_id", referencedColumnName = "id"), inverseJoinColumns =
+    // @JoinColumn(name = "feature_id", referencedColumnName = "id"))
+    // private List<Feature> feature;
 }
 
 // Relacion hacia productos

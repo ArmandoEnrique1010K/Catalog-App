@@ -5,33 +5,29 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Entity
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "feature")
-public class Feature {
+@Table(name = "feature_value")
+public class FeatureValue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name; // Característica (e.g., "Color", "Peso")
+    @ManyToOne
+    @JoinColumn(name = "feature_id")
+    private Feature feature;
 
-    // @OneToOne
-    // @JoinColumn(name = "value_id")
-    // private Value value;
+    private String value;
 
 }
-
-// Una caracteristica tiene varios valores asignados
-// @OneToMany(cascade = CascadeType.ALL, mappedBy = "feature")
-// private List<Value> values;

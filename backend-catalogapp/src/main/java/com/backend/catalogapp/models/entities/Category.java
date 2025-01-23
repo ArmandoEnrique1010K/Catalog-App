@@ -1,5 +1,6 @@
 package com.backend.catalogapp.models.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +36,9 @@ public class Category {
 
     // @Column(nullable = false)
     private Boolean status;
+
+    @OneToMany(mappedBy = "category")
+    private List<CategoryFeature> categoryFeatures = new ArrayList<>();
 
     // @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     // @JoinTable(name = "category_feature", joinColumns = @JoinColumn(name =

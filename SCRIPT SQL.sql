@@ -167,7 +167,6 @@ ORDER BY
 
 
 
-# Obtener los filtros para una categoría específica:
 
 
 # (1, 'Laptops'),
@@ -177,6 +176,7 @@ ORDER BY
 # (5, 'Camaras'),
 # (6, 'Relojes');
 
+# Obtiene todos los filtros y sus valores para una categoría específica:
 SELECT 
     f.id AS feature_id,
     f.name AS feature_name,
@@ -192,8 +192,7 @@ WHERE
     cf.category_id = 1;
 
 
-# Obtener la ficha técnica para un producto:
-
+# Obtiene la ficha técnica de un producto:
 SELECT 
     pf.product_id,
     f.name AS feature_name,
@@ -205,7 +204,7 @@ JOIN
 JOIN 
     feature_value fv ON pf.feature_value_id = fv.id
 WHERE 
-    pf.product_id = 3;
+    pf.product_id = 2;
     
     
 

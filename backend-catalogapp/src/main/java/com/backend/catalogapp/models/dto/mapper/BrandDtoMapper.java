@@ -12,7 +12,7 @@ import com.backend.catalogapp.models.entities.Brand;
 public interface BrandDtoMapper {
 
     // De Entidad a DTO
-    BrandDto toDto(Brand brand);
+    // BrandDto toDto(Brand brand);
 
     List<BrandDto> toDto(List<Brand> brands);
 

@@ -11,5 +11,5 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     // Lista todos las marcas por status igual a true
     List<Brand> findByStatusTrue();
 
-    // https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html
 }
+// https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html

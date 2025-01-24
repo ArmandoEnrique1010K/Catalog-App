@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,14 +20,17 @@ import lombok.NoArgsConstructor;
 @Table(name = "brand")
 public class Brand {
 
+    // https://www-geeksforgeeks-org.translate.goog/spring-mvc-validation/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=sge#:~:text=//%20@NotNull:%20The%20CharSequence%2C,length%20is%20greater%20than%20zero.
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @NotBlank
+    // @Column(unique = true)
     private String name;
 
-    @Column(nullable = false)
+    // @Column(nullable = false)
     private Boolean status;
 
     // Relacion hacia productos

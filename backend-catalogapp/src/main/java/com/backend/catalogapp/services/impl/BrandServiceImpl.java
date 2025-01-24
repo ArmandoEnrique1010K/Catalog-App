@@ -1,6 +1,7 @@
 package com.backend.catalogapp.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,58 @@ public class BrandServiceImpl implements BrandService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BrandDto> findAll() {
+    public List<BrandDto> findAllByStatusTrue() {
 
+        // 1° forma (versiones anteriores de java 16)
+        // List<Brand> brands = (List<Brand>) brandRepository.findByStatusTrue();
+        // return brands.stream().map(u -> brandDtoMapper.toDto(u))
+        // .collect(Collectors.toList());
+
+        // 2° forma
         List<Brand> brands = brandRepository.findByStatusTrue();
-        return brandDtoMapper.toDto(brands);
+        return brands.stream().map(brandDtoMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public BrandDto save(Brand brand) {
+        brand.setName(brand.getName());
+        brand.setStatus(true);
+
+        return brandDtoMapper.toDto(brandRepository.save(brand));
+
+        // return (brandDtoMapper::toDto)(brandRepository.save(brand));
+    }
+
+    @Override
+    @Transactional
+    public Optional<BrandDto> update(Brand brand, Long id) {
+        Optional<Brand> optional = brandRepository.findById(id);
+
+        Brand brandOptional = null;
+
+        if (optional.isPresent()) {
+            Brand brandDb = optional.orElseThrow();
+
+            brandDb.setName(brand.getName());
+            brandOptional = brandRepository.save(brandDb);
+        }
+
+        return Optional.ofNullable(brandOptional).map(brandDtoMapper::toDto);
 
     }
+
+    @Override
+    @Transactional
+    public void remove(Long id) {
+        brandRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<BrandDto> findById(Long id) {
+        return Optional.ofNullable(brandRepository.findById(id).map(brandDtoMapper::toDto).orElseThrow());
+
+    }
+
 }

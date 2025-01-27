@@ -7,59 +7,56 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.catalogapp.models.dto.BrandDto;
-import com.backend.catalogapp.models.entities.Brand;
-import com.backend.catalogapp.services.BrandService;
+import com.backend.catalogapp.models.dto.CategoryDto;
+import com.backend.catalogapp.models.entities.Category;
+import com.backend.catalogapp.services.CategoryService;
 
 import jakarta.validation.Valid;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 @RestController
-@RequestMapping("/brands")
+@RequestMapping("/categories")
+// TODO: INVESTIGAR SOBRE COMO COLOCAR UNA URL GLOBAL PARA CROSSORIGIN
 @CrossOrigin(originPatterns = "http://localhost:5173")
-public class BrandController {
+public class CategoryController {
 
     @Autowired
-    private BrandService brandService;
+    private CategoryService categoryService;
 
-    // Endpoint para obtener todas las categorias
     @GetMapping
-    public List<BrandDto> list() {
-        return brandService.findAllByStatusTrue();
+    public List<CategoryDto> list() {
+        return categoryService.findAllByStatusTrue();
     }
 
-    // Guardar una marca
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Brand brand, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody Category category, BindingResult result) {
         if (result.hasErrors()) {
             return validation(result);
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(brandService.save(brand));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(category));
     }
 
-    // Editar una marca
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody Brand brand, BindingResult result, @PathVariable Long id) {
+    public ResponseEntity<?> update(@Valid @RequestBody Category category, BindingResult result,
+            @PathVariable Long id) {
 
         if (result.hasErrors()) {
             return validation(result);
         }
 
-        Optional<BrandDto> o = brandService.update(brand, id);
+        Optional<CategoryDto> o = categoryService.update(category, id);
 
         if (o.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(o.orElseThrow());
@@ -68,23 +65,17 @@ public class BrandController {
         return ResponseEntity.notFound().build();
     }
 
-    // Inhabilitar una marca
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
-        // Busca la marca por su ID
-        Optional<BrandDto> o = brandService.findById(id);
+        Optional<CategoryDto> o = categoryService.findById(id);
 
-        // Si el usuario existe
         if (o.isPresent()) {
-            // Llama al servicio para eliminarlo por su id
-            brandService.remove(id);
-            // noContent es un metodo que devuelve el status 204, no hay contenido
+            categoryService.remove(id);
             return ResponseEntity.noContent().build(); // 204
         }
         return ResponseEntity.notFound().build(); // 404
     }
 
-    // Función privada para validar los campos
     private ResponseEntity<?> validation(BindingResult result) {
         Map<String, String> errors = new HashMap<>();
 

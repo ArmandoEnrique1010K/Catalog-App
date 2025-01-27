@@ -69,7 +69,18 @@ public class BrandServiceImpl implements BrandService {
     @Override
     @Transactional
     public void remove(Long id) {
-        brandRepository.deleteById(id);
+
+        Optional<Brand> optional = brandRepository.findById(id);
+
+        if (optional.isPresent()) {
+            Brand brandDb = optional.orElseThrow();
+            brandDb.setStatus(false);
+            brandRepository.save(brandDb);
+        }
+
+        // NO recomiendo borrar una marca desde la BD, porque se perdería la integridad
+        // de los datos
+        // brandRepository.deleteById(id);
     }
 
     @Override

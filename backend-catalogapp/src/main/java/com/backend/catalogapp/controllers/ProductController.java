@@ -39,6 +39,11 @@ public class ProductController {
         return productService.findAllByStatusTrue();
     }
 
+    @GetMapping("/{id}")
+    public ProductDetailDto findById(@PathVariable Long id) {
+        return productService.findById(id).orElseThrow();
+    }
+
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody Product product, BindingResult result) {
         if (result.hasErrors()) {

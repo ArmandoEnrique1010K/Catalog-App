@@ -10,7 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.backend.catalogapp.models.dto.ProductDetailDto;
 import com.backend.catalogapp.models.dto.ProductsListDto;
 import com.backend.catalogapp.models.dto.mapper.ProductDtoMapper;
+import com.backend.catalogapp.models.entities.Brand;
+import com.backend.catalogapp.models.entities.Category;
 import com.backend.catalogapp.models.entities.Product;
+import com.backend.catalogapp.repositories.BrandRepository;
+import com.backend.catalogapp.repositories.CategoryRepository;
 import com.backend.catalogapp.repositories.ProductRepository;
 import com.backend.catalogapp.services.ProductService;
 
@@ -19,6 +23,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private BrandRepository brandRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private ProductDtoMapper productDtoMapper;
@@ -41,29 +50,49 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public ProductDetailDto save(Product product) {
-        // Se establece los valores en todos los campos
+
+        Brand brand = brandRepository.findById(product.getBrand().getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "La marca con ID " + product.getBrand().getId() + " no existe"));
+        product.setBrand(brand);
+
+        // Obtener y asignar la categoría
+        Category category = categoryRepository.findById(product.getCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "La categoría con ID " + product.getCategory().getId() + " no existe"));
+        product.setCategory(category);
+
+        // Asignar valores directos
         product.setName(product.getName());
         product.setCode(product.getCode());
         product.setInOffer(product.getInOffer());
         product.setPrice(product.getPrice());
 
-        // Si el producto esta en oferta se establece el precio de oferta
         if (product.getInOffer()) {
             product.setOfferPrice(product.getOfferPrice());
         }
 
         product.setDescription(product.getDescription());
         product.setStatus(true);
-
-        // Fechas de creación y actualización
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
 
+        // Guardar el producto
         return productDtoMapper.toDetailDto(productRepository.save(product));
     }
 
     @Override
     public Optional<ProductDetailDto> update(Product product, Long id) {
+
+        Brand brand = brandRepository.findById(product.getBrand().getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "La marca con ID " + product.getBrand().getId() + " no existe"));
+
+        // Obtener y asignar la categoría
+        Category category = categoryRepository.findById(product.getCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "La categoría con ID " + product.getCategory().getId() + " no existe"));
+
         Optional<Product> optional = productRepository.findById(id);
 
         Product productOptional = null;
@@ -86,6 +115,9 @@ public class ProductServiceImpl implements ProductService {
 
             // Fecha de actualización
             productDb.setUpdatedAt(LocalDateTime.now());
+
+            productDb.setBrand(brand);
+            productDb.setCategory(category);
 
             productOptional = productRepository.save(productDb);
         }

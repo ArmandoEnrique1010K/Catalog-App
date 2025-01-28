@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -71,18 +72,19 @@ public class Product {
     // TODO: Investigar FetchType.LAZY
     // @ManyToOne(fetch = FetchType.LAZY)
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+
     @JoinColumn(name = "category_id")
     private Category category;
 
     // Relacion hacia marca
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
     // Relacion hacia imagen
-    @OneToOne
-    @JoinColumn(name = "image_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
     // Relacion hacia detalles del producto

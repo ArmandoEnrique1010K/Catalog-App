@@ -24,7 +24,7 @@ public interface BrandService {
     public Optional<BrandDto> update(Brand brand, Long id);
 
     // Inhabilitar una marca
-    public void remove(Long id);
+    public void disable(Long id);
 
     // No se define eliminar una marca, causaria un error en toda la aplicacion
     // eliminando todos los productos que corresponden a la misma marca

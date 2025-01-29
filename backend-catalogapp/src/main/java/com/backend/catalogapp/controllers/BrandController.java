@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -68,15 +68,15 @@ public class BrandController {
     }
 
     // Inhabilitar una marca
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         // Busca la marca por su ID
         Optional<BrandDto> o = brandService.findById(id);
 
         // Si el usuario existe
         if (o.isPresent()) {
             // Llama al servicio para eliminarlo por su id
-            brandService.remove(id);
+            brandService.disable(id);
             // noContent es un metodo que devuelve el status 204, no hay contenido
             return ResponseEntity.noContent().build(); // 204
         }

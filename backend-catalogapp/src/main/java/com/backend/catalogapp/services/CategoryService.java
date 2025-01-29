@@ -16,6 +16,6 @@ public interface CategoryService {
 
     public Optional<CategoryDto> update(Category category, Long id);
 
-    public void remove(Long id);
+    public void disable(Long id);
 
 }

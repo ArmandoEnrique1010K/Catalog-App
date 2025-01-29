@@ -2,14 +2,11 @@ package com.backend.catalogapp.models.entities;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
@@ -37,6 +34,7 @@ public class Image {
     private MultipartFile file;
 
     // Relación de uno a uno con producto
-    @OneToOne(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Product product;
+    // @OneToOne(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval =
+    // true, fetch = FetchType.LAZY)
+    // private Product product;
 }

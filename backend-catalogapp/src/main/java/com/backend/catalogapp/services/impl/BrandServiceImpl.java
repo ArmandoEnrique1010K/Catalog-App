@@ -68,7 +68,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     @Transactional
-    public void remove(Long id) {
+    public void disable(Long id) {
 
         Optional<Brand> optional = brandRepository.findById(id);
 

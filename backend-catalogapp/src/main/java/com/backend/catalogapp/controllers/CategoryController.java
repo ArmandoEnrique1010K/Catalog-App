@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -65,12 +66,12 @@ public class CategoryController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<CategoryDto> o = categoryService.findById(id);
 
         if (o.isPresent()) {
-            categoryService.remove(id);
+            categoryService.disable(id);
             return ResponseEntity.noContent().build(); // 204
         }
         return ResponseEntity.notFound().build(); // 404

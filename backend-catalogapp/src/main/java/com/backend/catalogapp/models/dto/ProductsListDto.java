@@ -16,4 +16,6 @@ public class ProductsListDto {
     private Boolean inOffer;
     private Double price;
     private Double offerPrice;
+    private Long idImage;
+    private String nameImage;
 }

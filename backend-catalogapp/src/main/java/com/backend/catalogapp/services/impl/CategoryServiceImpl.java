@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public void remove(Long id) {
+    public void disable(Long id) {
 
         Optional<Category> optional = categoryRepository.findById(id);
 

@@ -12,8 +12,9 @@ import com.backend.catalogapp.models.entities.Product;
 @Mapper(componentModel = "spring")
 public interface ProductDtoMapper {
 
-    @Mapping(source = "image.id", target = "idImage")
+    // @Mapping(source = "image.id", target = "idImage")
     @Mapping(source = "image.name", target = "nameImage")
+    @Mapping(source = "brand.name", target = "brandName")
     ProductsListDto toListDto(Product product);
 
     // En algunos casos se tiene que mapear de forma manual

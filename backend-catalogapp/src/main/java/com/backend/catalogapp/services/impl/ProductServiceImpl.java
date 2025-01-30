@@ -3,6 +3,8 @@ package com.backend.catalogapp.services.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +18,6 @@ import com.backend.catalogapp.models.entities.Product;
 import com.backend.catalogapp.repositories.BrandRepository;
 import com.backend.catalogapp.repositories.CategoryRepository;
 import com.backend.catalogapp.repositories.ProductRepository;
-import com.backend.catalogapp.services.ImageService;
 import com.backend.catalogapp.services.ProductService;
 
 @Service
@@ -27,30 +28,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private BrandRepository brandRepository;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Autowired
     private ProductDtoMapper productDtoMapper;
 
-    @Autowired
-    private ImageService imageService;
+    // @Autowired
+    // private ImageService imageService;
 
     @Transactional(readOnly = true)
     @Override
     public List<ProductsListDto> findAllByStatusTrue() {
-        List<Product> products = productRepository.findAll();
-
-        return products.stream().map(product -> {
-            ProductsListDto dto = productDtoMapper.toListDto(product);
-            dto.setNameImage(imageService.getImageNameById(dto.getIdImage())); // Resuelve el nombre en el servicio de
-            // imágenes
-            return dto;
-        }).toList();
-
-        // return products.stream().map(
-        // productDtoMapper::toListDto)
-        // .toList();
+        List<Product> products = productRepository.findByStatusTrue();
+        return products.stream().map(
+                productDtoMapper::toListDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

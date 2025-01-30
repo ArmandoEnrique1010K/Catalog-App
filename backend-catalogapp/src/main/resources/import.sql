@@ -10,3 +10,6 @@ INSERT INTO brand (id, name, status) VALUES
 (8, 'Converse', 1),
 (9, 'Fila', 0),
 (10, 'Vans', 1);
+
+-- FUENTES BIBLIOGRAFICAS DE AYUDA
+-- https://www.baeldung.com/mapstruct

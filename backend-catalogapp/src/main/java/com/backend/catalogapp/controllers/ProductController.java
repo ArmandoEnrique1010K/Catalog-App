@@ -34,6 +34,8 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    // ES NORMAL QUE EN LA CONSOLA SE MUESTRE VARIAS CONSULTAS A LA BASE DE DATOS
+    // (SEGUN LA CANTIDAD DE PRODUCTOS)
     @GetMapping
     public List<ProductsListDto> list() {
         return productService.findAllByStatusTrue();

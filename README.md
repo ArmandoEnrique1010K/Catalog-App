@@ -23,7 +23,7 @@ Se consideran las entidades: Brand, Category, Image, Product
 | PUT /categories/{id}          | Actualizar una categoria por su ID                                                | ADMIN           | LISTO, pero falta restringir endpoint |
 | PATCH /categories/{id}        | Inhabilitar una categoria (eliminar)                                              | ADMIN           | LISTO, pero falta restringir endpoint |
 | GET /images/{name}            | Obtener una imagen por su nombre                                                  | Sin restricción | CASI LISTO                            |
-| GET /products                 | Listar todos los productos habilitados, ademas de su categoria y marca habilitada | Sin restricción |                                       |
+| GET /products                 | Listar todos los productos habilitados, ademas de su categoria y marca habilitada | Sin restricción | EN PROCESO                            |
 | GET /products/{id}            | Obtener un producto por su ID                                                     | Sin restricción |                                       |
 | GET /products/{name}          | Obtener una lista de productos por su nombre (tipo barra de busqueda)             | Sin restricción |                                       |
 | GET /products/categories/{id} | Obtener una lista de productos que corresponden a la misma categoria por su ID    | Sin restricción |                                       |

@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.catalogapp.models.dto.ProductDetailDto;
 import com.backend.catalogapp.models.dto.ProductsListDto;
@@ -44,6 +47,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ImageService imageService;
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     @Transactional(readOnly = true)
     @Override
     public List<ProductsListDto> findAllByStatusTrue() {
@@ -61,26 +66,47 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductDetailDto save(Product product) {
+    public ProductDetailDto save(Product product, MultipartFile file) {
+
+        logger.info("Inicio de guardado del producto en el servicio");
 
         Brand brand = brandRepository.findById(product.getBrand().getId())
                 .orElseThrow(() -> new IllegalArgumentException(
                         "La marca con ID " + product.getBrand().getId() + " no existe"));
         product.setBrand(brand);
+        logger.debug("Marca asignada: {}", brand.getName());
 
         // Obtener y asignar la categoría
         Category category = categoryRepository.findById(product.getCategory().getId())
                 .orElseThrow(() -> new IllegalArgumentException(
                         "La categoría con ID " + product.getCategory().getId() + " no existe"));
         product.setCategory(category);
+        logger.debug("Categoría asignada: {}", category.getName());
 
-        // MANEJO DE LA IMAGEN
+        // Verificar si el producto ya tiene una imagen o inicializarla
+        if (product.getImage() == null) {
+            product.setImage(new Image()); // Inicializa la imagen si es null
+        }
+
+        // Validar que se proporcionó un archivo de imagen
+        if (product.getImage().getFile() == null || product.getImage().getFile().isEmpty()) {
+            throw new IllegalArgumentException("La imagen del producto no puede estar vacía");
+        }
+
+        // Verificar si el archivo es válido
+        if (file == null || file.isEmpty()) {
+            logger.warn("El archivo de imagen es nulo o vacío");
+            throw new IllegalArgumentException("La imagen del producto no puede estar vacía");
+        }
+
+        // Guardar la imagen y establecer el nombre
         // String nameImage = imageService.storeImage(product.getImage().getFile());
-        // product.getImage().setName(nameImage);
 
-        // Guardar primero la imagen
-        Image image = new Image();
+        // Guardar la imagen
         String nameImage = imageService.storeImage(product.getImage().getFile());
+        logger.info("Imagen guardada con nombre: {}", nameImage);
+
+        Image image = new Image();
         image.setName(nameImage);
         image = imageRepository.save(image); // Guardar la imagen antes de asignarla al producto
         product.setImage(image);
@@ -100,8 +126,15 @@ public class ProductServiceImpl implements ProductService {
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
 
-        // Guardar el producto
-        return productDtoMapper.toDetailDto(productRepository.save(product));
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("La imagen del producto no puede estar vacía");
+        }
+
+        // Guardar producto en base de datos
+        Product savedProduct = productRepository.save(product);
+        logger.info("Producto guardado con ID: {}", savedProduct.getId());
+
+        return productDtoMapper.toDetailDto(savedProduct);
     }
 
     @Override

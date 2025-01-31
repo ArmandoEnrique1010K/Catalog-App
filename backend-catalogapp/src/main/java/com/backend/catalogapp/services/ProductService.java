@@ -3,6 +3,8 @@ package com.backend.catalogapp.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.backend.catalogapp.models.dto.ProductDetailDto;
 import com.backend.catalogapp.models.dto.ProductsListDto;
 import com.backend.catalogapp.models.entities.Product;
@@ -14,7 +16,7 @@ public interface ProductService {
 
     public Optional<ProductDetailDto> findById(Long id);
 
-    public ProductDetailDto save(Product product);
+    public ProductDetailDto save(Product product, MultipartFile file);
 
     public Optional<ProductDetailDto> update(Product product, Long id);
 

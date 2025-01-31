@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.tika.Tika; // Dependencia de Apache Tika para detección de tipo MIME
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,6 +52,8 @@ public class ProductController {
     @Autowired
     private ImageRepository imageRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+
     // ES NORMAL QUE EN LA CONSOLA SE MUESTRE VARIAS CONSULTAS A LA BASE DE DATOS
     // (SEGUN LA CANTIDAD DE PRODUCTOS)
     @GetMapping
@@ -72,20 +78,35 @@ public class ProductController {
             @RequestParam("categoryId") Long categoryId,
             @RequestParam("image") MultipartFile image) {
 
-        if (image.isEmpty()) {
-            return ResponseEntity.badRequest().body("Debe proporcionar una imagen");
-        }
+        // if (image.isEmpty()) {
+        // return ResponseEntity.badRequest().body("Debe proporcionar una imagen");
+        // }
 
-        if (image == null || image.isEmpty()) {
-            return ResponseEntity.badRequest().body("Debe proporcionar una imagen válida.");
-        }
+        // if (image == null || image.isEmpty()) {
+        // return ResponseEntity.badRequest().body("Debe proporcionar una imagen
+        // válida.");
+        // }
 
         // Guardar la imagen primero
-        Image img = new Image();
-        String imageName = imageService.storeImage(image);
+        // Image img = new Image();
+        // String imageName = imageService.storeImage(image);
 
-        img.setName(imageName);
-        img = imageRepository.save(img); // Persistir la imagen antes de asignarla al producto
+        // img.setName(imageName);
+        // // Persistir la imagen antes de asignarla al producto
+        // img = imageRepository.save(img);
+
+        logger.info("Inicio de creación de producto");
+
+        // Validar si el archivo es una imagen
+
+        logger.debug(
+
+                "Datos recibidos: name={}, code={}, price={}, inOffer={}, offerPrice={}, description={}, brandId={}, categoryId={}, image={}",
+                name, code, price, inOffer, offerPrice, description, brandId, categoryId, image.getOriginalFilename());
+        if (image.isEmpty()) {
+            logger.warn("Imagen vacía recibida");
+            return ResponseEntity.badRequest().body("Debe proporcionar una imagen válida.");
+        }
 
         // Crear el objeto Product con los datos recibidos
         Product product = new Product();
@@ -95,19 +116,48 @@ public class ProductController {
         product.setInOffer(inOffer);
         product.setOfferPrice(inOffer ? offerPrice : null);
         product.setDescription(description);
-        product.setImage(img); // Asignar la imagen persistida
+        logger.info("Producto creado en memoria sin relaciones");
+
+        // if (product.getImage() == null) {
+        // product.setImage(new Image());
+        // }
+        // product.getImage().setFile(image);
+        // Asignar la imagen persistida
 
         // Asignar la marca y la categoría
-        Brand brand = new Brand();
-        brand.setId(brandId);
-        product.setBrand(brand);
+        product.setBrand(new Brand());
+        product.getBrand().setId(brandId);
+        product.setCategory(new Category());
+        product.getCategory().setId(categoryId);
 
-        Category category = new Category();
-        category.setId(categoryId);
-        product.setCategory(category);
+        logger.info("Marca y categoría asignadas");
+
+        product.setImage(new Image());
+        product.getImage().setFile(image);
+
+        logger.info("Imagen asignada al producto: {}", image.getOriginalFilename());
+
+        // Brand brand = new Brand();
+        // brand.setId(brandId);
+        // product.setBrand(brand);
+
+        // Category category = new Category();
+        // category.setId(categoryId);
+        // product.setCategory(category);
+
+        try {
+            ProductDetailDto savedProduct = productService.save(product, image);
+            logger.info("Producto guardado correctamente con ID: {}", savedProduct.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        } catch (Exception e) {
+            logger.error("Error al guardar el producto: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al guardar el producto: " + e.getMessage());
+        }
 
         // Guardar el producto
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
+        // return
+        // ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
     }
 
     @PutMapping("/{id}")

@@ -28,7 +28,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // :categoryId")
     @Query("SELECT p FROM Product p JOIN FETCH p.brand JOIN FETCH p.category JOIN FETCH p.image WHERE p.status = true AND p.brand.status = true AND p.category.status = true")
 
-    List<Product> findAll();
+    List<Product> findAllProducts();
 
     // QUERY PARA SELECCIONAR TODOS LOS PRODUCTOS HABILITADOS (POR MARCA Y
     // CATEGORIA) EN OFERTA

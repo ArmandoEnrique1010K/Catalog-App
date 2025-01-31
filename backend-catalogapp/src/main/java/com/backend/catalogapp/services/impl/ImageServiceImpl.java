@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,23 +44,32 @@ public class ImageServiceImpl implements ImageService {
 
     }
 
+    private static final List<String> ALLOWED_TYPES = Arrays.asList("auto", "image/jpeg", "image/png", "image/jpg");
+
     @Override
     @Transactional
-    public String storeImage(MultipartFile image) {
+    public String storeImage(MultipartFile file) {
         // Maneja las excepciones cuando no se sube imagen
-        if (image == null) {
-            throw new IllegalArgumentException("El archivo de imagen es nulo");
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("El archivo es nulo o está vacío");
         }
 
-        if (image.isEmpty()) {
-            throw new IllegalArgumentException("La imagen está vacía");
+        System.out.println("Nombre del archivo recibido: " + file.getOriginalFilename());
+        System.out.println("Tipo de archivo recibido: " + file.getContentType());
+        String fileType = file.getContentType();
+        String fileName = file.getOriginalFilename();
+
+        if (fileType == null || !ALLOWED_TYPES.contains(fileType.toLowerCase())) {
+            throw new IllegalArgumentException("Formato de imagen no permitido: " + fileType);
         }
 
-        // Verifica que el tipo de contenido sea una imagen
-        String contentType = image.getContentType();
+        if (!fileName.matches(".*\\.(jpg|jpeg|png)$")) {
+            throw new IllegalArgumentException("Extensión de archivo no permitida: " + fileName);
+        }
 
-        // Maneja la excepción si el tipo de contenido no es una imagen
-        if (contentType == null || !contentType.startsWith("image")) {
+        // Validación de imagen
+        String contentType = file.getContentType();
+        if (contentType == null || (!contentType.startsWith("image/") && !contentType.startsWith("Auto"))) {
             throw new IllegalArgumentException("El archivo no es una imagen válida");
         }
 
@@ -68,7 +79,7 @@ public class ImageServiceImpl implements ImageService {
             long miliseconds = System.currentTimeMillis();
 
             // Obtiene el nombre original de la imagen
-            String originalNameImage = image.getOriginalFilename();
+            String originalNameImage = file.getOriginalFilename();
 
             // Obtiene la extensión de la imagen
             String fileExtension = originalNameImage.substring(originalNameImage.lastIndexOf(".") + 1);
@@ -77,7 +88,7 @@ public class ImageServiceImpl implements ImageService {
             String newNameImage = "Img_" + miliseconds + "." + fileExtension;
 
             // Copia la imagen al directorio de almacenamiento
-            InputStream inputStream = image.getInputStream();
+            InputStream inputStream = file.getInputStream();
             Path path = Paths.get(storageLocation).resolve(newNameImage);
 
             // Copia el archivo de la imagen en el sistema de archivos

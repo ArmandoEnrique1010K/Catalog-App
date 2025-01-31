@@ -14,10 +14,13 @@ import com.backend.catalogapp.models.dto.ProductsListDto;
 import com.backend.catalogapp.models.dto.mapper.ProductDtoMapper;
 import com.backend.catalogapp.models.entities.Brand;
 import com.backend.catalogapp.models.entities.Category;
+import com.backend.catalogapp.models.entities.Image;
 import com.backend.catalogapp.models.entities.Product;
 import com.backend.catalogapp.repositories.BrandRepository;
 import com.backend.catalogapp.repositories.CategoryRepository;
+import com.backend.catalogapp.repositories.ImageRepository;
 import com.backend.catalogapp.repositories.ProductRepository;
+import com.backend.catalogapp.services.ImageService;
 import com.backend.catalogapp.services.ProductService;
 
 @Service
@@ -33,15 +36,18 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
     private ProductDtoMapper productDtoMapper;
 
-    // @Autowired
-    // private ImageService imageService;
+    @Autowired
+    private ImageService imageService;
 
     @Transactional(readOnly = true)
     @Override
     public List<ProductsListDto> findAllByStatusTrue() {
-        List<Product> products = productRepository.findByStatusTrue();
+        List<Product> products = productRepository.findAllProducts();
         return products.stream().map(
                 productDtoMapper::toListDto)
                 .collect(Collectors.toList());
@@ -67,6 +73,17 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "La categoría con ID " + product.getCategory().getId() + " no existe"));
         product.setCategory(category);
+
+        // MANEJO DE LA IMAGEN
+        // String nameImage = imageService.storeImage(product.getImage().getFile());
+        // product.getImage().setName(nameImage);
+
+        // Guardar primero la imagen
+        Image image = new Image();
+        String nameImage = imageService.storeImage(product.getImage().getFile());
+        image.setName(nameImage);
+        image = imageRepository.save(image); // Guardar la imagen antes de asignarla al producto
+        product.setImage(image);
 
         // Asignar valores directos
         product.setName(product.getName());

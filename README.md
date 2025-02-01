@@ -6,11 +6,11 @@ Aplicacion catalogo de productos hecho con Spring Boot y React
 
 Proyecto pendiente, fecha limite: 28/02/2025
 
+Nota: Una vez que tenga todos los endpoints terminados, llega la hora de implementar el sistema de login y registro en la API con Spring Security y JWT.
+
 ## Endpoints de la API
 
 Se consideran las entidades: Brand, Category, Image, Product
-
-
 
 | Endpoint                      | Descripción                                                                       | Permitir a...   | Estado                                |
 | ----------------------------- | --------------------------------------------------------------------------------- | --------------- | ------------------------------------- |
@@ -22,16 +22,14 @@ Se consideran las entidades: Brand, Category, Image, Product
 | POST /categories              | Crear una nueva categoria                                                         | ADMIN           | LISTO, pero falta restringir endpoint |
 | PUT /categories/{id}          | Actualizar una categoria por su ID                                                | ADMIN           | LISTO, pero falta restringir endpoint |
 | PATCH /categories/{id}        | Inhabilitar una categoria (eliminar)                                              | ADMIN           | LISTO, pero falta restringir endpoint |
-| GET /images/{name}            | Obtener una imagen por su nombre                                                  | Sin restricción | CASI LISTO                            |
-| GET /products                 | Listar todos los productos habilitados, ademas de su categoria y marca habilitada | Sin restricción | EN PROCESO                            |
+| GET /images/{name}            | Obtener una imagen por su nombre                                                  | Sin restricción | LISTO                                 |
+| GET /products                 | Listar todos los productos habilitados, ademas de su categoria y marca habilitada | Sin restricción | LISTO                                 |
 | GET /products/{id}            | Obtener un producto por su ID                                                     | Sin restricción |                                       |
 | GET /products/{name}          | Obtener una lista de productos por su nombre (tipo barra de busqueda)             | Sin restricción |                                       |
 | GET /products/categories/{id} | Obtener una lista de productos que corresponden a la misma categoria por su ID    | Sin restricción |                                       |
-| POST /products                | Crear un nuevo producto                                                           | ADMIN           |                                       |
+| POST /products                | Crear un nuevo producto                                                           | ADMIN           | LISTO, pero falta restringir endpoint |
 | PUT /products/{id}            | Actualizar un producto                                                            | ADMIN           |                                       |
 | PATCH products/{id}           | Inhabilitar un producto (eliminar)                                                | ADMIN           |                                       |
-
-
 
 USUARIO
 

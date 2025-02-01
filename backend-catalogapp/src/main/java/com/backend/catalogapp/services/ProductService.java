@@ -18,7 +18,7 @@ public interface ProductService {
 
     public ProductDetailDto save(Product product, MultipartFile file);
 
-    public Optional<ProductDetailDto> update(Product product, Long id);
+    public Optional<ProductDetailDto> update(Product product, MultipartFile file, Long id);
 
     public void remove(Long id);
 

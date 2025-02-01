@@ -15,5 +15,5 @@ public interface ImageService {
 
     public Resource loadAsResource(String name);
 
-    public String getImageNameById(Long id);
+    // public String getImageNameById(Long id);
 }

@@ -138,7 +138,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<ProductDetailDto> update(Product product, Long id) {
+    public Optional<ProductDetailDto> update(Product product, MultipartFile file, Long id) {
 
         Brand brand = brandRepository.findById(product.getBrand().getId())
                 .orElseThrow(() -> new IllegalArgumentException(

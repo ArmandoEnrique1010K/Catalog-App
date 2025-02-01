@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.tika.Tika; // Dependencia de Apache Tika para detección de tipo MIME
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +30,6 @@ import com.backend.catalogapp.models.entities.Brand;
 import com.backend.catalogapp.models.entities.Category;
 import com.backend.catalogapp.models.entities.Image;
 import com.backend.catalogapp.models.entities.Product;
-import com.backend.catalogapp.repositories.ImageRepository;
-import com.backend.catalogapp.services.ImageService;
 import com.backend.catalogapp.services.ProductService;
 
 import jakarta.validation.Valid;
@@ -46,11 +42,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private ImageService imageService;
+    // @Autowired
+    // private ImageService imageService;
 
-    @Autowired
-    private ImageRepository imageRepository;
+    // @Autowired
+    // private ImageRepository imageRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
@@ -160,8 +156,19 @@ public class ProductController {
         // ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody Product product, BindingResult result,
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> update(
+        
+    @RequestParam("name") String name,
+            @RequestParam("code") String code,
+            @RequestParam("price") Double price,
+            @RequestParam("inOffer") Boolean inOffer,
+            @RequestParam(value = "offerPrice", required = false) Double offerPrice,
+            @RequestParam("description") String description,
+            @RequestParam("brandId") Long brandId,
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("image") MultipartFile image
+    @Valid @RequestBody Product product, BindingResult result,
             @PathVariable Long id) {
 
         if (result.hasErrors()) {

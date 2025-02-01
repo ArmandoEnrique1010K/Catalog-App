@@ -8,9 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import org.apache.tika.Tika;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -27,7 +24,8 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class ImageServiceImpl implements ImageService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImageServiceImpl.class);
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(ImageServiceImpl.class);
 
     @Value("${storage.location}")
     private String storageLocation;
@@ -138,10 +136,11 @@ public class ImageServiceImpl implements ImageService {
 
     }
 
-    @Override
-    public String getImageNameById(Long id) {
-        return imageRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("La imagen no existe"))
-                .getName();
-    }
+    // @Override
+    // public String getImageNameById(Long id) {
+    // return imageRepository.findById(id).orElseThrow(() -> new
+    // IllegalArgumentException("La imagen no existe"))
+    // .getName();
+    // }
 
 }

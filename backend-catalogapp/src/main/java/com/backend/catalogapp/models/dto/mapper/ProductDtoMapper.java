@@ -20,5 +20,7 @@ public interface ProductDtoMapper {
     // En algunos casos se tiene que mapear de forma manual
     @Mapping(source = "brand.id", target = "idBrand")
     @Mapping(source = "category.id", target = "idCategory")
+    @Mapping(source = "image.name", target = "nameImage")
+
     ProductDetailDto toDetailDto(Product product);
 }

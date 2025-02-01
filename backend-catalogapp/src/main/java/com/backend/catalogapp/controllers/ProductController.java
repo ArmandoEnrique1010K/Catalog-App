@@ -62,6 +62,8 @@ public class ProductController {
         return productService.findById(id).orElseThrow();
     }
 
+    // TODO: USAR UN ModelAttribute Y RequestParam por separado, uno para el JSON
+    // que contiene los datos y otro para la imagen (tipo MultipartFile)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> create(
             @RequestParam("name") String name,
@@ -74,33 +76,15 @@ public class ProductController {
             @RequestParam("categoryId") Long categoryId,
             @RequestParam("image") MultipartFile image) {
 
-        // if (image.isEmpty()) {
-        // return ResponseEntity.badRequest().body("Debe proporcionar una imagen");
-        // }
+        // logger.info("Inicio de creación de producto");
 
-        // if (image == null || image.isEmpty()) {
-        // return ResponseEntity.badRequest().body("Debe proporcionar una imagen
-        // válida.");
-        // }
+        // logger.debug("Datos recibidos: name={}, code={}, price={}, inOffer={},
+        // offerPrice={}, description={}, brandId={}, categoryId={}, image={}",
+        // name, code, price, inOffer, offerPrice, description, brandId, categoryId,
+        // image.getOriginalFilename());
 
-        // Guardar la imagen primero
-        // Image img = new Image();
-        // String imageName = imageService.storeImage(image);
-
-        // img.setName(imageName);
-        // // Persistir la imagen antes de asignarla al producto
-        // img = imageRepository.save(img);
-
-        logger.info("Inicio de creación de producto");
-
-        // Validar si el archivo es una imagen
-
-        logger.debug(
-
-                "Datos recibidos: name={}, code={}, price={}, inOffer={}, offerPrice={}, description={}, brandId={}, categoryId={}, image={}",
-                name, code, price, inOffer, offerPrice, description, brandId, categoryId, image.getOriginalFilename());
         if (image.isEmpty()) {
-            logger.warn("Imagen vacía recibida");
+            // logger.warn("Imagen vacía recibida");
             return ResponseEntity.badRequest().body("Debe proporcionar una imagen válida.");
         }
 
@@ -112,13 +96,7 @@ public class ProductController {
         product.setInOffer(inOffer);
         product.setOfferPrice(inOffer ? offerPrice : null);
         product.setDescription(description);
-        logger.info("Producto creado en memoria sin relaciones");
-
-        // if (product.getImage() == null) {
-        // product.setImage(new Image());
-        // }
-        // product.getImage().setFile(image);
-        // Asignar la imagen persistida
+        // logger.info("Producto creado en memoria sin relaciones");
 
         // Asignar la marca y la categoría
         product.setBrand(new Brand());
@@ -126,40 +104,31 @@ public class ProductController {
         product.setCategory(new Category());
         product.getCategory().setId(categoryId);
 
-        logger.info("Marca y categoría asignadas");
+        // logger.info("Marca y categoría asignadas");
 
+        // Asignar la imagen recibida
         product.setImage(new Image());
         product.getImage().setFile(image);
 
-        logger.info("Imagen asignada al producto: {}", image.getOriginalFilename());
-
-        // Brand brand = new Brand();
-        // brand.setId(brandId);
-        // product.setBrand(brand);
-
-        // Category category = new Category();
-        // category.setId(categoryId);
-        // product.setCategory(category);
+        // logger.info("Imagen asignada al producto: {}", image.getOriginalFilename());
 
         try {
             ProductDetailDto savedProduct = productService.save(product, image);
-            logger.info("Producto guardado correctamente con ID: {}", savedProduct.getId());
+            // logger.info("Producto guardado correctamente con ID: {}",
+            // savedProduct.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
         } catch (Exception e) {
-            logger.error("Error al guardar el producto: {}", e.getMessage(), e);
+            // logger.error("Error al guardar el producto: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error al guardar el producto: " + e.getMessage());
         }
 
-        // Guardar el producto
-        // return
-        // ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(
-        
-    @RequestParam("name") String name,
+
+            @RequestParam("name") String name,
             @RequestParam("code") String code,
             @RequestParam("price") Double price,
             @RequestParam("inOffer") Boolean inOffer,
@@ -167,21 +136,47 @@ public class ProductController {
             @RequestParam("description") String description,
             @RequestParam("brandId") Long brandId,
             @RequestParam("categoryId") Long categoryId,
-            @RequestParam("image") MultipartFile image
-    @Valid @RequestBody Product product, BindingResult result,
+            @RequestParam("image") MultipartFile image,
             @PathVariable Long id) {
 
-        if (result.hasErrors()) {
-            return validation(result);
+        // Crear el objeto Product con los datos recibidos
+        Product product = new Product();
+        product.setName(name);
+        product.setCode(code);
+        product.setPrice(price);
+        product.setInOffer(inOffer);
+        product.setOfferPrice(inOffer ? offerPrice : null);
+        product.setDescription(description);
+        // logger.info("Producto creado en memoria sin relaciones");
+
+        // Asignar la marca y la categoría
+        product.setBrand(new Brand());
+        product.getBrand().setId(brandId);
+        product.setCategory(new Category());
+        product.getCategory().setId(categoryId);
+
+        // logger.info("Marca y categoría asignadas");
+
+        // Asignar la imagen recibida
+        if (!image.isEmpty()) {
+            product.setImage(new Image());
+            product.getImage().setFile(image);
         }
 
-        Optional<ProductDetailDto> o = productService.update(product, id);
+        try {
+            Optional<ProductDetailDto> o = productService.update(product, image, id);
 
-        if (o.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(o.orElseThrow());
+            if (o.isPresent()) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(o.orElseThrow());
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+
+            // return ResponseEntity.status(HttpStatus.CREATED).body(o.orElseThrow());
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

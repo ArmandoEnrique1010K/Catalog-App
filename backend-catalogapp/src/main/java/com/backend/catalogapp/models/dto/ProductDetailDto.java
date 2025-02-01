@@ -19,4 +19,5 @@ public class ProductDetailDto {
     private String description;
     private Long idCategory;
     private Long idBrand;
+    private String nameImage;
 }

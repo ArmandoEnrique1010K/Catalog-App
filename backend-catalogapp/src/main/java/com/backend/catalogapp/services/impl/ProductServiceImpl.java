@@ -168,12 +168,28 @@ public class ProductServiceImpl implements ProductService {
             }
 
             productDb.setDescription(product.getDescription());
+            productDb.setStatus(true);
 
-            // Fecha de actualización
+            // Fecha de actualización (ahora)
             productDb.setUpdatedAt(LocalDateTime.now());
 
             productDb.setBrand(brand);
             productDb.setCategory(category);
+
+            // Si hay una imagen, se asigna al producto (reemplazo)
+            if (!file.isEmpty()) {
+                System.out.println("SUBIO UNA IMAGEN EN EL SERVICIO");
+                String nameImage = imageService.storeImage(product.getImage().getFile());
+                // logger.info("Imagen guardada con nombre: {}", nameImage);
+
+                Image image = new Image();
+                image.setName(nameImage);
+                image = imageRepository.save(image); // Guardar la imagen antes de asignarla al producto
+                productDb.setImage(image);
+            } else {
+                System.out.println("NO SUBIO UNA IMAGEN EN EL SERVICIO");
+                productDb.setImage(optional.get().getImage());
+            }
 
             productOptional = productRepository.save(productDb);
         }

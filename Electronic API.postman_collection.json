@@ -159,7 +159,35 @@
 					"response": []
 				},
 				{
-					"name": "create",
+					"name": "findByName",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/31",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"31"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createTest",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -168,7 +196,7 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Product",
+									"value": "Producto",
 									"contentType": "",
 									"type": "text"
 								},
@@ -178,10 +206,156 @@
 									"type": "text"
 								},
 								{
+									"key": "price",
+									"value": "500",
+									"type": "text"
+								},
+								{
+									"key": "inOffer",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "offerPrice",
+									"value": "450",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Un producto de prueba",
+									"type": "text"
+								},
+								{
+									"key": "brandId",
+									"value": "1",
+									"type": "text"
+								},
+								{
 									"key": "image",
 									"contentType": "",
 									"type": "file",
-									"src": "/C:/Users/USER/Pictures/Saved Pictures/new anormal.jpeg"
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/Tree.jpg"
+								},
+								{
+									"key": "categoryId",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Timestamp</th>\r",
+									"        <th>Status</th>\r",
+									"        <th>Error</th>\r",
+									"        <th>Trace</th>\r",
+									"        <th>Message</th>\r",
+									"        <th>Path</th>\r",
+									"    </tr>\r",
+									"    <tr>\r",
+									"        <td>{{response.timestamp}}</td>\r",
+									"        <td>{{response.status}}</td>\r",
+									"        <td>{{response.error}}</td>\r",
+									"        <td>{{response.trace}}</td>\r",
+									"        <td>{{response.message}}</td>\r",
+									"        <td>{{response.path}}</td>\r",
+									"    </tr>\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return { response: pm.response.json() }\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product",
+									"value": "{\n  \"name\": \"2\",\n  \"code\": \"2\",\n  \"price\": \"22\",\n  \"inOffer\": true,\n  \"offerPrice\": 450,\n  \"description\": \"Descripción del producto\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 }\n}\n",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"contentType": "image",
+									"type": "file",
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/Ocean.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateTest",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Productos",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "12345",
+									"type": "text"
 								},
 								{
 									"key": "price",
@@ -212,18 +386,82 @@
 									"key": "categoryId",
 									"value": "2",
 									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/Tree.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/products",
+							"raw": "http://localhost:8080/products/test/31",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"products"
+								"products",
+								"test",
+								"31"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product",
+									"value": "{\n  \"name\": \"23\",\n  \"code\": \"ABC123\",\n  \"price\": \"32\",\n  \"inOffer\": true,\n  \"offerPrice\": 450,\n  \"description\": \"Descripción del producto\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 }\n}\n",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"contentType": "image",
+									"type": "file",
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/Deep underwater.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/32",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"32"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/31",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"31"
 							]
 						}
 					},

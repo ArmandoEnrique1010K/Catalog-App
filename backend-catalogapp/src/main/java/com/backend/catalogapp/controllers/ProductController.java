@@ -139,32 +139,37 @@ public class ProductController {
         }
 
     }
+    // TODO: INVESTIGAR COMO MEJORAR Y OBTENER EL MENSAJE DE ERROR
 
     // TODO: USAR UN ModelAttribute Y RequestParam por separado, uno para el JSON
     // REPARAR ESTE ENDPOINT
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> create(
-            @RequestPart("product") @Valid String productJson, BindingResult result,
-            @RequestPart("image") MultipartFile image) {
+            @Valid @RequestPart("product") Product product, BindingResult result,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        if (result.hasErrors()) {
+            return validation(result);
+        }
 
         if (image.isEmpty()) {
             return ResponseEntity.badRequest().body("Debe proporcionar una imagen válida.");
         }
 
         // Convertir JSON a objeto Product
-        ObjectMapper objectMapper = new ObjectMapper();
-        Product product;
-        // TODO: INVESTIGAR COMO MEJORAR Y OBTENER EL MENSAJE DE ERROR
-        try {
-            product = objectMapper.readValue(productJson, Product.class);
-        } catch (JsonProcessingException e) {
-            return ResponseEntity.badRequest().body("Error al procesar JSON: " + e.getMessage());
-        }
+        // ObjectMapper objectMapper = new ObjectMapper();
+        // Product product;
+        // try {
+        // product = objectMapper.readValue(productJson, Product.class);
+        // } catch (JsonProcessingException e) {
+        // return ResponseEntity.badRequest().body("Error al procesar JSON: " +
+        // e.getMessage());
+        // }
 
-        if (result.hasErrors()) {
-            System.out.println("Errores de validación: " + validation(result).getBody());
-            return validation(result);
-        }
+        // if (result.hasErrors()) {
+        // System.out.println("Errores de validación: " + validation(result).getBody());
+        // return validation(result);
+        // }
 
         // Asignar la imagen manualmente
         Image img = new Image();
@@ -237,37 +242,19 @@ public class ProductController {
 
     }
 
+    // ESPECIFICA EN POSTMAN:
+    // key - Value - Content-Type
+    // product (text) - Texto de tipo JSON - application/json
+    // image (file) - Una imagen (opcional) - image
     @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> update(
-            @RequestPart("product") String productJson, BindingResult result,
+            @Valid @RequestPart("product") Product product, BindingResult result,
             @RequestPart(value = "image", required = false) MultipartFile image,
             @PathVariable Long id) {
 
-        // Convertir JSON a objeto Product
-        ObjectMapper objectMapper = new ObjectMapper();
-        Product product;
-        try {
-            product = objectMapper.readValue(productJson, Product.class);
-        } catch (JsonProcessingException e) {
-            return ResponseEntity.badRequest().body("Error al procesar JSON: " + e.getMessage());
-        }
-
-        // VALIDACIÓN MANUAL de campos
-
-        // Set<ConstraintViolation<Product>> violations =
-        // Validation.buildDefaultValidatorFactory()
-        // .getValidator().validate(product);
-
-        // if (!violations.isEmpty()) {
-        // List<String> errorMessages = violations.stream()
-        // .map(violation -> violation.getPropertyPath() + " " + violation.getMessage())
-        // .collect(Collectors.toList());
-        // return ResponseEntity.badRequest().body(errorMessages);
-        // }
-
+        // Validación automática con @Valid
         if (result.hasErrors()) {
-            System.out.println("Errores de validación: " + validation(result).getBody());
-            return validation(result);
+            return validation(result); // Retorna los errores de validación
         }
 
         if (image != null && !image.isEmpty()) {

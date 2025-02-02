@@ -1,4 +1,4 @@
-SELECT * FROM db_catalog.brand;
+SELECT * FROM db_electronic.brand;
 INSERT INTO brand (id, name, status) VALUES
 (1, 'HP', 1),
 (2, 'LG', 1),
@@ -81,7 +81,7 @@ INSERT INTO image (id, name) VALUES
 
 
 -- Limpia la tabla antes de insertar nuevos datos (opcional)
-TRUNCATE TABLE product;
+-- TRUNCATE TABLE product;
 
 -- Inserta datos en la tabla "product"
 INSERT INTO product (id, code, name, in_offer, price, offer_price, status, description, updated_at, created_at, brand_id, category_id, image_id) VALUES

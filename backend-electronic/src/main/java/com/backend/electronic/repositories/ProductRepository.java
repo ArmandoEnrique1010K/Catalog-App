@@ -14,6 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // - Obtener todos los productos
     // - " " " " por su nombre
     // - " " " " en oferta
+    // - " " " " por su categoria
 
     // El uso de JOIN FETCH acelera la consulta a la base de datos
     // @Query("SELECT p FROM Product p JOIN FETCH p.brand JOIN FETCH p.category
@@ -27,6 +28,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p JOIN FETCH p.brand JOIN FETCH p.category JOIN FETCH p.image WHERE p.status = true AND p.brand.status = true AND p.category.status = true AND p.inOffer = true")
     List<Product> findAllProductsByOffer();
+
+    @Query("SELECT p FROM Product p JOIN FETCH p.brand JOIN FETCH p.category JOIN FETCH p.image WHERE p.status = true AND p.brand.status = true AND p.category.status = true AND p.category.id = :id")
+    List<Product> findAllProductsByCategoryId(@Param("id") Long id);
 
     // TODO: UNA VEZ TERMINADO, IMPLEMENTAR PAGINACION
 }

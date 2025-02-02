@@ -18,6 +18,8 @@ public interface ProductService {
 
     public List<ProductsListDto> findAllByOffer();
 
+    public List<ProductsListDto> findAllByCategoryId(Long id);
+
     public Optional<ProductDetailDto> findById(Long id);
 
     public ProductDetailDto save(Product product, MultipartFile file);

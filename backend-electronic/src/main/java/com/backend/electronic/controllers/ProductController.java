@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.backend.electronic.exceptions.ValidationException;
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.entities.Brand;
@@ -30,12 +32,14 @@ import com.backend.electronic.models.entities.Category;
 import com.backend.electronic.models.entities.Image;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.services.ProductService;
+import com.backend.electronic.exceptions.*;
+
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/products")
 @CrossOrigin(originPatterns = "http://localhost:5173")
-public class ProductController {
+public class ProductController extends GlobalExceptionHandler {
 
     @Autowired
     private ProductService productService;
@@ -54,10 +58,14 @@ public class ProductController {
         return productService.findAllByOffer();
     }
 
-    // TODO: ENDPOINT PARA BUSCAR UN PRODUCTO POR SU NOMBRE (COMO PARAMETRO)
     @GetMapping("/search")
     public List<ProductsListDto> searchListByName(@RequestParam("name") String name) {
         return productService.findAllByName(name);
+    }
+
+    @GetMapping("category/{id}")
+    public List<ProductsListDto> listByCategory(@PathVariable Long id) {
+        return productService.findAllByCategoryId(id);
     }
 
     // @GetMapping("/{id}")
@@ -145,52 +153,52 @@ public class ProductController {
         }
 
     }
-    // TODO: INVESTIGAR COMO MEJORAR Y OBTENER EL MENSAJE DE ERROR
 
     // TODO: USAR UN ModelAttribute Y RequestParam por separado, uno para el JSON
-    // REPARAR ESTE ENDPOINT
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> create(
             @Valid @RequestPart("product") Product product, BindingResult result,
             @RequestPart(value = "image", required = false) MultipartFile image) {
 
         if (result.hasErrors()) {
-            return validation(result);
+            Map<String, String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(err -> {
+                errors.put(err.getField(), err.getDefaultMessage());
+            });
+            return ResponseEntity.badRequest().body(errors);
         }
+
+        // if (result.hasErrors()) {
+        // return validation(result);
+        // }
 
         if (image.isEmpty()) {
             return ResponseEntity.badRequest().body("Debe proporcionar una imagen válida.");
         }
-
-        // Convertir JSON a objeto Product
-        // ObjectMapper objectMapper = new ObjectMapper();
-        // Product product;
-        // try {
-        // product = objectMapper.readValue(productJson, Product.class);
-        // } catch (JsonProcessingException e) {
-        // return ResponseEntity.badRequest().body("Error al procesar JSON: " +
-        // e.getMessage());
-        // }
-
-        // if (result.hasErrors()) {
-        // System.out.println("Errores de validación: " + validation(result).getBody());
-        // return validation(result);
-        // }
 
         // Asignar la imagen manualmente
         Image img = new Image();
         img.setFile(image);
         product.setImage(img);
 
+        // ProductDetailDto savedProduct = productService.save(product, image);
+        // return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+
         try {
             ProductDetailDto savedProduct = productService.save(product, image);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(validation(result));
-            // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            // .body("Error al guardar el producto: " + e.getMessage());
+        } catch (DataIntegrityViolationException ex) {
+            return handleDuplicateEntryException(ex);
         }
+
+        // try {
+        // ProductDetailDto savedProduct = productService.save(product, image);
+        // return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+
+        // } catch (Exception e) {
+        // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        // .body(validation(result));
+        // }
 
     }
 
@@ -258,10 +266,11 @@ public class ProductController {
             @RequestPart(value = "image", required = false) MultipartFile image,
             @PathVariable Long id) {
 
-        // Validación automática con @Valid
-        if (result.hasErrors()) {
-            return validation(result); // Retorna los errores de validación
-        }
+        validation(result);
+
+        // if (result.hasErrors()) {
+        // return validation(result);
+        // }
 
         if (image != null && !image.isEmpty()) {
             product.setImage(new Image());
@@ -278,13 +287,10 @@ public class ProductController {
         }
     }
 
-    private ResponseEntity<?> validation(BindingResult result) {
-        Map<String, String> errors = new HashMap<>();
-
-        result.getFieldErrors().forEach(err -> {
-            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
-        });
-        return ResponseEntity.badRequest().body(errors);
+    private void validation(BindingResult result) {
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
+        }
     }
 
     @PatchMapping("/{id}")
@@ -302,11 +308,10 @@ public class ProductController {
 
     // Obtener todos los productos (solamente habilitados)
     // Buscar productos por nombre
+    // Buscar productos por categoria
     // Obtener un producto por su ID
     // Crear un producto
     // Editar un producto
     // Eliminar un producto (cambiar el state a false)
-
-    // Buscar productos por categoria
 
 }

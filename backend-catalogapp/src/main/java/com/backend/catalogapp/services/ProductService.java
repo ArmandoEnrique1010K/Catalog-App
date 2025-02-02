@@ -14,6 +14,8 @@ public interface ProductService {
     // Se utiliza la lista de productos
     public List<ProductsListDto> findAllByStatusTrue();
 
+    public List<ProductsListDto> findAllByName(String name);
+
     public Optional<ProductDetailDto> findById(Long id);
 
     public ProductDetailDto save(Product product, MultipartFile file);

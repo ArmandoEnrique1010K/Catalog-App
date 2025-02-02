@@ -60,6 +60,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<ProductsListDto> findAllByName(String name) {
+        List<Product> products = productRepository.findByName(name);
+        return products.stream().map(
+                productDtoMapper::toListDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<ProductDetailDto> findById(Long id) {
         return Optional.ofNullable(productRepository.findById(id).map(productDtoMapper::toDetailDto).orElseThrow());
     }

@@ -15,12 +15,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +34,8 @@ import com.backend.catalogapp.models.entities.Category;
 import com.backend.catalogapp.models.entities.Image;
 import com.backend.catalogapp.models.entities.Product;
 import com.backend.catalogapp.services.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.Valid;
 
@@ -57,68 +62,114 @@ public class ProductController {
         return productService.findAllByStatusTrue();
     }
 
+    // TODO: ENDPOINT PARA BUSCAR UN PRODUCTO POR SU NOMBRE (COMO PARAMETRO)
+    @GetMapping("/search")
+    public List<ProductsListDto> findByName(@RequestParam("name") String name) {
+        return productService.findAllByName(name);
+    }
+
     @GetMapping("/{id}")
     public ProductDetailDto findById(@PathVariable Long id) {
         return productService.findById(id).orElseThrow();
     }
 
+    // // TODO: USAR UN ModelAttribute Y RequestParam por separado, uno para el JSON
+    // @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // public ResponseEntity<?> create(
+    // @RequestParam("name") String name,
+    // @RequestParam("code") String code,
+    // @RequestParam("price") Double price,
+    // @RequestParam("inOffer") Boolean inOffer,
+    // @RequestParam(value = "offerPrice", required = false) Double offerPrice,
+    // @RequestParam("description") String description,
+    // @RequestParam("brandId") Long brandId,
+    // @RequestParam("categoryId") Long categoryId,
+    // @RequestParam("image") MultipartFile image) {
+
+    // // logger.info("Inicio de creación de producto");
+
+    // // logger.debug("Datos recibidos: name={}, code={}, price={}, inOffer={},
+    // // offerPrice={}, description={}, brandId={}, categoryId={}, image={}",
+    // // name, code, price, inOffer, offerPrice, description, brandId, categoryId,
+    // // image.getOriginalFilename());
+
+    // if (image.isEmpty()) {
+    // // logger.warn("Imagen vacía recibida");
+    // return ResponseEntity.badRequest().body("Debe proporcionar una imagen
+    // válida.");
+    // }
+
+    // // Crear el objeto Product con los datos recibidos
+    // Product product = new Product();
+    // product.setName(name);
+    // product.setCode(code);
+    // product.setPrice(price);
+    // product.setInOffer(inOffer);
+    // product.setOfferPrice(inOffer ? offerPrice : null);
+    // product.setDescription(description);
+    // // logger.info("Producto creado en memoria sin relaciones");
+
+    // // Asignar la marca y la categoría
+    // product.setBrand(new Brand());
+    // product.getBrand().setId(brandId);
+    // product.setCategory(new Category());
+    // product.getCategory().setId(categoryId);
+
+    // // logger.info("Marca y categoría asignadas");
+
+    // // Asignar la imagen recibida
+    // product.setImage(new Image());
+    // product.getImage().setFile(image);
+
+    // // logger.info("Imagen asignada al producto: {}",
+    // image.getOriginalFilename());
+
+    // try {
+    // ProductDetailDto savedProduct = productService.save(product, image);
+    // // logger.info("Producto guardado correctamente con ID: {}",
+    // // savedProduct.getId());
+    // return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+    // } catch (Exception e) {
+    // // logger.error("Error al guardar el producto: {}", e.getMessage(), e);
+    // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    // .body("Error al guardar el producto: " + e.getMessage());
+    // }
+
+    // }
+
     // TODO: USAR UN ModelAttribute Y RequestParam por separado, uno para el JSON
-    // que contiene los datos y otro para la imagen (tipo MultipartFile)
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // REPARAR ESTE ENDPOINT
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> create(
-            @RequestParam("name") String name,
-            @RequestParam("code") String code,
-            @RequestParam("price") Double price,
-            @RequestParam("inOffer") Boolean inOffer,
-            @RequestParam(value = "offerPrice", required = false) Double offerPrice,
-            @RequestParam("description") String description,
-            @RequestParam("brandId") Long brandId,
-            @RequestParam("categoryId") Long categoryId,
-            @RequestParam("image") MultipartFile image) {
-
-        // logger.info("Inicio de creación de producto");
-
-        // logger.debug("Datos recibidos: name={}, code={}, price={}, inOffer={},
-        // offerPrice={}, description={}, brandId={}, categoryId={}, image={}",
-        // name, code, price, inOffer, offerPrice, description, brandId, categoryId,
-        // image.getOriginalFilename());
+            @RequestPart("product") @Valid String productJson, BindingResult result,
+            @RequestPart("image") MultipartFile image) {
 
         if (image.isEmpty()) {
-            // logger.warn("Imagen vacía recibida");
             return ResponseEntity.badRequest().body("Debe proporcionar una imagen válida.");
         }
 
-        // Crear el objeto Product con los datos recibidos
-        Product product = new Product();
-        product.setName(name);
-        product.setCode(code);
-        product.setPrice(price);
-        product.setInOffer(inOffer);
-        product.setOfferPrice(inOffer ? offerPrice : null);
-        product.setDescription(description);
-        // logger.info("Producto creado en memoria sin relaciones");
+        // Convertir JSON a objeto Product
+        ObjectMapper objectMapper = new ObjectMapper();
+        Product product;
+        try {
+            product = objectMapper.readValue(productJson, Product.class);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.badRequest().body("Error al procesar JSON: " + e.getMessage());
+        }
 
-        // Asignar la marca y la categoría
-        product.setBrand(new Brand());
-        product.getBrand().setId(brandId);
-        product.setCategory(new Category());
-        product.getCategory().setId(categoryId);
+        if (result.hasErrors()) {
+            return validation(result);
+        }
 
-        // logger.info("Marca y categoría asignadas");
-
-        // Asignar la imagen recibida
-        product.setImage(new Image());
-        product.getImage().setFile(image);
-
-        // logger.info("Imagen asignada al producto: {}", image.getOriginalFilename());
+        // Asignar la imagen manualmente
+        Image img = new Image();
+        img.setFile(image);
+        product.setImage(img);
 
         try {
             ProductDetailDto savedProduct = productService.save(product, image);
-            // logger.info("Producto guardado correctamente con ID: {}",
-            // savedProduct.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
         } catch (Exception e) {
-            // logger.error("Error al guardar el producto: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error al guardar el producto: " + e.getMessage());
         }
@@ -179,7 +230,7 @@ public class ProductController {
 
     }
 
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
         Optional<ProductDetailDto> o = productService.findById(id);
 

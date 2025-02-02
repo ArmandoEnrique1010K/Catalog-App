@@ -26,11 +26,11 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(unique = true, nullable = false)
+    @NotBlank(message = "El nombre no puede estar vacío")
+    @Column(unique = true)
     private String name;
 
-    // @Column(nullable = false)
+    @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private Boolean status;
 
     // Relacion hacia productos

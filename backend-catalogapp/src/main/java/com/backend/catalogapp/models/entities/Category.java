@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,10 +29,11 @@ public class Category {
     private Long id;
 
     // TODO: INVESTIGAR SOBRE COMO GENERAR UN MENSAJE DE ERROR SI LA COLUMA ES UNICA
-    @Column(unique = true, nullable = false)
+    @NotBlank(message = "El nombre no puede estar vacío")
+    @Column(unique = true)
     private String name;
 
-    // @Column(nullable = false)
+    @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private Boolean status;
 
     @OneToMany(mappedBy = "category")

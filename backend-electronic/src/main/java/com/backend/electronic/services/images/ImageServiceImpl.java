@@ -1,4 +1,4 @@
-package com.backend.electronic.services.impl;
+package com.backend.electronic.services.images;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,16 +8,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.backend.electronic.repositories.ImageRepository;
-import com.backend.electronic.services.ImageService;
 
 import jakarta.annotation.PostConstruct;
 

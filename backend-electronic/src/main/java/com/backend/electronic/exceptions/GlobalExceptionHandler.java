@@ -3,12 +3,8 @@ package com.backend.electronic.exceptions;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -17,6 +13,12 @@ import java.util.regex.Pattern;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> handleValidationException(ValidationException ex) {
+        return ResponseEntity.badRequest().body(ex.getErrors());
+    }
+
+    // Excepción al tener algun registro duplicado en el JSON
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<?> handleDuplicateEntryException(DataIntegrityViolationException ex) {
         String errorMessage = ex.getMostSpecificCause().getMessage();
@@ -51,3 +53,6 @@ public class GlobalExceptionHandler {
         }
     }
 }
+
+// TODO: INVESTIGAR SOBRE...
+// https://www.restack.io/p/mysql-unique-constraints-answer-ai-implementation

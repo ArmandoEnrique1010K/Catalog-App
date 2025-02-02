@@ -1,4 +1,4 @@
-package com.backend.electronic.services;
+package com.backend.electronic.services.images;
 
 import java.nio.file.Path;
 

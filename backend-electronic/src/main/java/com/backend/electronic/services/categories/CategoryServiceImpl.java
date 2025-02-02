@@ -1,4 +1,4 @@
-package com.backend.electronic.services.impl;
+package com.backend.electronic.services.categories;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,6 @@ import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.mapper.CategoryDtoMapper;
 import com.backend.electronic.models.entities.Category;
 import com.backend.electronic.repositories.CategoryRepository;
-import com.backend.electronic.services.CategoryService;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {

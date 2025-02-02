@@ -1,4 +1,4 @@
-package com.backend.electronic.services;
+package com.backend.electronic.services.products;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.entities.Product;
+import com.backend.electronic.models.requests.ProductRequest;
 
 public interface ProductService {
 
@@ -24,7 +25,7 @@ public interface ProductService {
 
     public ProductDetailDto save(Product product, MultipartFile file);
 
-    public Optional<ProductDetailDto> update(Product product, MultipartFile file, Long id);
+    public Optional<ProductDetailDto> update(ProductRequest product, MultipartFile file, Long id);
 
     public void disable(Long id);
 

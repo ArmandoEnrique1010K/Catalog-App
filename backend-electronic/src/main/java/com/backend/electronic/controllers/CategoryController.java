@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.electronic.models.dto.CategoryDto;
 import com.backend.electronic.models.entities.Category;
-import com.backend.electronic.services.CategoryService;
+import com.backend.electronic.services.categories.CategoryService;
 
 import jakarta.validation.Valid;
 
@@ -77,7 +76,6 @@ public class CategoryController {
         return ResponseEntity.notFound().build(); // 404
     }
 
-    // FUNCIÓN PARA CONSTRUIR UN MAP CON LAS VALIDACIONES
     private ResponseEntity<?> validation(BindingResult result) {
         Map<String, String> errors = new HashMap<>();
 

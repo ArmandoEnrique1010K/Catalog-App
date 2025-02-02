@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.electronic.models.dto.BrandDto;
 import com.backend.electronic.models.entities.Brand;
-import com.backend.electronic.services.BrandService;
+import com.backend.electronic.services.brands.BrandService;
 
 import jakarta.validation.Valid;
 

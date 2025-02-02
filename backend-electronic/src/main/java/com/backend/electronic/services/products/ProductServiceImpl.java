@@ -1,4 +1,4 @@
-package com.backend.electronic.services.impl;
+package com.backend.electronic.services.products;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,12 +19,12 @@ import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.models.entities.Category;
 import com.backend.electronic.models.entities.Image;
 import com.backend.electronic.models.entities.Product;
+import com.backend.electronic.models.requests.ProductRequest;
 import com.backend.electronic.repositories.BrandRepository;
 import com.backend.electronic.repositories.CategoryRepository;
 import com.backend.electronic.repositories.ImageRepository;
 import com.backend.electronic.repositories.ProductRepository;
-import com.backend.electronic.services.ImageService;
-import com.backend.electronic.services.ProductService;
+import com.backend.electronic.services.images.ImageService;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -176,7 +176,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<ProductDetailDto> update(Product product, MultipartFile file, Long id) {
+    public Optional<ProductDetailDto> update(ProductRequest product, MultipartFile file, Long id) {
+
+        Optional<Product> optional = productRepository.findById(id);
+
+        Product productOptional = null;
 
         Brand brand = brandRepository.findById(product.getBrand().getId())
                 .orElseThrow(() -> new IllegalArgumentException(
@@ -187,12 +191,9 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "La categoría con ID " + product.getCategory().getId() + " no existe"));
 
-        Optional<Product> optional = productRepository.findById(id);
-
-        Product productOptional = null;
-
         if (optional.isPresent()) {
             Product productDb = optional.orElseThrow();
+
             productDb.setName(product.getName());
             productDb.setCode(product.getCode());
             productDb.setInOffer(product.getInOffer());

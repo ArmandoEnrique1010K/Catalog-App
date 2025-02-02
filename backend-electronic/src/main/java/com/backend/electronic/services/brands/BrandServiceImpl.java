@@ -1,4 +1,4 @@
-package com.backend.electronic.services.impl;
+package com.backend.electronic.services.brands;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,6 @@ import com.backend.electronic.models.dto.CategoryDto;
 import com.backend.electronic.models.dto.mapper.BrandDtoMapper;
 import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.repositories.BrandRepository;
-import com.backend.electronic.services.BrandService;
 
 @Service
 public class BrandServiceImpl implements BrandService {

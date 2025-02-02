@@ -1,15 +1,16 @@
 package com.backend.electronic.exceptions;
 
-import org.springframework.validation.BindingResult;
+import java.util.Map;
 
 public class ValidationException extends RuntimeException {
-    private final BindingResult result;
+    private final Map<String, String> errors;
 
-    public ValidationException(BindingResult result) {
-        this.result = result;
+    public ValidationException(String message, Map<String, String> errors) {
+        super(message);
+        this.errors = errors;
     }
 
-    public BindingResult getResult() {
-        return result;
+    public Map<String, String> getErrors() {
+        return errors;
     }
 }

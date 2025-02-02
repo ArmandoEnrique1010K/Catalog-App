@@ -8,6 +8,7 @@ import com.backend.electronic.models.entities.Brand;
 
 // Clase de tipo Mapper para mapear los campos de la entidad hacia el DTO 
 // el uso de la dependencia MapStruck simplifica bastante el codigo
+
 // Sintaxis para usar mapStruct
 @Component
 @Mapper(componentModel = "spring")

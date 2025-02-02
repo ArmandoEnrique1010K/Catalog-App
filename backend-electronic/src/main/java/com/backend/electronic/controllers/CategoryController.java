@@ -77,6 +77,7 @@ public class CategoryController {
         return ResponseEntity.notFound().build(); // 404
     }
 
+    // FUNCIÓN PARA CONSTRUIR UN MAP CON LAS VALIDACIONES
     private ResponseEntity<?> validation(BindingResult result) {
         Map<String, String> errors = new HashMap<>();
 

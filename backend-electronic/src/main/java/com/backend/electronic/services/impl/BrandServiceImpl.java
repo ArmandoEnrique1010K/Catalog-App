@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.electronic.models.dto.BrandDto;
+import com.backend.electronic.models.dto.CategoryDto;
 import com.backend.electronic.models.dto.mapper.BrandDtoMapper;
 import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.repositories.BrandRepository;
@@ -40,7 +41,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     @Transactional(readOnly = true)
     public Optional<BrandDto> findById(Long id) {
-        return Optional.ofNullable(brandRepository.findById(id).map(brandDtoMapper::toDto).orElseThrow());
+        return brandRepository.findById(id).map(brandDtoMapper::toDto);
     }
 
     @Override

@@ -45,19 +45,42 @@ public class ProductController {
     // ES NORMAL QUE EN LA CONSOLA SE MUESTRE VARIAS CONSULTAS A LA BASE DE DATOS
     // (SEGUN LA CANTIDAD DE PRODUCTOS)
     @GetMapping
-    public List<ProductsListDto> list() {
-        return productService.findAllByStatusTrue();
+    public List<ProductsListDto> listAll() {
+        return productService.findAll();
+    }
+
+    @GetMapping("/offer")
+    public List<ProductsListDto> listByOffer() {
+        return productService.findAllByOffer();
     }
 
     // TODO: ENDPOINT PARA BUSCAR UN PRODUCTO POR SU NOMBRE (COMO PARAMETRO)
     @GetMapping("/search")
-    public List<ProductsListDto> findByName(@RequestParam("name") String name) {
+    public List<ProductsListDto> searchListByName(@RequestParam("name") String name) {
         return productService.findAllByName(name);
     }
 
+    // @GetMapping("/{id}")
+    // public ResponseEntity<?> showById(@PathVariable Long id) {
+
+    // Optional<ProductDetailDto> product = productService.findById(id);
+
+    // if (product.isPresent()) {
+    // return ResponseEntity.ok(product.orElseThrow());
+    // }
+
+    // return ResponseEntity.notFound().build();
+    // }
+
     @GetMapping("/{id}")
-    public ProductDetailDto findById(@PathVariable Long id) {
-        return productService.findById(id).orElseThrow();
+    public ResponseEntity<?> showById(@PathVariable Long id) {
+        Optional<ProductDetailDto> product = productService.findById(id);
+
+        if (product.isPresent()) {
+            return ResponseEntity.ok(product.get()); // Retorna 200 OK con el producto
+        } else {
+            return ResponseEntity.notFound().build(); // Retorna 404 Not Found
+        }
     }
 
     // TODO: USAR UN ModelAttribute Y RequestParam por separado, uno para el JSON
@@ -265,11 +288,11 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<ProductDetailDto> o = productService.findById(id);
 
         if (o.isPresent()) {
-            productService.remove(id);
+            productService.disable(id);
             return ResponseEntity.noContent().build(); // 204
         }
         return ResponseEntity.notFound().build(); // 404
@@ -278,13 +301,12 @@ public class ProductController {
     // TODO: Tener en cuenta los siguientes endpoints
 
     // Obtener todos los productos (solamente habilitados)
-
+    // Buscar productos por nombre
     // Obtener un producto por su ID
     // Crear un producto
     // Editar un producto
     // Eliminar un producto (cambiar el state a false)
 
-    // Buscar productos por nombre
     // Buscar productos por categoria
 
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+// Dto para la lista de productos
 public class ProductsListDto {
     private Long id;
     private String code;
@@ -16,7 +17,6 @@ public class ProductsListDto {
     private Boolean inOffer;
     private Double price;
     private Double offerPrice;
-    // private Long idImage;
     private String nameImage;
     private String brandName;
 }

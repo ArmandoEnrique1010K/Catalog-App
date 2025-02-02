@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ProductsListDto> findAllByStatusTrue() {
+    public List<ProductsListDto> findAll() {
         List<Product> products = productRepository.findAllProducts();
         return products.stream().map(
                 productDtoMapper::toListDto)
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     @Override
     public List<ProductsListDto> findAllByName(String name) {
-        List<Product> products = productRepository.findByName(name);
+        List<Product> products = productRepository.findAllProductsByName(name);
         return products.stream().map(
                 productDtoMapper::toListDto)
                 .collect(Collectors.toList());
@@ -70,8 +70,27 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<ProductsListDto> findAllByOffer() {
+        List<Product> products = productRepository.findAllProductsByOffer();
+        return products.stream().map(
+                productDtoMapper::toListDto)
+                .collect(Collectors.toList());
+    }
+
+    // NO SE RECOMIENDA USAR LO SIGUIENTE EN FINDBYID
+
+    // @Transactional(readOnly = true)
+    // @Override
+    // public Optional<ProductDetailDto> findById(Long id) {
+    // return
+    // Optional.ofNullable(productRepository.findById(id).map(productDtoMapper::toDetailDto).orElseThrow());
+    // }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<ProductDetailDto> findById(Long id) {
-        return Optional.ofNullable(productRepository.findById(id).map(productDtoMapper::toDetailDto).orElseThrow());
+        return productRepository.findById(id)
+                .map(productDtoMapper::toDetailDto);
     }
 
     @Transactional
@@ -208,7 +227,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void remove(Long id) {
+    @Transactional
+    public void disable(Long id) {
         Optional<Product> optional = productRepository.findById(id);
 
         if (optional.isPresent()) {
@@ -217,5 +237,12 @@ public class ProductServiceImpl implements ProductService {
             productRepository.save(productDb);
         }
     }
+
+    // @Transactional(readOnly = true)
+    // @Override
+    // public Optional<ProductDetailDto> findById(Long id) {
+    // return productRepository.findById(id)
+    // .map(productDtoMapper::toDetailDto);
+    // }
 
 }

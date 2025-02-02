@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.electronic.models.dto.CategoryDto;
+import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.mapper.CategoryDtoMapper;
 import com.backend.electronic.models.entities.Category;
 import com.backend.electronic.repositories.CategoryRepository;
@@ -34,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public Optional<CategoryDto> findById(Long id) {
-        return Optional.ofNullable(categoryRepository.findById(id).map(categoryDtoMapper::toDto).orElseThrow());
+        return categoryRepository.findById(id).map(categoryDtoMapper::toDto);
     }
 
     @Override

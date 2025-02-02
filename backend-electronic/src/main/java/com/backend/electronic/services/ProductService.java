@@ -12,9 +12,11 @@ import com.backend.electronic.models.entities.Product;
 public interface ProductService {
 
     // Se utiliza la lista de productos
-    public List<ProductsListDto> findAllByStatusTrue();
+    public List<ProductsListDto> findAll();
 
     public List<ProductsListDto> findAllByName(String name);
+
+    public List<ProductsListDto> findAllByOffer();
 
     public Optional<ProductDetailDto> findById(Long id);
 
@@ -22,7 +24,7 @@ public interface ProductService {
 
     public Optional<ProductDetailDto> update(Product product, MultipartFile file, Long id);
 
-    public void remove(Long id);
+    public void disable(Long id);
 
     // TODO: CREAR SERVICIO PARA OBTENER LOS PRODUCTOS QUE CORRESPONDEN A UNA MISMA
     // CATEGORIA

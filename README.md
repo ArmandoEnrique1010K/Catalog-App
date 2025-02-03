@@ -24,12 +24,14 @@ Se consideran las entidades: Brand, Category, Image, Product
 | PATCH /categories/{id}        | Inhabilitar una categoria (eliminar)                                              | ADMIN           | LISTO, pero falta restringir endpoint |
 | GET /images/{name}            | Obtener una imagen por su nombre                                                  | Sin restricción | LISTO                                 |
 | GET /products                 | Listar todos los productos habilitados, ademas de su categoria y marca habilitada | Sin restricción | LISTO                                 |
-| GET /products/{id}            | Obtener un producto por su ID                                                     | Sin restricción |                                       |
-| GET /products/{name}          | Obtener una lista de productos por su nombre (tipo barra de busqueda)             | Sin restricción |                                       |
-| GET /products/categories/{id} | Obtener una lista de productos que corresponden a la misma categoria por su ID    | Sin restricción |                                       |
+| GET /products/{id}            | Obtener un producto por su ID                                                     | Sin restricción | LISTO                                 |
+| GET /products/{name}          | Obtener una lista de productos por su nombre (tipo barra de busqueda)             | Sin restricción | LISTO                                 |
+| GET /products/categories/{id} | Obtener una lista de productos que corresponden a la misma categoria por su ID    | Sin restricción | LISTO                                 |
 | POST /products                | Crear un nuevo producto                                                           | ADMIN           | LISTO, pero falta restringir endpoint |
-| PUT /products/{id}            | Actualizar un producto                                                            | ADMIN           |                                       |
-| PATCH products/{id}           | Inhabilitar un producto (eliminar)                                                | ADMIN           |                                       |
+| PUT /products/{id}            | Actualizar un producto                                                            | ADMIN           | LISTO, pero falta restringir endpoint |
+| PATCH products/{id}           | Inhabilitar un producto (eliminar)                                                | ADMIN           | LISTO, pero falta restringir endpoint |
+
+**Agregar otros endpoints relacionados con caracteristicas de un producto y ficha tecnica de un producto, además de filtros de busqueda**
 
 USUARIO
 

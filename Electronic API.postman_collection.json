@@ -39,7 +39,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"Nueva marca\"\r\n}",
+							"raw": "{\r\n    \"name\" : \"HP\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -75,7 +75,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/brands/8",
+							"raw": "http://localhost:8080/brands/88",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -83,7 +83,7 @@
 							"port": "8080",
 							"path": [
 								"brands",
-								"8"
+								"88"
 							]
 						}
 					},
@@ -140,7 +140,7 @@
 			"name": "products",
 			"item": [
 				{
-					"name": "list",
+					"name": "listAll",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -159,20 +159,12 @@
 					"response": []
 				},
 				{
-					"name": "findByName",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "findById",
+					"name": "listByOffer",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/31",
+							"raw": "http://localhost:8080/products/offer",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -180,7 +172,74 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"31"
+								"offer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listByCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/category/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"category",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchListByName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/search?name=epson",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "epson"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "showById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/100",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"100"
 							]
 						}
 					},
@@ -313,7 +372,7 @@
 							"formdata": [
 								{
 									"key": "product",
-									"value": "{\n  \"name\": \"2\",\n  \"code\": \"2\",\n  \"price\": \"22\",\n  \"inOffer\": true,\n  \"offerPrice\": 450,\n  \"description\": \"Descripción del producto\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 }\n}\n",
+									"value": "{\n  \"name\": \"654DG\",\n  \"code\": \"1111\",\n  \"price\": \"32\",\n  \"inOffer\": true,\n  \"offerPrice\": 450,\n  \"description\": \"Descripción del producto\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 }\n}\n",
 									"contentType": "application/json",
 									"type": "text"
 								},
@@ -321,7 +380,7 @@
 									"key": "image",
 									"contentType": "image",
 									"type": "file",
-									"src": "/C:/Users/USER/Pictures/Saved Pictures/Ocean.jpg"
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/Classic Shell.jpg"
 								}
 							]
 						},
@@ -420,7 +479,7 @@
 							"formdata": [
 								{
 									"key": "product",
-									"value": "{\n  \"name\": \"23\",\n  \"code\": \"ABC123\",\n  \"price\": \"32\",\n  \"inOffer\": true,\n  \"offerPrice\": 450,\n  \"description\": \"Descripción del producto\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 }\n}\n",
+									"value": "{\n  \"name\": \"234\",\n  \"code\": \"22332\",\n  \"price\": \"32\",\n  \"inOffer\": true,\n  \"offerPrice\": 450,\n  \"description\": \"Descripción del producto\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 }\n}\n",
 									"contentType": "application/json",
 									"type": "text"
 								},
@@ -428,12 +487,12 @@
 									"key": "image",
 									"contentType": "image",
 									"type": "file",
-									"src": "/C:/Users/USER/Pictures/Saved Pictures/Deep underwater.jpg"
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/Moon.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8080/products/32",
+							"raw": "http://localhost:8080/products/56",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -441,7 +500,7 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"32"
+								"56"
 							]
 						}
 					},
@@ -453,7 +512,7 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/31",
+							"raw": "http://localhost:8080/products/100",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -461,7 +520,7 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"31"
+								"100"
 							]
 						}
 					},
@@ -534,7 +593,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/categories/9",
+							"raw": "http://localhost:8080/categories/99",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -542,7 +601,7 @@
 							"port": "8080",
 							"path": [
 								"categories",
-								"9"
+								"99"
 							]
 						}
 					},
@@ -554,7 +613,7 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/categories/99",
+							"raw": "http://localhost:8080/categories/1000",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -562,7 +621,7 @@
 							"port": "8080",
 							"path": [
 								"categories",
-								"99"
+								"1000"
 							]
 						}
 					},

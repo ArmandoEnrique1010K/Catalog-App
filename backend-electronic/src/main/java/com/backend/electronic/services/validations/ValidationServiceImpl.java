@@ -3,6 +3,7 @@ package com.backend.electronic.services.validations;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,10 +24,9 @@ public class ValidationServiceImpl implements ValidationService {
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             result.getFieldErrors().forEach(err -> {
-                errors.put(err.getField(), err.getDefaultMessage());
+                errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
             });
             throw new ValidationException("Error de validación de campos", errors);
         }
     }
-
 }

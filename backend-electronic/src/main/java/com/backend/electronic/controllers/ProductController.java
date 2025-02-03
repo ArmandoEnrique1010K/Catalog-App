@@ -163,41 +163,9 @@ public class ProductController {
             @Valid @RequestPart("product") Product product, BindingResult result,
             @RequestPart(value = "image", required = false) MultipartFile image) {
 
-        // NO CONVIENE LLAMAR A validation(result)
-        // validation(result);
-
-        // EN SU LUGAR, SI HAY UN ERROR RELACIONADO A UN CAMPO, SE TENDRIA QUE MOSTRAR
-        // EL MENSAJE DE ERROR
-        // if (result.hasErrors()) {
-        // Map<String, String> errors = new HashMap<>();
-        // result.getFieldErrors().forEach(err -> {
-        // errors.put(err.getField(), err.getDefaultMessage());
-        // });
-        // return ResponseEntity.badRequest().body(errors);
-        // }
-
-        // if (result.hasErrors()) {
-        // return validation(result);
-        // }
-
-        // // MENSAJE DE ERROR SI NO HAY UNA IMAGEN
-        // if (image.isEmpty()) {
-        // Map<String, String> errors = new HashMap<>();
-        // errors.put("image", "Debe proporcionar una imagen válida");
-        // return ResponseEntity.badRequest().body(errors);
-        // }
-
-        // REALIZA LAS VALIDACIONES
-        validationService.validateImage(image);
+        // Validaciones (si fallan, lanzarán excepciones y se detendrá el flujo)
         validationService.validateFields(result);
-
-        // Asignar la imagen manualmente
-        Image img = new Image();
-        img.setFile(image);
-        product.setImage(img);
-
-        // ProductDetailDto savedProduct = productService.save(product, image);
-        // return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        validationService.validateImage(image);
 
         try {
             ProductDetailDto savedProduct = productService.save(product, image);
@@ -207,16 +175,11 @@ public class ProductController {
             // error definido en GlobalExceptionHandler
 
             throw ex;
+        } catch (Exception ex) {
+            // Manejar otros errores
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al guardar el producto: " + ex.getMessage());
         }
-
-        // try {
-        // ProductDetailDto savedProduct = productService.save(product, image);
-        // return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
-
-        // } catch (Exception e) {
-        // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        // .body(validation(result));
-        // }
 
     }
 

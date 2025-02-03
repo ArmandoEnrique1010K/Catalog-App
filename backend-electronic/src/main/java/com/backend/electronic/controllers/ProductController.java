@@ -32,6 +32,7 @@ import com.backend.electronic.models.entities.Image;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.models.requests.ProductRequest;
 import com.backend.electronic.services.products.ProductService;
+import com.backend.electronic.services.validations.ValidationService;
 import com.backend.electronic.services.validations.ValidationServiceImpl;
 
 import jakarta.validation.Valid;
@@ -45,7 +46,7 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    private ValidationServiceImpl validationService;
+    private ValidationService validationService;
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 

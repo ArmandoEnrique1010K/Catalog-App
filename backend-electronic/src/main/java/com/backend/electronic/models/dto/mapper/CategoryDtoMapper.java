@@ -8,8 +8,6 @@ import com.backend.electronic.models.entities.Category;
 
 @Component
 @Mapper(componentModel = "spring")
-
 public interface CategoryDtoMapper {
-
     CategoryDto toDto(Category category);
 }

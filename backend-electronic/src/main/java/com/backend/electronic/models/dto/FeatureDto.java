@@ -10,10 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeatureDto {
-
-    // TODO: MODIFICAR ESTO
-    private Long idFeature;
-    private String nameFeature;
-    private Long idValue;
-    private String nameValue;
+    private Long id;
+    private String name;
 }

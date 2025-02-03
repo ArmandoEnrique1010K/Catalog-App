@@ -28,7 +28,6 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // TODO: INVESTIGAR SOBRE COMO GENERAR UN MENSAJE DE ERROR SI LA COLUMA ES UNICA
     @NotBlank(message = "El nombre no puede estar vacío")
     @Column(unique = true)
     private String name;

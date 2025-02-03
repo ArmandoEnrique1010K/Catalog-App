@@ -1,6 +1,5 @@
 package com.backend.electronic.services.validations;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 

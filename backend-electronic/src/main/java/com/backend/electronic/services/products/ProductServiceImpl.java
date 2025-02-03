@@ -204,7 +204,8 @@ public class ProductServiceImpl implements ProductService {
                         "La categoría con ID " + product.getCategory().getId() + " no existe"));
         product.setCategory(category);
 
-        // Asignar valores directos al producto
+        // Asignar valores directos al producto (solamente los campos que no seran
+        // llenados por el usuario)
         product.setStatus(true);
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
@@ -226,65 +227,129 @@ public class ProductServiceImpl implements ProductService {
         return productDtoMapper.toDetailDto(savedProduct);
     }
 
+    // @Override
+    // public Optional<ProductDetailDto> update(ProductRequest product,
+    // MultipartFile file, Long id) {
+
+    // Optional<Product> optional = productRepository.findById(id);
+
+    // Product productOptional = null;
+
+    // Brand brand = brandRepository.findById(product.getBrand().getId())
+    // .orElseThrow(() -> new IllegalArgumentException(
+    // "La marca con ID " + product.getBrand().getId() + " no existe"));
+
+    // // Obtener y asignar la categoría
+    // Category category =
+    // categoryRepository.findById(product.getCategory().getId())
+    // .orElseThrow(() -> new IllegalArgumentException(
+    // "La categoría con ID " + product.getCategory().getId() + " no existe"));
+
+    // if (optional.isPresent()) {
+    // Product productDb = optional.orElseThrow();
+
+    // productDb.setName(product.getName());
+    // productDb.setCode(product.getCode());
+    // productDb.setInOffer(product.getInOffer());
+    // productDb.setPrice(product.getPrice());
+
+    // // Si el producto esta en oferta se establece el precio de oferta
+    // if (productDb.getInOffer()) {
+    // productDb.setOfferPrice(product.getOfferPrice());
+    // } else {
+    // productDb.setOfferPrice(null);
+    // }
+
+    // productDb.setDescription(product.getDescription());
+    // productDb.setStatus(true);
+
+    // // Fecha de actualización (ahora)
+    // productDb.setUpdatedAt(LocalDateTime.now());
+
+    // productDb.setBrand(brand);
+    // productDb.setCategory(category);
+
+    // // Si hay una imagen, se asigna al producto (reemplazo)
+    // if (!file.isEmpty()) {
+    // System.out.println("SUBIO UNA IMAGEN EN EL SERVICIO");
+    // String nameImage = imageService.storeImage(product.getImage().getFile());
+    // // logger.info("Imagen guardada con nombre: {}", nameImage);
+
+    // Image image = new Image();
+    // image.setName(nameImage);
+    // image = imageRepository.save(image); // Guardar la imagen antes de asignarla
+    // al producto
+    // productDb.setImage(image);
+    // } else {
+    // System.out.println("NO SUBIO UNA IMAGEN EN EL SERVICIO");
+    // productDb.setImage(optional.get().getImage());
+    // }
+
+    // productOptional = productRepository.save(productDb);
+    // }
+
+    // return
+    // Optional.ofNullable(productOptional).map(productDtoMapper::toDetailDto);
+    // }
+
+    @Transactional
     @Override
     public Optional<ProductDetailDto> update(ProductRequest product, MultipartFile file, Long id) {
 
         Optional<Product> optional = productRepository.findById(id);
 
-        Product productOptional = null;
+        if (optional.isEmpty()) {
+            return Optional.empty(); // Si el producto no existe, no hacemos nada
+        }
 
+        Product productDb = optional.get();
+
+        // Validamos que la marca y la categoría existan antes de asignarlas
         Brand brand = brandRepository.findById(product.getBrand().getId())
                 .orElseThrow(() -> new IllegalArgumentException(
                         "La marca con ID " + product.getBrand().getId() + " no existe"));
+        productDb.setBrand(brand);
 
-        // Obtener y asignar la categoría
         Category category = categoryRepository.findById(product.getCategory().getId())
                 .orElseThrow(() -> new IllegalArgumentException(
                         "La categoría con ID " + product.getCategory().getId() + " no existe"));
+        productDb.setCategory(category);
 
-        if (optional.isPresent()) {
-            Product productDb = optional.orElseThrow();
+        // Actualizamos los datos del producto
+        productDb.setName(product.getName());
+        productDb.setCode(product.getCode());
+        productDb.setInOffer(product.getInOffer());
+        productDb.setPrice(product.getPrice());
 
-            productDb.setName(product.getName());
-            productDb.setCode(product.getCode());
-            productDb.setInOffer(product.getInOffer());
-            productDb.setPrice(product.getPrice());
-
-            // Si el producto esta en oferta se establece el precio de oferta
-            if (productDb.getInOffer()) {
-                productDb.setOfferPrice(product.getOfferPrice());
-            } else {
-                productDb.setOfferPrice(null);
-            }
-
-            productDb.setDescription(product.getDescription());
-            productDb.setStatus(true);
-
-            // Fecha de actualización (ahora)
-            productDb.setUpdatedAt(LocalDateTime.now());
-
-            productDb.setBrand(brand);
-            productDb.setCategory(category);
-
-            // Si hay una imagen, se asigna al producto (reemplazo)
-            if (!file.isEmpty()) {
-                System.out.println("SUBIO UNA IMAGEN EN EL SERVICIO");
-                String nameImage = imageService.storeImage(product.getImage().getFile());
-                // logger.info("Imagen guardada con nombre: {}", nameImage);
-
-                Image image = new Image();
-                image.setName(nameImage);
-                image = imageRepository.save(image); // Guardar la imagen antes de asignarla al producto
-                productDb.setImage(image);
-            } else {
-                System.out.println("NO SUBIO UNA IMAGEN EN EL SERVICIO");
-                productDb.setImage(optional.get().getImage());
-            }
-
-            productOptional = productRepository.save(productDb);
+        if (productDb.getInOffer()) {
+            productDb.setOfferPrice(product.getOfferPrice());
+        } else {
+            productDb.setOfferPrice(null);
         }
 
-        return Optional.ofNullable(productOptional).map(productDtoMapper::toDetailDto);
+        productDb.setDescription(product.getDescription());
+        productDb.setStatus(true);
+        productDb.setUpdatedAt(LocalDateTime.now());
+
+        // Primero guardamos el producto sin la imagen
+        Product updatedProduct = productRepository.save(productDb);
+
+        // Si se sube una imagen nueva, la reemplazamos
+        if (file != null && !file.isEmpty()) {
+            System.out.println("SUBIENDO UNA NUEVA IMAGEN...");
+            String nameImage = imageService.storeImage(file);
+
+            Image image = new Image();
+            image.setName(nameImage);
+            image = imageRepository.save(image);
+
+            updatedProduct.setImage(image);
+            productRepository.save(updatedProduct); // Segunda actualización con imagen
+        } else {
+            System.out.println("NO SE SUBIÓ UNA NUEVA IMAGEN, SE MANTIENE LA ACTUAL.");
+        }
+
+        return Optional.of(productDtoMapper.toDetailDto(updatedProduct));
     }
 
     @Override

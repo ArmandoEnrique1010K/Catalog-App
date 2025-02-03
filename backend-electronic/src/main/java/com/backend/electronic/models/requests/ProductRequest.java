@@ -39,6 +39,7 @@ public class ProductRequest {
     @Column(nullable = false)
     private String name;
 
+    // TODO: EL CODIGO DE PRODUCTO SE DEBE GENERAR DE UNA FORMA ALEATORIA???
     // Codigo del producto (se genera de una forma)
     @NotBlank(message = "El código no puede estar vacío")
     @Column(nullable = false)

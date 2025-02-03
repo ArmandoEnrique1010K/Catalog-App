@@ -21,6 +21,8 @@ public interface ProductService {
 
     public List<ProductsListDto> findAllByCategoryId(Long id);
 
+    public List<ProductsListDto> findAllByFilters(String name, Long idCategory, List<Long> idsBrands, Boolean offer);
+
     public Optional<ProductDetailDto> findById(Long id);
 
     public ProductDetailDto save(Product product, MultipartFile file);

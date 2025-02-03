@@ -86,6 +86,15 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProductsListDto> findAllByFilters(String name, Long idCategory, List<Long> idsBrands, Boolean offer) {
+        List<Product> products = productRepository.findAllFilteredProducts(name, idCategory, idsBrands, offer);
+        return products.stream().map(
+                productDtoMapper::toListDto)
+                .collect(Collectors.toList());
+    }
+
     // NO SE RECOMIENDA USAR LO SIGUIENTE EN FINDBYID
 
     // @Transactional(readOnly = true)

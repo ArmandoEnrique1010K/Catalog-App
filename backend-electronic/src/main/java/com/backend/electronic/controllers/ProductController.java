@@ -72,6 +72,13 @@ public class ProductController {
         return productService.findAllByCategoryId(id);
     }
 
+    @GetMapping("/search/filters")
+    public List<ProductsListDto> listByFilters(@RequestParam("name") String name,
+            @RequestParam("idCategory") Long idCategory, @RequestParam("idsBrands") List<Long> idBrands,
+            @RequestParam("offer") Boolean offer) {
+        return productService.findAllByFilters(name, idCategory, idBrands, offer);
+    }
+
     // @GetMapping("/{id}")
     // public ResponseEntity<?> showById(@PathVariable Long id) {
 

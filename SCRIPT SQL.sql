@@ -291,3 +291,13 @@ INSERT INTO product_feature (id, product_id, feature_value_id, feature_id) VALUE
 (6, 2, 10, 3), -- LG OLED TV, Tipo de pantalla: OLED
 (7, 2, 19, 6), -- LG OLED TV, Tecnología de impresión: Inyección de tinta
 (8, 2, 1, 1); -- LG OLED TV, Color: Rojo
+
+# NUEVAS CONSULTAS
+# FICHA TECNICA DE UN PRODUCTO (SE INCLUYEN CARACTERSITICAS)
+
+# OBTIENE LOS VALORES DE UNA CARACTERISTICA
+# SELECT * FROM db_electronic.feature_value WHERE feature_id = 2;
+
+
+
+

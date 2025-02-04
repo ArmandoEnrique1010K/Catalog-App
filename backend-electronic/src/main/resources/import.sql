@@ -17,3 +17,4 @@ INSERT INTO brand (id, name, status) VALUES
 -- FUENTES BIBLIOGRAFICAS DE AYUDA
 -- https://www.baeldung.com/mapstruct
 -- https://github.com/ArmandoEnrique1010K/DesarrolloWebEntornosServidor-02-2023-2024/blob/master/07-SpringDataJPASQL.md#autoincremental-vs-uuid
+-- https://www.baeldung.com/spring-request-param

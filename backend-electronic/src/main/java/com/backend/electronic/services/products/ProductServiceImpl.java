@@ -107,94 +107,16 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     @Override
     public Optional<ProductDetailDto> findById(Long id) {
-        return productRepository.findById(id)
-                .map(productDtoMapper::toDetailDto);
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent() && optionalProduct.get().getStatus() == true) {
+            // Nota, solamente retornara el producto si el status esta en true
+            // TODO: APLICAR ESTA TECNICA EN LAS DEMAS ENTITADES
+            return optionalProduct.map(productDtoMapper::toDetailDto);
+        } else {
+            return Optional.empty();
+        }
     }
 
-    // TODO: SOLUCIONAR EL PROBLEMA CUANDO HAY UN ERROR DE VALIDACION SE SALTEA EL
-    // ID QUE SE VA A ASIGNAR Y LA IMAGEN SE SUBE
-    // @Transactional
-    // @Override
-    // public ProductDetailDto save(Product product, MultipartFile file) {
-
-    // // Validar que se proporcionó un archivo de imagen
-    // if (file == null || file.isEmpty()) {
-    // logger.warn("El archivo de imagen es nulo o vacío");
-    // throw new IllegalArgumentException("La imagen del producto no puede estar
-    // vacía");
-    // }
-
-    // Brand brand = brandRepository.findById(product.getBrand().getId())
-    // .orElseThrow(() -> new IllegalArgumentException(
-    // "La marca con ID " + product.getBrand().getId() + " no existe"));
-    // product.setBrand(brand);
-
-    // Category category =
-    // categoryRepository.findById(product.getCategory().getId())
-    // .orElseThrow(() -> new IllegalArgumentException(
-    // "La categoría con ID " + product.getCategory().getId() + " no existe"));
-    // product.setCategory(category);
-
-    // // Verificar si el producto ya tiene una imagen o inicializarla
-    // // if (product.getImage() == null) {
-    // // product.setImage(new Image()); // Inicializa la imagen si es null
-    // // }
-
-    // // // Validar que se proporcionó un archivo de imagen
-    // // if (product.getImage().getFile() == null ||
-    // // product.getImage().getFile().isEmpty()) {
-    // // throw new IllegalArgumentException("La imagen del producto no puede estar
-    // // vacía");
-    // // }
-
-    // // // Verificar si el archivo es válido
-    // // if (file == null || file.isEmpty()) {
-    // // // logger.warn("El archivo de imagen es nulo o vacío");
-    // // throw new IllegalArgumentException("La imagen del producto no puede estar
-    // // vacía");
-    // // }
-
-    // // // Guardar la imagen y establecer el nombre
-    // // // String nameImage =
-    // imageService.storeImage(product.getImage().getFile());
-
-    // // Guardar la imagen
-    // if (file != null) {
-    // String nameImage = imageService.storeImage(file);
-    // // logger.info("Imagen guardada con nombre: {}", nameImage);
-
-    // Image image = new Image();
-    // image.setName(nameImage);
-    // image = imageRepository.save(image); // Guardar la imagen antes de asignarla
-    // al producto
-    // product.setImage(image);
-    // }
-
-    // // Asignar valores directos
-    // product.setName(product.getName());
-    // product.setCode(product.getCode());
-    // product.setInOffer(product.getInOffer());
-    // product.setPrice(product.getPrice());
-
-    // if (product.getInOffer()) {
-    // product.setOfferPrice(product.getOfferPrice());
-    // }
-
-    // product.setDescription(product.getDescription());
-    // product.setStatus(true);
-    // product.setCreatedAt(LocalDateTime.now());
-    // product.setUpdatedAt(LocalDateTime.now());
-
-    // // if (file == null || file.isEmpty()) {
-    // // throw new IllegalArgumentException("La imagen del producto no puede estar
-    // // vacía");
-    // // }
-
-    // // Guardar producto en base de datos
-    // Product savedProduct = productRepository.save(product);
-
-    // return productDtoMapper.toDetailDto(savedProduct);
-    // }
     @Transactional
     @Override
     public ProductDetailDto save(Product product, MultipartFile file) {
@@ -235,71 +157,6 @@ public class ProductServiceImpl implements ProductService {
 
         return productDtoMapper.toDetailDto(savedProduct);
     }
-
-    // @Override
-    // public Optional<ProductDetailDto> update(ProductRequest product,
-    // MultipartFile file, Long id) {
-
-    // Optional<Product> optional = productRepository.findById(id);
-
-    // Product productOptional = null;
-
-    // Brand brand = brandRepository.findById(product.getBrand().getId())
-    // .orElseThrow(() -> new IllegalArgumentException(
-    // "La marca con ID " + product.getBrand().getId() + " no existe"));
-
-    // // Obtener y asignar la categoría
-    // Category category =
-    // categoryRepository.findById(product.getCategory().getId())
-    // .orElseThrow(() -> new IllegalArgumentException(
-    // "La categoría con ID " + product.getCategory().getId() + " no existe"));
-
-    // if (optional.isPresent()) {
-    // Product productDb = optional.orElseThrow();
-
-    // productDb.setName(product.getName());
-    // productDb.setCode(product.getCode());
-    // productDb.setInOffer(product.getInOffer());
-    // productDb.setPrice(product.getPrice());
-
-    // // Si el producto esta en oferta se establece el precio de oferta
-    // if (productDb.getInOffer()) {
-    // productDb.setOfferPrice(product.getOfferPrice());
-    // } else {
-    // productDb.setOfferPrice(null);
-    // }
-
-    // productDb.setDescription(product.getDescription());
-    // productDb.setStatus(true);
-
-    // // Fecha de actualización (ahora)
-    // productDb.setUpdatedAt(LocalDateTime.now());
-
-    // productDb.setBrand(brand);
-    // productDb.setCategory(category);
-
-    // // Si hay una imagen, se asigna al producto (reemplazo)
-    // if (!file.isEmpty()) {
-    // System.out.println("SUBIO UNA IMAGEN EN EL SERVICIO");
-    // String nameImage = imageService.storeImage(product.getImage().getFile());
-    // // logger.info("Imagen guardada con nombre: {}", nameImage);
-
-    // Image image = new Image();
-    // image.setName(nameImage);
-    // image = imageRepository.save(image); // Guardar la imagen antes de asignarla
-    // al producto
-    // productDb.setImage(image);
-    // } else {
-    // System.out.println("NO SUBIO UNA IMAGEN EN EL SERVICIO");
-    // productDb.setImage(optional.get().getImage());
-    // }
-
-    // productOptional = productRepository.save(productDb);
-    // }
-
-    // return
-    // Optional.ofNullable(productOptional).map(productDtoMapper::toDetailDto);
-    // }
 
     @Transactional
     @Override
@@ -372,12 +229,5 @@ public class ProductServiceImpl implements ProductService {
             productRepository.save(productDb);
         }
     }
-
-    // @Transactional(readOnly = true)
-    // @Override
-    // public Optional<ProductDetailDto> findById(Long id) {
-    // return productRepository.findById(id)
-    // .map(productDtoMapper::toDetailDto);
-    // }
 
 }

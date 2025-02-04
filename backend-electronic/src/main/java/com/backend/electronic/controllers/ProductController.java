@@ -73,10 +73,13 @@ public class ProductController {
     }
 
     @GetMapping("/search/filters")
-    public List<ProductsListDto> listByFilters(@RequestParam("name") String name,
-            @RequestParam("idCategory") Long idCategory, @RequestParam("idsBrands") List<Long> idBrands,
-            @RequestParam("offer") Boolean offer) {
-        return productService.findAllByFilters(name, idCategory, idBrands, offer);
+    public List<ProductsListDto> listByFilters(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "idCategory", required = false) Long idCategory,
+            @RequestParam(value = "idsBrands", required = false) List<Long> idsBrands,
+            @RequestParam(value = "offer", required = false) Boolean offer) {
+
+        return productService.findAllByFilters(name, idCategory, idsBrands, offer);
     }
 
     // @GetMapping("/{id}")
@@ -96,73 +99,13 @@ public class ProductController {
         Optional<ProductDetailDto> product = productService.findById(id);
 
         if (product.isPresent()) {
+
+            // Si el status es false, no lo debe mostrar
+
             return ResponseEntity.ok(product.get()); // Retorna 200 OK con el producto
         } else {
             return ResponseEntity.notFound().build(); // Retorna 404 Not Found
         }
-    }
-
-    // TODO: USAR UN ModelAttribute Y RequestParam por separado, uno para el JSON
-    @PostMapping(value = "/test", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> createTest(
-            @RequestParam("name") String name,
-            @RequestParam("code") String code,
-            @RequestParam("price") Double price,
-            @RequestParam("inOffer") Boolean inOffer,
-            @RequestParam(value = "offerPrice", required = false) Double offerPrice,
-            @RequestParam("description") String description,
-            @RequestParam("brandId") Long brandId,
-            @RequestParam("categoryId") Long categoryId,
-            @RequestParam("image") MultipartFile image) {
-
-        // logger.info("Inicio de creación de producto");
-
-        // logger.debug("Datos recibidos: name={}, code={}, price={}, inOffer={},
-        // offerPrice={}, description={}, brandId={}, categoryId={}, image={}",
-        // name, code, price, inOffer, offerPrice, description, brandId, categoryId,
-        // image.getOriginalFilename());
-
-        if (image.isEmpty()) {
-            // logger.warn("Imagen vacía recibida");
-            return ResponseEntity.badRequest().body("Debe proporcionar una imagen válida.");
-        }
-
-        // Crear el objeto Product con los datos recibidos
-        Product product = new Product();
-        product.setName(name);
-        product.setCode(code);
-        product.setPrice(price);
-        product.setInOffer(inOffer);
-        product.setOfferPrice(inOffer ? offerPrice : null);
-        product.setDescription(description);
-        // logger.info("Producto creado en memoria sin relaciones");
-
-        // Asignar la marca y la categoría
-        product.setBrand(new Brand());
-        product.getBrand().setId(brandId);
-        product.setCategory(new Category());
-        product.getCategory().setId(categoryId);
-
-        // logger.info("Marca y categoría asignadas");
-
-        // Asignar la imagen recibida
-        product.setImage(new Image());
-        product.getImage().setFile(image);
-
-        // logger.info("Imagen asignada al producto: {}",
-        image.getOriginalFilename();
-
-        try {
-            ProductDetailDto savedProduct = productService.save(product, image);
-            // logger.info("Producto guardado correctamente con ID: {}",
-            // savedProduct.getId());
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
-        } catch (Exception e) {
-            // logger.error("Error al guardar el producto: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error al guardar el producto: " + e.getMessage());
-        }
-
     }
 
     // TODO: USAR UN ModelAttribute Y RequestParam por separado, uno para el JSON
@@ -190,61 +133,6 @@ public class ProductController {
         }
 
     }
-
-    // @PutMapping(value = "/test/{id}", consumes =
-    // MediaType.MULTIPART_FORM_DATA_VALUE)
-    // public ResponseEntity<?> updateTest(
-
-    // @RequestParam("name") String name,
-    // @RequestParam("code") String code,
-    // @RequestParam("price") Double price,
-    // @RequestParam("inOffer") Boolean inOffer,
-    // @RequestParam(value = "offerPrice", required = false) Double offerPrice,
-    // @RequestParam("description") String description,
-    // @RequestParam("brandId") Long brandId,
-    // @RequestParam("categoryId") Long categoryId,
-    // @RequestParam("image") MultipartFile image,
-    // @PathVariable Long id) {
-
-    // // Crear el objeto Product con los datos recibidos
-    // Product product = new Product();
-    // product.setName(name);
-    // product.setCode(code);
-    // product.setPrice(price);
-    // product.setInOffer(inOffer);
-    // product.setOfferPrice(inOffer ? offerPrice : null);
-    // product.setDescription(description);
-    // // logger.info("Producto creado en memoria sin relaciones");
-
-    // // Asignar la marca y la categoría
-    // product.setBrand(new Brand());
-    // product.getBrand().setId(brandId);
-    // product.setCategory(new Category());
-    // product.getCategory().setId(categoryId);
-
-    // // logger.info("Marca y categoría asignadas");
-
-    // // Asignar la imagen recibida
-    // if (!image.isEmpty()) {
-    // product.setImage(new Image());
-    // product.getImage().setFile(image);
-    // }
-
-    // try {
-    // Optional<ProductDetailDto> o = productService.update(product, image, id);
-
-    // if (o.isPresent()) {
-    // return ResponseEntity.status(HttpStatus.CREATED).body(o.orElseThrow());
-    // } else {
-    // return ResponseEntity.notFound().build();
-    // }
-
-    // // return ResponseEntity.status(HttpStatus.CREATED).body(o.orElseThrow());
-    // } catch (Exception e) {
-    // return ResponseEntity.notFound().build();
-    // }
-
-    // }
 
     // ESPECIFICA EN POSTMAN:
     // key - Value - Content-Type

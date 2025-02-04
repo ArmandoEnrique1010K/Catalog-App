@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// TODO: MODIFICAR ESTO
 @Builder
 @Entity
 @Data
@@ -33,5 +32,4 @@ public class CategoryFeature {
     @JoinColumn(name = "feature_id")
     private Feature feature;
 
-    // Getters and Setters
 }

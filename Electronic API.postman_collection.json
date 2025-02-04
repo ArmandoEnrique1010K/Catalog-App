@@ -39,7 +39,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"HP\"\r\n}",
+							"raw": "{\r\n    \"name\" : \"65\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -67,7 +67,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Marca actualizada\"\r\n}",
+							"raw": "{\r\n    \"name\": \"HP2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -75,7 +75,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/brands/88",
+							"raw": "http://localhost:8080/brands/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -83,7 +83,7 @@
 							"port": "8080",
 							"path": [
 								"brands",
-								"88"
+								"12"
 							]
 						}
 					},
@@ -231,7 +231,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/100",
+							"raw": "http://localhost:8080/products/744",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -239,71 +239,19 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"100"
+								"744"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "createTest",
+					"name": "listByFilters",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Producto",
-									"contentType": "",
-									"type": "text"
-								},
-								{
-									"key": "code",
-									"value": "12345",
-									"type": "text"
-								},
-								{
-									"key": "price",
-									"value": "500",
-									"type": "text"
-								},
-								{
-									"key": "inOffer",
-									"value": "true",
-									"type": "text"
-								},
-								{
-									"key": "offerPrice",
-									"value": "450",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "Un producto de prueba",
-									"type": "text"
-								},
-								{
-									"key": "brandId",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "image",
-									"contentType": "",
-									"type": "file",
-									"src": "/C:/Users/USER/Pictures/Saved Pictures/Tree.jpg"
-								},
-								{
-									"key": "categoryId",
-									"value": "2",
-									"type": "text"
-								}
-							]
-						},
 						"url": {
-							"raw": "http://localhost:8080/products/test",
+							"raw": "http://localhost:8080/products/search/filters?offer=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -311,7 +259,29 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"test"
+								"search",
+								"filters"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Spectre",
+									"disabled": true
+								},
+								{
+									"key": "idCategory",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "idsBrands",
+									"value": "1, 2",
+									"disabled": true
+								},
+								{
+									"key": "offer",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -393,77 +363,6 @@
 							"port": "8080",
 							"path": [
 								"products"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateTest",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Productos",
-									"type": "text"
-								},
-								{
-									"key": "code",
-									"value": "12345",
-									"type": "text"
-								},
-								{
-									"key": "price",
-									"value": "500",
-									"type": "text"
-								},
-								{
-									"key": "inOffer",
-									"value": "true",
-									"type": "text"
-								},
-								{
-									"key": "offerPrice",
-									"value": "450",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "Un producto de prueba",
-									"type": "text"
-								},
-								{
-									"key": "brandId",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "categoryId",
-									"value": "2",
-									"type": "text"
-								},
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/USER/Pictures/Saved Pictures/Tree.jpg"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://localhost:8080/products/test/31",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"products",
-								"test",
-								"31"
 							]
 						}
 					},
@@ -557,7 +456,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"Nueva categoria\"\r\n}",
+							"raw": "{\r\n    \"name\" : \"Laptops\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -622,6 +521,218 @@
 							"path": [
 								"categories",
 								"1000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "features",
+			"item": [
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/features",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"features"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Incluye IA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/features",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"features"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Incluye Nombre\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/features/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"features",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/features/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"features",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "featureValues",
+			"item": [
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/features/8/values",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"features",
+								"8",
+								"values"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"value\":\"Verde\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/features/1/values",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"features",
+								"1",
+								"values"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "categoryFeatures",
+			"item": [
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/categories/1/features",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								"1",
+								"features"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category\": {\r\n        \"id\": \"1\"\r\n    },\r\n    \"feature\": {\r\n        \"id\": \"8\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/categories/features",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								"features"
 							]
 						}
 					},

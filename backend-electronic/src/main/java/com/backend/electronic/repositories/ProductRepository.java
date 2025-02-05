@@ -98,11 +98,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("idsBrands") List<Long> idsBrands,
             @Param("offer") Boolean offer);
 
+    // TODO: MODIFICAR ESTO PARA UNA SUPERCONSULTA
+    @Query("SELECT p FROM Product p " +
+            "JOIN p.productFeature pf " +
+            "WHERE pf.featureValue.id IN :featureValues " +
+            "GROUP BY p.id")
+    List<Product> findByFeatureValues(
+            @Param("featureValues") List<Long> featureValues);
+
 }
-// TODO: UNA VEZ TERMINADO, IMPLEMENTAR PAGINACION
 
 // EL USO DE FETCH EN UN QUERY
 // https://medium.com/javarevisited/spring-jpa-when-to-use-join-fetch-a6cec898c4c6
 
 // CONSULTA BASE
 // https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html
+
+//
+// TODO: UNA VEZ TERMINADO, IMPLEMENTAR PAGINACION

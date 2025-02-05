@@ -1,6 +1,8 @@
 package com.backend.electronic.models.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
@@ -11,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -96,7 +99,9 @@ public class Product {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
-    // TODO: AGREGAR OTRAS RELACIONES
+    // TODO: ESTO DEBERIA CONTAR?
+    @OneToMany(mappedBy = "product")
+    private List<ProductFeature> productFeature = new ArrayList<>();
 
     // Relacion hacia detalles del producto
     // @OneToOne

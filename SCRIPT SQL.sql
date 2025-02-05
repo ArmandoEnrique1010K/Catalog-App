@@ -296,7 +296,32 @@ INSERT INTO product_feature (id, product_id, feature_value_id, feature_id) VALUE
 # FICHA TECNICA DE UN PRODUCTO (SE INCLUYEN CARACTERSITICAS)
 
 # OBTIENE LOS VALORES DE UNA CARACTERISTICA
-# SELECT * FROM db_electronic.feature_value WHERE feature_id = 2;
+SELECT * FROM db_electronic.feature_value WHERE feature_id = 2;
+
+
+# CREAR UNA CONSULTA PARA SELECCIONAR TODOS LOS PRODUCTOS CUYO VALOR DE LA CARACTERISTICA (feature_value_id) COINCIDA
+SELECT * FROM db_electronic.product_feature;
+
+# Tabla: id - feature_id - feature_value_id - product_id
+
+
+SELECT p.* 
+FROM product p
+JOIN product_feature pf ON p.id = pf.product_id
+WHERE pf.feature_value_id = 1;
+
+SELECT p.* 
+FROM product p
+JOIN product_feature pf ON p.id = pf.product_id
+WHERE pf.feature_value_id = 3;
+
+SELECT p.*
+FROM product p
+JOIN product_feature pf ON p.id = pf.product_id
+WHERE pf.feature_value_id IN (1, 2, 3)  -- Lista de valores de características
+-- GROUP BY p.id
+-- HAVING COUNT(DISTINCT pf.feature_value_id) = 3; -- Debe coincidir con la cantidad de características buscadas
+
 
 
 

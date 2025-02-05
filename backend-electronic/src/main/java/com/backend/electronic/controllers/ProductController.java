@@ -82,6 +82,13 @@ public class ProductController {
         return productService.findAllByFilters(name, idCategory, idsBrands, offer);
     }
 
+    // METODO DE PRUEBA PARA BUSCAR POR VALORES DE LAS CARACTERISTICA (UTIL PARA
+    // FILTRAR PRODUCTOS POR SU CARACTERISTICA)
+    @GetMapping("/search/features")
+    public List<ProductsListDto> listByFeaturesValues(@RequestParam List<Long> featureValues) {
+        return productService.findAllByFeatureValues(featureValues);
+    }
+
     // @GetMapping("/{id}")
     // public ResponseEntity<?> showById(@PathVariable Long id) {
 

@@ -54,6 +54,8 @@ public class CategoryFeatureServiceImpl implements CategoryFeatureService {
         Optional<CategoryFeature> existingRelation = categoryFeatureRepository.findByCategoryAndFeature(category,
                 feature);
         if (existingRelation.isPresent()) {
+            // TODO: UTILIZAR UN RESPONSE ENTITY EN LUGAR DE MOSTRAR UN MENSAJE EN EL CUERPO
+            // DE LA RESPUESTA
             throw new IllegalStateException("La categoría ya tiene asignada esta característica");
         }
 

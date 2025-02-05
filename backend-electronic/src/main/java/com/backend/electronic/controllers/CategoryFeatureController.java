@@ -36,6 +36,7 @@ public class CategoryFeatureController {
     @Autowired
     private ValidationService validationService;
 
+    // TODO: ¿MODIFICAR ESTO?
     @GetMapping("/{id}/features")
     public List<CategoryFeatureDto> list(@PathVariable Long id) {
         return categoryFeatureService.findAllByCategoryId(id);

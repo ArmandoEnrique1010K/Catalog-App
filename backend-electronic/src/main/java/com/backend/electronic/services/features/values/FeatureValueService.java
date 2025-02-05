@@ -13,4 +13,7 @@ public interface FeatureValueService {
 
     // Guardar un nuevo valor para la caracteristica
     public FeatureValueDto save(FeatureValue featureValue, Long id);
+
+    // TODO: AÑADIR UN SERVICIO PARA VERIFICAR QUE EL VALOR DE LA CARACTERISTICA NO
+    // COINCIDA CON UNO EXISTENTE
 }

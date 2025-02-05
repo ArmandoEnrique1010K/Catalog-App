@@ -4,8 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.backend.electronic.models.entities.Feature;
 import com.backend.electronic.models.entities.FeatureValue;
 import java.util.List;
+import java.util.Optional;
 
 public interface FeatureValueRepository extends JpaRepository<FeatureValue, Long> {
 
@@ -23,5 +25,9 @@ public interface FeatureValueRepository extends JpaRepository<FeatureValue, Long
         List<FeatureValue> findFeatureValuesByCategoryAndFeature(
                         @Param("categoryId") Long categoryId,
                         @Param("featureId") Long featureId);
+
+        // Encuentra un valor de una caracteristica por su nombre de valor y
+        // caracteristica
+        Optional<FeatureValue> findByFeatureAndValue(Feature feature, String value);
 
 }

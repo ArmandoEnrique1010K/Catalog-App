@@ -343,7 +343,7 @@ WHERE pf.feature_value_id IN (1, 2, 3)  -- Lista de valores de características
 GROUP BY p.id;
 
 
-
+# MOSTRAR LA FICHA TECNICA DE UN PRODUCTO
 SELECT f.name AS feature, fv.value AS value
 FROM product_feature pf
 JOIN feature_value fv ON pf.feature_value_id = fv.id

@@ -298,6 +298,15 @@ INSERT INTO product_feature (id, product_id, feature_value_id, feature_id) VALUE
 # OBTIENE LOS VALORES DE UNA CARACTERISTICA
 SELECT * FROM db_electronic.feature_value WHERE feature_id = 2;
 
+# OBTIENE LOS VALORES DISTINTOS QUE CORRESPONDEN A UNA CARACTERISTICA POR SU CATEGORIA
+SELECT DISTINCT fv.id, fv.value
+FROM feature_value fv
+JOIN product_feature pf ON fv.id = pf.feature_value_id
+JOIN product p ON pf.product_id = p.id
+WHERE p.category_id = 1  -- ID de la categoría
+AND fv.feature_id = 1;  -- ID de la característica
+
+
 
 # CREAR UNA CONSULTA PARA SELECCIONAR TODOS LOS PRODUCTOS CUYO VALOR DE LA CARACTERISTICA (feature_value_id) COINCIDA
 SELECT * FROM db_electronic.product_feature;
@@ -318,10 +327,28 @@ WHERE pf.feature_value_id = 3;
 SELECT p.*
 FROM product p
 JOIN product_feature pf ON p.id = pf.product_id
-WHERE pf.feature_value_id IN (1, 2, 3)  -- Lista de valores de características
--- GROUP BY p.id
--- HAVING COUNT(DISTINCT pf.feature_value_id) = 3; -- Debe coincidir con la cantidad de características buscadas
+WHERE pf.feature_value_id IN (1, 2, 3);  -- Lista de valores de características
 
+
+SELECT DISTINCT p.*
+FROM product p
+JOIN product_feature pf ON p.id = pf.product_id
+WHERE pf.feature_value_id IN (1, 2, 3);  -- Lista de valores de características
+
+
+SELECT p.*
+FROM product p
+JOIN product_feature pf ON p.id = pf.product_id
+WHERE pf.feature_value_id IN (1, 2, 3)  -- Lista de valores de características
+GROUP BY p.id;
+
+
+
+SELECT f.name AS feature, fv.value AS value
+FROM product_feature pf
+JOIN feature_value fv ON pf.feature_value_id = fv.id
+JOIN feature f ON fv.feature_id = f.id
+WHERE pf.product_id = 1;
 
 
 

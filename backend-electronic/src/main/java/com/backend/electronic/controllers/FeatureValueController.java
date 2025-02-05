@@ -43,6 +43,16 @@ public class FeatureValueController {
         return featureValueService.findAllByFeatureId(id);
     }
 
+    // PUEDE SERVIR...
+    // ENDPOINT PARA MOSTRAR LOS VALORES QUE CORRESPONDEN A UNA CARACTERISTICA Y
+    // CUYOS VALORES SEAN DISTINTOS A LOS QUE SE ENCUENTRAN EN LOS PRODUCTOS QUE
+    // CORRESPONDEN A ESA CATEGORIA
+    @GetMapping("/{featureId}/values/category/{categoryId}")
+    public List<FeatureValueDto> listDistintValuesByFeatureAndCategory(@PathVariable Long featureId,
+            @PathVariable Long categoryId) {
+        return featureValueService.getFeatureValuesByCategoryAndFeature(categoryId, featureId);
+    }
+
     // ENDPOINT PARA AGREGAR UN NUEVO VALOR A UNA CARACTERISTICA CORRESPONDIENTE AL
     // ID
     @PostMapping("/{id}/values")

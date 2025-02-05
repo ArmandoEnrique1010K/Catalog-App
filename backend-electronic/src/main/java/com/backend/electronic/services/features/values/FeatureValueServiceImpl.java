@@ -33,6 +33,16 @@ public class FeatureValueServiceImpl implements FeatureValueService {
     }
 
     @Override
+    public List<FeatureValueDto> getFeatureValuesByCategoryAndFeature(Long categoryId, Long featureId) {
+        List<FeatureValue> featureValue = featureValueRepository.findFeatureValuesByCategoryAndFeature(categoryId,
+                featureId);
+        return featureValue.stream().map(
+                featureValueDtoMapper::toDto)
+                .toList();
+
+    }
+
+    @Override
     public FeatureValueDto save(FeatureValue featureValue, Long id) {
         // Buscar la característica por su ID
         Feature feature = featureRepository.findById(id)

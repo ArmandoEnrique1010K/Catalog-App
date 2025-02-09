@@ -1,8 +1,6 @@
 package com.backend.electronic.controllers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.electronic.models.dto.BrandDto;
-import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.services.brands.BrandService;
 import com.backend.electronic.services.validations.ValidationService;
-import com.backend.electronic.services.validations.ValidationServiceImpl;
-
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;

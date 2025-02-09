@@ -1,8 +1,6 @@
 package com.backend.electronic.controllers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +22,6 @@ import com.backend.electronic.models.dto.CategoryDto;
 import com.backend.electronic.models.entities.Category;
 import com.backend.electronic.services.categories.CategoryService;
 import com.backend.electronic.services.validations.ValidationService;
-import com.backend.electronic.services.validations.ValidationServiceImpl;
-
 import jakarta.validation.Valid;
 
 @RestController

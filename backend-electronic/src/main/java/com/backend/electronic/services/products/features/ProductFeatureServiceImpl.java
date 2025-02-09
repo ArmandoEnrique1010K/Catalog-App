@@ -4,16 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.TechSheetDto;
 import com.backend.electronic.models.dto.mapper.TechSheetDtoMapper;
 import com.backend.electronic.models.entities.Feature;
 import com.backend.electronic.models.entities.FeatureValue;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.models.entities.ProductFeature;
-import com.backend.electronic.models.requests.TechSheetRequestDto;
 import com.backend.electronic.repositories.FeatureRepository;
 import com.backend.electronic.repositories.FeatureValueRepository;
 import com.backend.electronic.repositories.ProductFeatureRepository;

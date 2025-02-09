@@ -16,11 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.electronic.models.dto.CategoryFeatureDto;
-import com.backend.electronic.models.dto.FeatureValueDto;
 import com.backend.electronic.models.entities.CategoryFeature;
-import com.backend.electronic.models.entities.FeatureValue;
 import com.backend.electronic.services.categories.features.CategoryFeatureService;
-import com.backend.electronic.services.features.values.FeatureValueService;
 import com.backend.electronic.services.validations.ValidationService;
 
 import jakarta.validation.Valid;

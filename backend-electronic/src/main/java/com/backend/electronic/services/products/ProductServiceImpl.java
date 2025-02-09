@@ -14,15 +14,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
+import com.backend.electronic.models.dto.TechSheetDto;
 import com.backend.electronic.models.dto.mapper.ProductDtoMapper;
 import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.models.entities.Category;
+import com.backend.electronic.models.entities.Feature;
+import com.backend.electronic.models.entities.FeatureValue;
 import com.backend.electronic.models.entities.Image;
 import com.backend.electronic.models.entities.Product;
+import com.backend.electronic.models.entities.ProductFeature;
 import com.backend.electronic.models.requests.ProductRequest;
 import com.backend.electronic.repositories.BrandRepository;
 import com.backend.electronic.repositories.CategoryRepository;
+import com.backend.electronic.repositories.FeatureRepository;
+import com.backend.electronic.repositories.FeatureValueRepository;
 import com.backend.electronic.repositories.ImageRepository;
+import com.backend.electronic.repositories.ProductFeatureRepository;
 import com.backend.electronic.repositories.ProductRepository;
 import com.backend.electronic.services.images.ImageService;
 
@@ -40,6 +47,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private FeatureRepository featureRepository;
+
+    @Autowired
+    private FeatureValueRepository featureValueRepository;
+    @Autowired
+    private ProductFeatureRepository productFeatureRepository;
 
     @Autowired
     private ProductDtoMapper productDtoMapper;
@@ -164,6 +179,70 @@ public class ProductServiceImpl implements ProductService {
         // 🔹 Ahora asignamos la imagen al producto y guardamos de nuevo
         savedProduct.setImage(image);
         productRepository.save(savedProduct); // Segunda actualización con imagen
+
+        return productDtoMapper.toDetailDto(savedProduct);
+    }
+
+    @Transactional
+    @Override
+    public ProductDetailDto saveWithTechSheet(Product product, MultipartFile file) {
+
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("La imagen del producto no puede estar vacía");
+        }
+
+        Brand brand = brandRepository.findById(product.getBrand().getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "La marca con ID " + product.getBrand().getId() + " no existe"));
+        product.setBrand(brand);
+
+        Category category = categoryRepository.findById(product.getCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "La categoría con ID " + product.getCategory().getId() + " no existe"));
+        product.setCategory(category);
+
+        // Asignar valores directos al producto (solamente los campos que no seran
+        // llenados por el usuario)
+        product.setStatus(true);
+        product.setCreatedAt(LocalDateTime.now());
+        product.setUpdatedAt(LocalDateTime.now());
+
+        // 🔹 Primero guardamos el producto sin la imagen
+        Product savedProduct = productRepository.save(product);
+
+        // 🔹 Ahora guardamos la imagen, porque ya sabemos que el producto se guardó
+        // bien
+        String nameImage = imageService.storeImage(file);
+        Image image = new Image();
+        image.setName(nameImage);
+        image = imageRepository.save(image);
+
+        // 🔹 Ahora asignamos la imagen al producto y guardamos de nuevo
+        savedProduct.setImage(image);
+        productRepository.save(savedProduct); // Segunda actualización con imagen
+
+        // TODO: REPARAR ESTA PARTE
+        // Guardar la ficha técnica
+        if (product.getProductFeature() != null) {
+
+            for (ProductFeature productFeature : product.getProductFeature()) {
+                TechSheetDto entry = new TechSheetDto(productFeature.getFeature().getName(),
+                        productFeature.getFeatureValue().getValue());
+                Feature feature = featureRepository.findByName(entry.getFeature())
+                        // Si no encuentra la caracteristica, lo debe guardar como una nueva
+                        // caracteristica
+                        .orElseGet(() -> featureRepository.save(new Feature(null, entry.getFeature(), true)));
+
+                FeatureValue featureValue = featureValueRepository.findByFeatureAndValue(feature, entry.getValue())
+                        .orElseGet(
+                                () -> featureValueRepository
+                                        .save(new FeatureValue(null, feature, entry.getValue(), null)));
+
+                if (!productFeatureRepository.existsByProductAndFeatureValue(savedProduct, featureValue)) {
+                    productFeatureRepository.save(new ProductFeature(null, savedProduct, featureValue, feature));
+                }
+            }
+        }
 
         return productDtoMapper.toDetailDto(savedProduct);
     }

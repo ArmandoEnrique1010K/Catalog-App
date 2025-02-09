@@ -26,15 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
-import com.backend.electronic.models.entities.Brand;
-import com.backend.electronic.models.entities.Category;
 import com.backend.electronic.models.entities.Image;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.models.requests.ProductRequest;
 import com.backend.electronic.services.products.ProductService;
 import com.backend.electronic.services.validations.ValidationService;
-import com.backend.electronic.services.validations.ValidationServiceImpl;
-
 import jakarta.validation.Valid;
 
 @RestController
@@ -127,6 +123,32 @@ public class ProductController {
 
         try {
             ProductDetailDto savedProduct = productService.save(product, image);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        } catch (DataIntegrityViolationException ex) {
+            // Solamente si hay un registro duplicado en uno de los campos, devolvera el
+            // error definido en GlobalExceptionHandler
+
+            throw ex;
+        } catch (Exception ex) {
+            // Manejar otros errores
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al guardar el producto: " + ex.getMessage());
+        }
+
+    }
+
+    @PostMapping(value = "/createTest", consumes = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<?> createWithTechSheet(
+            @Valid @RequestPart("product") Product product, BindingResult result,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        // Validaciones (si fallan, lanzarán excepciones y se detendrá el flujo)
+        validationService.validateFields(result);
+        validationService.validateImage(image);
+
+        try {
+            ProductDetailDto savedProduct = productService.saveWithTechSheet(product, image);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
         } catch (DataIntegrityViolationException ex) {
             // Solamente si hay un registro duplicado en uno de los campos, devolvera el

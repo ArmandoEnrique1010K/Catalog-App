@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.electronic.models.dto.CategoryDto;
 import com.backend.electronic.models.dto.FeatureDto;
-import com.backend.electronic.models.entities.Category;
 import com.backend.electronic.models.entities.Feature;
 import com.backend.electronic.services.features.FeatureService;
 import com.backend.electronic.services.validations.ValidationService;

@@ -29,10 +29,11 @@ public interface ProductService {
 
     public ProductDetailDto save(Product product, MultipartFile file);
 
+    // METODO PARA GUARDAR UN PRODUCTO INCLUYENDO SU FICHA TECNICA
+    public ProductDetailDto saveWithTechSheet(Product product, MultipartFile file);
+
     public Optional<ProductDetailDto> update(ProductRequest product, MultipartFile file, Long id);
 
     public void disable(Long id);
 
-    // TODO: CREAR SERVICIO PARA OBTENER LOS PRODUCTOS QUE CORRESPONDEN A UNA MISMA
-    // CATEGORIA
 }

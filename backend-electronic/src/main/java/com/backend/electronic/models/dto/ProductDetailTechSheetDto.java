@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-// Dto para los detalles de un producto
-public class ProductDetailDto {
+public class ProductDetailTechSheetDto {
     private Long id;
     private String code;
     private String name;
@@ -22,4 +21,9 @@ public class ProductDetailDto {
     private Long idCategory;
     private Long idBrand;
     private String nameImage;
+
+    // CAMPOS PARA FICHA TECNICA
+    private String feature;
+    private String value;
+
 }

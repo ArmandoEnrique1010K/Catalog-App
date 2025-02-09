@@ -16,17 +16,17 @@ INSERT INTO category (id, name, status) VALUES
 (5, 'Camaras', true),
 (6, 'Relojes', true);
 
-INSERT INTO feature (id, name) VALUES
-(1, 'Color'),
-(2, 'Tamaño de pantalla'),
-(3, 'Tipo de pantalla'),
-(4, 'Procesador'),
-(5, 'Memoria RAM'),
-(6, 'Tecnologia de impresion'),
-(7, 'Puertos USB'),
-(8, 'Bluetooth integrado'),
-(9, 'Resistencia al agua'),
-(10, 'Sistema operativo');
+INSERT INTO feature (id, name, status) VALUES
+(1, 'Color', true),
+(2, 'Tamaño de pantalla', true),
+(3, 'Tipo de pantalla', true),
+(4, 'Procesador', true),
+(5, 'Memoria RAM', true),
+(6, 'Tecnologia de impresion', true),
+(7, 'Puertos USB', true),
+(8, 'Bluetooth integrado', true),
+(9, 'Resistencia al agua', true),
+(10, 'Sistema operativo', true);
 -- Inserta datos en la tabla "category_feature"
 INSERT INTO category_feature (category_id, feature_id) VALUES
 (1, 3),

@@ -35,7 +35,6 @@ public class FeatureValue {
     private Feature feature;
 
     @NotBlank
-    @Column(unique = true)
     private String value;
 
     @OneToMany(mappedBy = "featureValue")

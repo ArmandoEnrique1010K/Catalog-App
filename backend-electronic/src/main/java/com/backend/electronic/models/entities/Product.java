@@ -105,12 +105,12 @@ public class Product {
     // TODO: ESTO DEBERIA CONTAR?
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductFeature> productFeature = new ArrayList<>();
-
-    // Relacion hacia detalles del producto
-    // @OneToOne
-    // @JoinColumn(name = "productDetails_id")
-    // private ProductDetails productDetails;
 }
 
 // EAGER VS LAZY
 // https:// somospnt.com/blog/243-fetchtype-con-jpa
+
+// Relacion hacia detalles del producto
+// @OneToOne
+// @JoinColumn(name = "productDetails_id")
+// private ProductDetails productDetails;

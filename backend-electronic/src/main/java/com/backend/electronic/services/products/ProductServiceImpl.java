@@ -1,6 +1,7 @@
 package com.backend.electronic.services.products;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.dto.TechSheetDto;
+import com.backend.electronic.models.dto.mapper.ProductDetailTechSheetDtoMapper;
 import com.backend.electronic.models.dto.mapper.ProductDtoMapper;
 import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.models.entities.Category;
@@ -32,6 +34,9 @@ import com.backend.electronic.repositories.ImageRepository;
 import com.backend.electronic.repositories.ProductFeatureRepository;
 import com.backend.electronic.repositories.ProductRepository;
 import com.backend.electronic.services.images.ImageService;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -61,6 +66,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ImageService imageService;
+
+    // @Autowired
+    // private ProductDetailTechSheetDtoMapper productDetailTechSheetDtoMapper;
+
+    // TODO: ¿QUE ES ESO?
+    @PersistenceContext
+    private EntityManager entityManager;
 
     // TODO: SIMPLIFICAR EL CODIGO DE ESTE ARCHIVO
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
@@ -207,9 +219,6 @@ public class ProductServiceImpl implements ProductService {
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
 
-        // 🔹 Primero guardamos el producto sin la imagen
-        // Product savedProduct = productRepository.save(product);
-
         // 🔹 Ahora guardamos la imagen, porque ya sabemos que el producto se guardó
         // bien
         String nameImage = imageService.storeImage(file);
@@ -219,8 +228,11 @@ public class ProductServiceImpl implements ProductService {
 
         // 🔹 Ahora asignamos la imagen al producto y guardamos de nuevo
         product.setImage(image);
+
         // Guardar el producto
         Product savedProduct = productRepository.save(product);
+        Long idSavedProduct = savedProduct.getId();
+        System.out.println("EL PRODUCTO VA A TENER EL ID: " + idSavedProduct);
 
         // ✅ Validar que hay características antes de procesarlas
         if (product.getProductFeature() == null || product.getProductFeature().isEmpty()) {
@@ -234,24 +246,19 @@ public class ProductServiceImpl implements ProductService {
             }
 
             String featureName = eachProductFeature.getFeature().getName();
-            System.out.println("Caracteristica: " + featureName);
-
             String featureValueName = eachProductFeature.getFeatureValue().getValue();
-            System.out.println("Valor: " + featureValueName);
+            System.out.println(featureName);
+            System.out.println(featureValueName);
 
-            // TODO: AL PARECER AQUI OCURRE EL ERROR PORQUE IMPRIME EL PRIMER VALOR DE
-            // CARACTETISTICA Y VALOR
-
+            // TODO: AQUI OCURRE
             // Guardar Feature si no existe
             Feature feature = featureRepository.findByName(featureName)
                     .orElseGet(() -> {
                         Feature newFeature = new Feature();
                         newFeature.setName(featureName);
-                        System.out.println("Nueva caracteristica guardada: " + featureName);
+                        newFeature.setStatus(true);
                         return featureRepository.save(newFeature);
                     });
-
-            System.out.println("Caracteristica encontrada: " + featureName);
 
             // Guardar FeatureValue si no existe
             FeatureValue featureValue = featureValueRepository.findByValue(featureValueName)
@@ -259,10 +266,8 @@ public class ProductServiceImpl implements ProductService {
                         FeatureValue newFeatureValue = new FeatureValue();
                         newFeatureValue.setFeature(feature);
                         newFeatureValue.setValue(featureValueName);
-                        System.out.println("Nuevo valor de la caracteristica guardado: " + featureValueName);
                         return featureValueRepository.save(newFeatureValue);
                     });
-            System.out.println("Valor de la caracteristica encontrada: " + featureValueName);
 
             // Guardar ProductFeature si no existe
             if (!productFeatureRepository.existsByProductAndFeatureValue(savedProduct, featureValue)) {
@@ -274,9 +279,9 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-        System.out.println("Características guardadas correctamente para el producto.");
-
+        // return productDetailTechSheetDtoMapper.toDto(savedProduct);
         return productDtoMapper.toDetailDto(savedProduct);
+
     }
 
     @Transactional

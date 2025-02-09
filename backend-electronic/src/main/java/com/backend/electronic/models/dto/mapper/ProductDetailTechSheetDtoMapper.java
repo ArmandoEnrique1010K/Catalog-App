@@ -7,20 +7,19 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
-import com.backend.electronic.models.dto.ProductDetailTechSheetDto;
+import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.models.entities.ProductFeature;
 
 @Component
 @Mapper(componentModel = "spring")
-
 public interface ProductDetailTechSheetDtoMapper {
     @Mapping(source = "brand.id", target = "idBrand")
     @Mapping(source = "category.id", target = "idCategory")
     @Mapping(source = "image.name", target = "nameImage")
     @Mapping(source = "productFeature", target = "feature", qualifiedByName = "mapFirstFeatureName")
     @Mapping(source = "productFeature", target = "value", qualifiedByName = "mapFirstFeatureValue")
-    ProductDetailTechSheetDto toDto(Product product);
+    ProductDetailDto toDto(Product product);
 
     // TODO: INVESTIGAR LA POSIBILIDAD DE USAR UNA LISTA
     @Named("mapFirstFeatureName")

@@ -2,6 +2,8 @@ package com.backend.electronic.models.entities;
 
 import java.util.List;
 
+import org.hibernate.annotations.Cascade;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +34,7 @@ public class FeatureValue {
     private Long id;
 
     @ManyToOne
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
     @JoinColumn(name = "feature_id")
     private Feature feature;
 

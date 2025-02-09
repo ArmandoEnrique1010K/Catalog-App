@@ -1,5 +1,8 @@
 package com.backend.electronic.models.entities;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,14 +29,17 @@ public class ProductFeature {
     private Long id;
 
     @ManyToOne
+    @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
     @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne
+    @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
     @JoinColumn(name = "feature_id")
     private Feature feature;
 
     @ManyToOne
+    @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
     @JoinColumn(name = "feature_value_id")
     private FeatureValue featureValue;
 

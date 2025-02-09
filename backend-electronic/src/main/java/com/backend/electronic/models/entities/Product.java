@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,7 +43,9 @@ public class Product {
 
     // Codigo del producto (se genera de una forma)
     @NotBlank(message = "El código no puede estar vacío")
-    @Column(unique = true, nullable = false)
+
+    // TODO_: HABILITAR unique PARA QUE EL CAMPO TENGA VALORES UNICOS
+    @Column(nullable = false)
     private String code;
 
     // Campo para verificar que si un producto esta en oferta
@@ -100,7 +103,7 @@ public class Product {
     private Image image;
 
     // TODO: ESTO DEBERIA CONTAR?
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductFeature> productFeature = new ArrayList<>();
 
     // Relacion hacia detalles del producto

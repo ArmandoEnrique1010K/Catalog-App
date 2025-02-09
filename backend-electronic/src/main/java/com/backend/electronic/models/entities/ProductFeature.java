@@ -30,12 +30,12 @@ public class ProductFeature {
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "feature_value_id")
-    private FeatureValue featureValue;
-
-    @ManyToOne
     @JoinColumn(name = "feature_id")
     private Feature feature;
+
+    @ManyToOne
+    @JoinColumn(name = "feature_value_id")
+    private FeatureValue featureValue;
 
     // Getters and Setters
 }

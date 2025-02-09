@@ -3,6 +3,7 @@ package com.backend.electronic.models.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,7 +36,7 @@ public class Category {
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private Boolean status;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CategoryFeature> categoryFeatures = new ArrayList<>();
 
 }

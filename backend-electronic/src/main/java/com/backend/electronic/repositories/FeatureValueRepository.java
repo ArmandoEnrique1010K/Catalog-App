@@ -15,6 +15,9 @@ public interface FeatureValueRepository extends JpaRepository<FeatureValue, Long
         @Query("SELECT v FROM FeatureValue v JOIN FETCH v.feature WHERE v.feature.id = :id")
         List<FeatureValue> findByFeatureId(Long id);
 
+        // Encuentra una caracteristica por su nombre
+        Optional<FeatureValue> findByValue(String value);
+
         // LISTA TODOS LOS VALORES DE UNA CARACTERISTICA POR SU ID Y TODAS LAS
         // CARACTERISTICAS DISTINTAS QUE CORRESPONDEN A LA CATEGORIA
         @Query("SELECT DISTINCT fv FROM FeatureValue fv " +

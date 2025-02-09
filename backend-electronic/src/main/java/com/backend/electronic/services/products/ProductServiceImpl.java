@@ -208,7 +208,7 @@ public class ProductServiceImpl implements ProductService {
         product.setUpdatedAt(LocalDateTime.now());
 
         // 🔹 Primero guardamos el producto sin la imagen
-        Product savedProduct = productRepository.save(product);
+        // Product savedProduct = productRepository.save(product);
 
         // 🔹 Ahora guardamos la imagen, porque ya sabemos que el producto se guardó
         // bien
@@ -218,31 +218,63 @@ public class ProductServiceImpl implements ProductService {
         image = imageRepository.save(image);
 
         // 🔹 Ahora asignamos la imagen al producto y guardamos de nuevo
-        savedProduct.setImage(image);
-        productRepository.save(savedProduct); // Segunda actualización con imagen
+        product.setImage(image);
+        // Guardar el producto
+        Product savedProduct = productRepository.save(product);
 
-        // TODO: REPARAR ESTA PARTE
-        // Guardar la ficha técnica
-        if (product.getProductFeature() != null) {
+        // ✅ Validar que hay características antes de procesarlas
+        if (product.getProductFeature() == null || product.getProductFeature().isEmpty()) {
+            throw new IllegalArgumentException("No se recibieron características para el producto.");
+        }
 
-            for (ProductFeature productFeature : product.getProductFeature()) {
-                TechSheetDto entry = new TechSheetDto(productFeature.getFeature().getName(),
-                        productFeature.getFeatureValue().getValue());
-                Feature feature = featureRepository.findByName(entry.getFeature())
-                        // Si no encuentra la caracteristica, lo debe guardar como una nueva
-                        // caracteristica
-                        .orElseGet(() -> featureRepository.save(new Feature(null, entry.getFeature(), true)));
+        // ✅ Procesamos cada característica del producto
+        for (ProductFeature eachProductFeature : product.getProductFeature()) {
+            if (eachProductFeature.getFeature() == null || eachProductFeature.getFeatureValue() == null) {
+                throw new IllegalArgumentException("Cada ProductFeature debe contener una Feature y un FeatureValue.");
+            }
 
-                FeatureValue featureValue = featureValueRepository.findByFeatureAndValue(feature, entry.getValue())
-                        .orElseGet(
-                                () -> featureValueRepository
-                                        .save(new FeatureValue(null, feature, entry.getValue(), null)));
+            String featureName = eachProductFeature.getFeature().getName();
+            System.out.println("Caracteristica: " + featureName);
 
-                if (!productFeatureRepository.existsByProductAndFeatureValue(savedProduct, featureValue)) {
-                    productFeatureRepository.save(new ProductFeature(null, savedProduct, featureValue, feature));
-                }
+            String featureValueName = eachProductFeature.getFeatureValue().getValue();
+            System.out.println("Valor: " + featureValueName);
+
+            // TODO: AL PARECER AQUI OCURRE EL ERROR PORQUE IMPRIME EL PRIMER VALOR DE
+            // CARACTETISTICA Y VALOR
+
+            // Guardar Feature si no existe
+            Feature feature = featureRepository.findByName(featureName)
+                    .orElseGet(() -> {
+                        Feature newFeature = new Feature();
+                        newFeature.setName(featureName);
+                        System.out.println("Nueva caracteristica guardada: " + featureName);
+                        return featureRepository.save(newFeature);
+                    });
+
+            System.out.println("Caracteristica encontrada: " + featureName);
+
+            // Guardar FeatureValue si no existe
+            FeatureValue featureValue = featureValueRepository.findByValue(featureValueName)
+                    .orElseGet(() -> {
+                        FeatureValue newFeatureValue = new FeatureValue();
+                        newFeatureValue.setFeature(feature);
+                        newFeatureValue.setValue(featureValueName);
+                        System.out.println("Nuevo valor de la caracteristica guardado: " + featureValueName);
+                        return featureValueRepository.save(newFeatureValue);
+                    });
+            System.out.println("Valor de la caracteristica encontrada: " + featureValueName);
+
+            // Guardar ProductFeature si no existe
+            if (!productFeatureRepository.existsByProductAndFeatureValue(savedProduct, featureValue)) {
+                ProductFeature productFeature = new ProductFeature();
+                productFeature.setProduct(savedProduct);
+                productFeature.setFeature(feature);
+                productFeature.setFeatureValue(featureValue);
+                productFeatureRepository.save(productFeature);
             }
         }
+
+        System.out.println("Características guardadas correctamente para el producto.");
 
         return productDtoMapper.toDetailDto(savedProduct);
     }

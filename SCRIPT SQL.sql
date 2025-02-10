@@ -204,7 +204,7 @@ JOIN
 JOIN 
     feature_value fv ON pf.feature_value_id = fv.id
 WHERE 
-    pf.product_id = 2;
+    pf.product_id = 84;
     
     
 

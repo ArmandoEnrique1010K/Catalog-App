@@ -13,4 +13,7 @@ public interface FeatureRepository extends JpaRepository<Feature, Long> {
     // Encuentra una caracteristica por su nombre
     Optional<Feature> findByName(String name);
 
+    // TODO: EXPERIMIENTAL, ENCUENTRA EL PRIMERO POR SU NOMBRE
+    Optional<Feature> findFirstByName(String name);
+
 }

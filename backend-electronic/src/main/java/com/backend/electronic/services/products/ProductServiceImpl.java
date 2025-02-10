@@ -250,26 +250,52 @@ public class ProductServiceImpl implements ProductService {
             System.out.println(featureName);
             System.out.println(featureValueName);
 
-            // TODO: AQUI OCURRE
-            // Guardar Feature si no existe
+            // ✅ Buscar o crear Feature
+            // 1° DEBE BUSCAR SI ESA CARACTERISTICA YA EXISTE
             Feature feature = featureRepository.findByName(featureName)
+                    // .orElseGet(() -> featureRepository.save(new Feature(null, featureName, true,
+                    // null)));
                     .orElseGet(() -> {
                         Feature newFeature = new Feature();
                         newFeature.setName(featureName);
                         newFeature.setStatus(true);
+
+                        Feature savedFeature = featureRepository.save(newFeature); // 🔹 Guardar antes de usarlo
+                        System.out.println("Feature guardado con ID: " + savedFeature.getId()); // ✅ Verificar ID
+
                         return featureRepository.save(newFeature);
                     });
 
-            // Guardar FeatureValue si no existe
-            FeatureValue featureValue = featureValueRepository.findByValue(featureValueName)
-                    .orElseGet(() -> {
-                        FeatureValue newFeatureValue = new FeatureValue();
-                        newFeatureValue.setFeature(feature);
-                        newFeatureValue.setValue(featureValueName);
-                        return featureValueRepository.save(newFeatureValue);
-                    });
+            if (feature.getId() == null) {
+                throw new IllegalStateException("El Feature no tiene ID después de ser guardado");
+            }
 
-            // Guardar ProductFeature si no existe
+            System.out.println(feature.getId());
+            System.out.println("Caracteristica: " + feature);
+
+            Optional<FeatureValue> existingFeatureValue = featureValueRepository.findByFeatureAndValue(feature,
+                    featureValueName);
+            FeatureValue featureValue = existingFeatureValue.orElseGet(() -> {
+                FeatureValue newFeatureValue = new FeatureValue();
+                newFeatureValue.setFeature(feature); // 🔹 Ya tiene ID porque se guardó antes
+                newFeatureValue.setValue(featureValueName);
+                return featureValueRepository.save(newFeatureValue);
+            });
+
+            // ✅ Buscar o crear FeatureValue (asegurando que corresponda con Feature
+            // FeatureValue featureValue =
+            // featureValueRepository.findByFeatureAndValue(feature, featureValueName)
+            // .orElseGet(() -> {
+            // FeatureValue newFeatureValue = new FeatureValue();
+            // newFeatureValue.setFeature(feature);
+            // newFeatureValue.setValue(featureValueName);
+            // return featureValueRepository.save(newFeatureValue);
+            // // featureValueRepository.save(new FeatureValue(null, feature,
+            // featureValueName,
+            // // null))
+            // });
+
+            // ✅ Evitar insertar duplicados en ProductFeature
             if (!productFeatureRepository.existsByProductAndFeatureValue(savedProduct, featureValue)) {
                 ProductFeature productFeature = new ProductFeature();
                 productFeature.setProduct(savedProduct);
@@ -277,7 +303,50 @@ public class ProductServiceImpl implements ProductService {
                 productFeature.setFeatureValue(featureValue);
                 productFeatureRepository.save(productFeature);
             }
+
+            // TODO: ASIGNA feature_id EN LA TABLA feature_value, PERO INSERTA 2 VECES EL
+            // MISMO REGISTRO
+            // TODO: SI VERIFICA LOS VALORES DE feature Y value SI YA EXISTEN EN LA BASE DE
+            // DATOS
+            // TODO: GUARDA 2 VECES EL MISMO REGISTRO EN product_feature
+
+            // ESTE ERROR SE MUESTRA... PORQUE HAY
+            // Error al guardar el producto: Query did not return a unique result: 2 results
+            // were returned
+
+            // 1. Guardar Feature si no existe
+            // 2. Buscar o guardar FeatureValue (DEBE INCLUIR `Feature` en la consulta)
+            // 3. Verificar que no exista ya la relación en `product_feature`
+
+            // Feature feature = featureRepository.findByName(featureName)
+            // .orElseGet(() -> {
+            // Feature newFeature = new Feature();
+            // newFeature.setName(featureName);
+            // newFeature.setStatus(true);
+            // return featureRepository.save(newFeature);
+            // });
+
+            // FeatureValue featureValue =
+            // featureValueRepository.findByFeatureAndValue(feature, featureValueName)
+            // .orElseGet(() -> {
+            // FeatureValue newFeatureValue = new FeatureValue();
+            // newFeatureValue.setFeature(feature);
+            // newFeatureValue.setValue(featureValueName);
+            // return featureValueRepository.save(newFeatureValue);
+            // });
+
+            // if (!productFeatureRepository.existsByProductAndFeatureValue(savedProduct,
+            // featureValue)) {
+            // ProductFeature productFeature = new ProductFeature();
+            // productFeature.setProduct(savedProduct);
+            // productFeature.setFeature(feature);
+            // productFeature.setFeatureValue(featureValue);
+            // productFeatureRepository.save(productFeature);
+
+            // }
         }
+
+        System.out.println("Ficha técnica guardada correctamente.");
 
         // return productDetailTechSheetDtoMapper.toDto(savedProduct);
         return productDtoMapper.toDetailDto(savedProduct);
@@ -357,3 +426,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
 }
+
+// @Cascade
+// https://rajendraprasadpadma.medium.com/object-references-an-unsaved-transient-instance-save-the-transient-instance-before-flushing-1bede249108

@@ -18,6 +18,9 @@ public interface FeatureValueRepository extends JpaRepository<FeatureValue, Long
         // Encuentra una caracteristica por su nombre
         Optional<FeatureValue> findByValue(String value);
 
+        // TODO: EXPERIMENTAL, ENCUENTRA LA PRIMERA CARACTERISTICA POR SU NOMBRE
+        // Optional<FeatureValue> findFirstByValue(String value);
+
         // LISTA TODOS LOS VALORES DE UNA CARACTERISTICA POR SU ID Y TODAS LAS
         // CARACTERISTICAS DISTINTAS QUE CORRESPONDEN A LA CATEGORIA
         @Query("SELECT DISTINCT fv FROM FeatureValue fv " +
@@ -32,5 +35,8 @@ public interface FeatureValueRepository extends JpaRepository<FeatureValue, Long
         // Encuentra un valor de una caracteristica por su nombre de valor y
         // caracteristica
         Optional<FeatureValue> findByFeatureAndValue(Feature feature, String value);
+
+        // TODO: EXPERIMENTAL, ENCUENTRA LA PRIMERA CARACTERISTICA POR SU NOMBRE Y VALOR
+        Optional<FeatureValue> findFirstByFeatureAndValue(Feature feature, String value);
 
 }

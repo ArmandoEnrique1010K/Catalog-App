@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "feature")
+@Table(name = "feature", uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
 // Entidad para las caracteristicas de un producto (dentro de ficha tecnica)
 public class Feature {
 
@@ -31,7 +32,8 @@ public class Feature {
     private Long id;
 
     @NotBlank(message = "El nombre no puede estar vacío")
-    @Column(unique = true)
+    // NO DEBERIA SER UNICO
+    @Column(nullable = false, unique = true) // 🔹 Asegura que el nombre sea único
     private String name; // Característica (e.g., "Color", "Peso")
 
     @Column(columnDefinition = "TINYINT(1)", nullable = false)

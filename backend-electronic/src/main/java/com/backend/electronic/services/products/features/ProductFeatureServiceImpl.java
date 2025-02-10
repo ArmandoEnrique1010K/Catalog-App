@@ -31,12 +31,7 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
     private ProductFeatureRepository productFeatureRepository;
 
     @Autowired
-    private final TechSheetDtoMapper techSheetDtoMapper;
-
-    @Autowired
-    public ProductFeatureServiceImpl(TechSheetDtoMapper techSheetDtoMapper) {
-        this.techSheetDtoMapper = techSheetDtoMapper;
-    }
+    private TechSheetDtoMapper techSheetDtoMapper;
 
     @Override
     public List<TechSheetDto> getTechSheet(Long productId) {

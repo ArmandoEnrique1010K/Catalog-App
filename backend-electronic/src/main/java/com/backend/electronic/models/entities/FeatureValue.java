@@ -3,8 +3,8 @@ package com.backend.electronic.models.entities;
 import java.util.List;
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,22 +27,23 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "feature_value")
+@Table(name = "feature_value", uniqueConstraints = @UniqueConstraint(columnNames = { "feature_id", "value" }))
 public class FeatureValue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @Cascade(org.hibernate.annotations.CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
-    @JoinColumn(name = "feature_id")
+    @ManyToOne(optional = false) // 🔹 No permitir que feature sea null
+    @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
+    @JoinColumn(name = "feature_id", nullable = false) // 🔹 Asegurar integridad en la BD
     private Feature feature;
 
     @NotBlank
+    @Column(nullable = false)
     private String value;
 
-    @OneToMany(mappedBy = "featureValue", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "featureValue", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
     private List<ProductFeature> productFeatures;
 
 }

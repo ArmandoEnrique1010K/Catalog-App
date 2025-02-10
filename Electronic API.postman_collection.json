@@ -307,7 +307,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/744",
+							"raw": "http://localhost:8080/products/21",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -315,7 +315,7 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"744"
+								"21"
 							]
 						}
 					},
@@ -453,7 +453,7 @@
 									"key": "image",
 									"contentType": "image",
 									"type": "file",
-									"src": "/C:/Users/USER/Pictures/Saved Pictures/Classic Shell.jpg"
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/Classic Shell_night.jpg"
 								}
 							]
 						},
@@ -523,6 +523,43 @@
 							"path": [
 								"products",
 								"100"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createWithTechSheet",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product",
+									"value": "{\n  \"code\": \"234htgfbx\",\n  \"name\": \"Laptop Gamer\",\n  \"inOffer\": false,\n  \"price\": 1200.99,\n  \"offerPrice\": 100,\n  \"description\": \"Laptop de alto rendimiento\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 },\n  \"productFeature\": [\n    {\n      \"feature\": { \"name\": \"Procesador 2\" },\n      \"featureValue\": { \"value\": \"Intel Core i8\" }\n    },\n    {\n      \"feature\": { \"name\": \"RAM 2\" },\n      \"featureValue\": { \"value\": \"13GB\" }\n    }\n  ]\n\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"contentType": "image",
+									"type": "file",
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/Deep underwater.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/createTest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"createTest"
 							]
 						}
 					},
@@ -665,7 +702,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/features/3/values",
+							"raw": "http://localhost:8080/features/5/values",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -673,7 +710,7 @@
 							"port": "8080",
 							"path": [
 								"features",
-								"3",
+								"5",
 								"values"
 							]
 						}
@@ -744,7 +781,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/categories/1/features",
+							"raw": "http://localhost:8080/categories/2/features",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -752,7 +789,7 @@
 							"port": "8080",
 							"path": [
 								"categories",
-								"1",
+								"2",
 								"features"
 							]
 						}
@@ -783,6 +820,96 @@
 							"path": [
 								"categories",
 								"features"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "productFeature",
+			"item": [
+				{
+					"name": "getTechSheet",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product/1/feature/tech-sheet",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"1",
+								"feature",
+								"tech-sheet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "saveTechSheet",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    { \"feature\": \"Tamaño de pantalla\", \"value\": \"15.6 pulgadas\" },\r\n    { \"feature\": \"Memoria RAM\", \"value\": \"16 GB\" },\r\n    { \"feature\": \"Procesador\", \"value\": \"Intel i7\" }\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/product/7/feature/tech-sheet",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"7",
+								"feature",
+								"tech-sheet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "testsaveTechSheet2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    { \"feature\": { \"id\": 1 }, \"featureValue\": { \"id\": 3 } },\r\n    { \"feature\": { \"id\": 2 }, \"featureValue\": { \"id\": 7 } },\r\n    { \"feature\": { \"id\": 3 }, \"featureValue\": { \"id\": 10 } }\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/product/4/feature/tech-sheet/test2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"4",
+								"feature",
+								"tech-sheet",
+								"test2"
 							]
 						}
 					},

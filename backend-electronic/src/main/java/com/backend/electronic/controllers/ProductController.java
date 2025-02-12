@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -26,11 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
+import com.backend.electronic.models.dto.TechSheetDto;
 import com.backend.electronic.models.entities.Image;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.models.entities.ProductFeature;
 import com.backend.electronic.models.requests.ProductRequest;
 import com.backend.electronic.services.products.ProductService;
+import com.backend.electronic.services.products.features.ProductFeatureService;
 import com.backend.electronic.services.validations.ValidationService;
 import jakarta.validation.Valid;
 
@@ -44,6 +47,8 @@ public class ProductController {
 
     @Autowired
     private ValidationService validationService;
+    @Autowired
+    private ProductFeatureService productFeatureService;
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
@@ -163,6 +168,49 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al guardar el producto: " + ex.getMessage());
         }
+
+    }
+
+    @PostMapping(value = "/createTest/services", consumes = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<?> createWithTechSheet2Services(
+            @Valid @RequestPart("product") Product product, BindingResult result,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart("techSheet") List<TechSheetDto> techSheet
+    // @RequestPart("techSheet") List<ProductFeature> techSheet
+    ) { // ✅ Nueva clave para ficha técnica
+
+        // Validaciones (si fallan, lanzarán excepciones y se detendrá el flujo)
+        validationService.validateFields(result);
+        validationService.validateImage(image);
+
+        try {
+            ProductDetailDto savedProduct = productService.save(product, image);
+
+            // TODO: INTENTAR ESTO: 2 SERVICIOS EN UN CONTROLADOR
+            Long idProductInDb = savedProduct.getId();
+
+            productFeatureService.saveTechSheet(idProductInDb, techSheet);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+
+        } catch (DataIntegrityViolationException ex) {
+            // Solamente si hay un registro duplicado en uno de los campos, devolvera el
+            // error definido en GlobalExceptionHandler
+
+            throw ex;
+        } catch (Exception ex) {
+            // Manejar otros errores
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al guardar el producto: " + ex.getMessage());
+        }
+
+    }
+
+    @PostMapping("/{id}/feature/tech-sheet")
+    public ResponseEntity<String> saveTechSheet(@PathVariable Long id, @RequestBody List<TechSheetDto> techSheet) {
+        productFeatureService.saveTechSheet(id, techSheet);
+        return ResponseEntity.ok("Ficha técnica guardada exitosamente.");
 
     }
 

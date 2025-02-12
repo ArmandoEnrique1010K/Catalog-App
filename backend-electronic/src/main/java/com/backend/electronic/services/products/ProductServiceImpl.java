@@ -195,6 +195,8 @@ public class ProductServiceImpl implements ProductService {
         return productDtoMapper.toDetailDto(savedProduct);
     }
 
+// https://stackoverflow.com/questions/62272205/error-when-it-implements-a-create-hhh000437-attempting-to-save-one-or-more
+// TODO: ESTE PROBLEMA NO TIENE SOLUCIÓN, NO SE PUEDE GUARDAR UN PRODUCTO JUNTO CON SU FICHA TECNICA AL MISMO TIEMPO EN EL MISMO SERVICIO
     @Transactional
     @Override
     public ProductDetailDto saveWithTechSheet(Product product, MultipartFile file) {
@@ -229,17 +231,19 @@ public class ProductServiceImpl implements ProductService {
         // 🔹 Ahora asignamos la imagen al producto y guardamos de nuevo
         product.setImage(image);
 
-        // Guardar el producto
+        // Guardar el producto primero
         Product savedProduct = productRepository.save(product);
         Long idSavedProduct = savedProduct.getId();
         System.out.println("EL PRODUCTO VA A TENER EL ID: " + idSavedProduct);
 
-        // ✅ Validar que hay características antes de procesarlas
+        // 🔹 Validar ficha técnica
+
+        // TODO: MODIFICAR LA FICHA TECNICA, DE TAL MANERA QUE SOLAMENTE ACEPTE VALORES
+        // QUE SE ENCUENTRAN REGISTRADOS
         if (product.getProductFeature() == null || product.getProductFeature().isEmpty()) {
             throw new IllegalArgumentException("No se recibieron características para el producto.");
         }
 
-        // ✅ Procesamos cada característica del producto
         for (ProductFeature eachProductFeature : product.getProductFeature()) {
             if (eachProductFeature.getFeature() == null || eachProductFeature.getFeatureValue() == null) {
                 throw new IllegalArgumentException("Cada ProductFeature debe contener una Feature y un FeatureValue.");
@@ -247,110 +251,35 @@ public class ProductServiceImpl implements ProductService {
 
             String featureName = eachProductFeature.getFeature().getName();
             String featureValueName = eachProductFeature.getFeatureValue().getValue();
-            System.out.println(featureName);
-            System.out.println(featureValueName);
 
-            // ✅ Buscar o crear Feature
-            // 1° DEBE BUSCAR SI ESA CARACTERISTICA YA EXISTE
+            // 🔹 Buscar Feature en BD
             Feature feature = featureRepository.findByName(featureName)
-                    // .orElseGet(() -> featureRepository.save(new Feature(null, featureName, true,
-                    // null)));
-                    .orElseGet(() -> {
-                        Feature newFeature = new Feature();
-                        newFeature.setName(featureName);
-                        newFeature.setStatus(true);
+                    .orElseThrow(
+                            () -> new IllegalArgumentException("La característica '" + featureName + "' no existe."));
 
-                        Feature savedFeature = featureRepository.save(newFeature); // 🔹 Guardar antes de usarlo
-                        System.out.println("Feature guardado con ID: " + savedFeature.getId()); // ✅ Verificar ID
+            // 🔹 Buscar FeatureValue en BD
+            FeatureValue featureValue = featureValueRepository.findByFeatureAndValue(feature, featureValueName)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "El valor '" + featureValueName + "' no existe para la característica '" + featureName
+                                    + "'."));
 
-                        return featureRepository.save(newFeature);
-                    });
+            // 🔥 **Forzar la persistencia de Feature y FeatureValue**
+            feature = featureRepository.save(feature); // 🔥 Hibernate ahora maneja Feature correctamente
+            featureValue = featureValueRepository.save(featureValue); // 🔥 Hibernate maneja FeatureValue correctamente
 
-            if (feature.getId() == null) {
-                throw new IllegalStateException("El Feature no tiene ID después de ser guardado");
-            }
-
-            System.out.println(feature.getId());
-            System.out.println("Caracteristica: " + feature);
-
-            Optional<FeatureValue> existingFeatureValue = featureValueRepository.findByFeatureAndValue(feature,
-                    featureValueName);
-            FeatureValue featureValue = existingFeatureValue.orElseGet(() -> {
-                FeatureValue newFeatureValue = new FeatureValue();
-                newFeatureValue.setFeature(feature); // 🔹 Ya tiene ID porque se guardó antes
-                newFeatureValue.setValue(featureValueName);
-                return featureValueRepository.save(newFeatureValue);
-            });
-
-            // ✅ Buscar o crear FeatureValue (asegurando que corresponda con Feature
-            // FeatureValue featureValue =
-            // featureValueRepository.findByFeatureAndValue(feature, featureValueName)
-            // .orElseGet(() -> {
-            // FeatureValue newFeatureValue = new FeatureValue();
-            // newFeatureValue.setFeature(feature);
-            // newFeatureValue.setValue(featureValueName);
-            // return featureValueRepository.save(newFeatureValue);
-            // // featureValueRepository.save(new FeatureValue(null, feature,
-            // featureValueName,
-            // // null))
-            // });
-
-            // ✅ Evitar insertar duplicados en ProductFeature
-            if (!productFeatureRepository.existsByProductAndFeatureValue(savedProduct, featureValue)) {
+            // 🔹 Verificar que no exista un registro duplicado en ProductFeature
+            boolean exists = productFeatureRepository.findByProductAndFeatureValue(savedProduct, featureValue)
+                    .isPresent();
+            if (!exists) {
                 ProductFeature productFeature = new ProductFeature();
-                productFeature.setProduct(savedProduct);
-                productFeature.setFeature(feature);
-                productFeature.setFeatureValue(featureValue);
+                productFeature.setProduct(savedProduct); // ✅ Producto ya guardado
+                productFeature.setFeature(feature); // ✅ Feature ya guardado
+                productFeature.setFeatureValue(featureValue); // ✅ FeatureValue ya guardado
                 productFeatureRepository.save(productFeature);
             }
-
-            // TODO: ASIGNA feature_id EN LA TABLA feature_value, PERO INSERTA 2 VECES EL
-            // MISMO REGISTRO
-            // TODO: SI VERIFICA LOS VALORES DE feature Y value SI YA EXISTEN EN LA BASE DE
-            // DATOS
-            // TODO: GUARDA 2 VECES EL MISMO REGISTRO EN product_feature
-
-            // ESTE ERROR SE MUESTRA... PORQUE HAY
-            // Error al guardar el producto: Query did not return a unique result: 2 results
-            // were returned
-
-            // 1. Guardar Feature si no existe
-            // 2. Buscar o guardar FeatureValue (DEBE INCLUIR `Feature` en la consulta)
-            // 3. Verificar que no exista ya la relación en `product_feature`
-
-            // Feature feature = featureRepository.findByName(featureName)
-            // .orElseGet(() -> {
-            // Feature newFeature = new Feature();
-            // newFeature.setName(featureName);
-            // newFeature.setStatus(true);
-            // return featureRepository.save(newFeature);
-            // });
-
-            // FeatureValue featureValue =
-            // featureValueRepository.findByFeatureAndValue(feature, featureValueName)
-            // .orElseGet(() -> {
-            // FeatureValue newFeatureValue = new FeatureValue();
-            // newFeatureValue.setFeature(feature);
-            // newFeatureValue.setValue(featureValueName);
-            // return featureValueRepository.save(newFeatureValue);
-            // });
-
-            // if (!productFeatureRepository.existsByProductAndFeatureValue(savedProduct,
-            // featureValue)) {
-            // ProductFeature productFeature = new ProductFeature();
-            // productFeature.setProduct(savedProduct);
-            // productFeature.setFeature(feature);
-            // productFeature.setFeatureValue(featureValue);
-            // productFeatureRepository.save(productFeature);
-
-            // }
         }
 
-        System.out.println("Ficha técnica guardada correctamente.");
-
-        // return productDetailTechSheetDtoMapper.toDto(savedProduct);
         return productDtoMapper.toDetailDto(savedProduct);
-
     }
 
     @Transactional

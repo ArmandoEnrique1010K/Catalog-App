@@ -33,7 +33,7 @@ public class Feature {
 
     @NotBlank(message = "El nombre no puede estar vacío")
     // NO DEBERIA SER UNICO
-    @Column(nullable = false, unique = true) // 🔹 Asegura que el nombre sea único
+    @Column(nullable = false) // 🔹 Asegura que el nombre sea único
     private String name; // Característica (e.g., "Color", "Peso")
 
     @Column(columnDefinition = "TINYINT(1)", nullable = false)

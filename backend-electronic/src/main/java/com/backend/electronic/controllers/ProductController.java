@@ -28,6 +28,7 @@ import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.entities.Image;
 import com.backend.electronic.models.entities.Product;
+import com.backend.electronic.models.entities.ProductFeature;
 import com.backend.electronic.models.requests.ProductRequest;
 import com.backend.electronic.services.products.ProductService;
 import com.backend.electronic.services.validations.ValidationService;
@@ -141,7 +142,9 @@ public class ProductController {
             MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> createWithTechSheet(
             @Valid @RequestPart("product") Product product, BindingResult result,
-            @RequestPart(value = "image", required = false) MultipartFile image) {
+            @RequestPart(value = "image", required = false) MultipartFile image
+    // @RequestPart("techSheet") List<ProductFeature> techSheet
+    ) { // ✅ Nueva clave para ficha técnica
 
         // Validaciones (si fallan, lanzarán excepciones y se detendrá el flujo)
         validationService.validateFields(result);

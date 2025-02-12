@@ -1,9 +1,12 @@
 package com.backend.electronic.models.entities;
 
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,19 +33,21 @@ public class ProductFeature {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
-    @JoinColumn(name = "product_id")
+    @ManyToOne // Cascada para Feature
+    // @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @ManyToOne
-    @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
-    @JoinColumn(name = "feature_id")
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Feature.class) // Cascada para Feature
+    // @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
+    @JoinColumn(name = "feature_id", nullable = false)
+    // @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Feature feature;
 
-    @ManyToOne
-    @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
-    @JoinColumn(name = "feature_value_id")
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = FeatureValue.class)
+    // @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
+    @JoinColumn(name = "feature_value_id", nullable = false)
+    // @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private FeatureValue featureValue;
 
     // Getters and Setters

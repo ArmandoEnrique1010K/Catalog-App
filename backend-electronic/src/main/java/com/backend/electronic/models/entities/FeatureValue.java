@@ -35,8 +35,13 @@ public class FeatureValue {
     private Long id;
 
     @ManyToOne(optional = false) // 🔹 No permitir que feature sea null
-    @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
-    @JoinColumn(name = "feature_id", nullable = false) // 🔹 Asegurar integridad en la BD
+    // @Cascade(CascadeType.PERSIST) // TODO: INVESTIGAR @CASCADE
+
+    // TODO: SI DESACTIVO nullable = false, vuelve a ocurrir el error de que se sube
+    // 2 veces el registro en la base de datos en la tablas product_feature e
+    // feature_value, pero se sube el registro, el primero sin feature_id y el
+    // segundo se asigna feature_id
+    @JoinColumn(name = "feature_id", nullable = false /* , nullable = false */) // 🔹 Asegurar integridad en la BD
     private Feature feature;
 
     @NotBlank

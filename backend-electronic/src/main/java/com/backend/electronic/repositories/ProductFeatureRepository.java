@@ -1,6 +1,7 @@
 package com.backend.electronic.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,7 @@ public interface ProductFeatureRepository extends JpaRepository<ProductFeature, 
     List<ProductFeature> findTechSheetByProductId(@Param("productId") Long productId);
 
     boolean existsByProductAndFeatureValue(Product product, FeatureValue featureValue);
+
+    Optional<ProductFeature> findByProductAndFeatureValue(Product product, FeatureValue featureValue);
+
 }

@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.entities.Product;
+import com.backend.electronic.models.entities.ProductFeature;
 import com.backend.electronic.models.requests.ProductRequest;
 
 public interface ProductService {

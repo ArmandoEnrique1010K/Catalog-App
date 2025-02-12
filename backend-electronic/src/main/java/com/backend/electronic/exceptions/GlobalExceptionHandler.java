@@ -31,12 +31,12 @@ public class GlobalExceptionHandler {
             if (matcher.find()) {
                 String constraintName = matcher.group(1);
                 String fieldName = extractFieldName(constraintName);
-                errors.put(fieldName, "El campo " + fieldName + " ya está en uso. Debe ser único.");
+                errors.put(fieldName, "El campo " + fieldName + " ya está en uso. Debe ser único. " + errorMessage);
             } else {
-                errors.put("error_general", "Error de integridad de datos: entrada duplicada.");
+                errors.put("error_general", "Error de integridad de datos: entrada duplicada." + errorMessage);
             }
         } else {
-            errors.put("error_general", "Error de integridad de datos.");
+            errors.put("error_general", "Error de integridad de datos." + errorMessage);
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);

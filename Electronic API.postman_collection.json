@@ -108,6 +108,14 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "listByCategory",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -281,7 +289,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/search?name=epson",
+							"raw": "http://localhost:8080/products/searchByName?name=laptop",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -289,12 +297,12 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"search"
+								"searchByName"
 							],
 							"query": [
 								{
 									"key": "name",
-									"value": "epson"
+									"value": "laptop"
 								}
 							]
 						}
@@ -391,6 +399,63 @@
 					"response": []
 				},
 				{
+					"name": "listFilteredProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "HP",
+									"disabled": true
+								},
+								{
+									"key": "idCategory",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "idsBrands",
+									"value": "1,2,3,4",
+									"disabled": true
+								},
+								{
+									"key": "offer",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "minPrice",
+									"value": "1000",
+									"disabled": true
+								},
+								{
+									"key": "maxPrice",
+									"value": "10000",
+									"disabled": true
+								},
+								{
+									"key": "featureValues",
+									"value": "1,2,3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "create",
 					"event": [
 						{
@@ -472,6 +537,49 @@
 					"response": []
 				},
 				{
+					"name": "createWithTechSheet",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product",
+									"value": "{\n  \"name\": \"654DG\",\n  \"code\": \"1111\",\n  \"price\": \"32\",\n  \"inOffer\": true,\n  \"offerPrice\": 450,\n  \"description\": \"Descripción del producto\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 }\n}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"contentType": "image",
+									"type": "file",
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/door.png"
+								},
+								{
+									"key": "techSheet",
+									"value": "[\n    { \"feature\": \"Tamaño de pantallazo\", \"value\": \"15.6 pulgadas\" },\n    { \"feature\": \"Memoria RAM\", \"value\": \"16 GB\" },\n    { \"feature\": \"Procesador\", \"value\": \"Intel i7\" }\n]",
+									"contentType": "application/json",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/new",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "update",
 					"request": {
 						"method": "PUT",
@@ -529,7 +637,85 @@
 					"response": []
 				},
 				{
-					"name": "createWithTechSheet",
+					"name": "deletethiscreateWithTechSheet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<canvas id=\"errorChart\" height=\"75\"></canvas>\r",
+									"\r",
+									"<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\"></script> \r",
+									"\r",
+									"<script>\r",
+									"    var ctx = document.getElementById(\"errorChart\");\r",
+									"\r",
+									"    var errorChart = new Chart(ctx, {\r",
+									"        type: \"bar\",\r",
+									"        data: {\r",
+									"            labels: [\"Error Message\"],\r",
+									"            datasets: [{\r",
+									"                data: [2],\r",
+									"                \r",
+									"                // Change these colours to customize the chart\r",
+									"                backgroundColor: [\"#e63946\"],\r",
+									"            }]\r",
+									"        },\r",
+									"        options: {\r",
+									"            legend: { display: false },\r",
+									"            title: {\r",
+									"                display: true,\r",
+									"                text: 'Error Occurrences'\r",
+									"            },\r",
+									"            scales: {\r",
+									"                xAxes: [{\r",
+									"                    display: true,\r",
+									"                    scaleLabel: {\r",
+									"                        display: true,\r",
+									"                        labelString: 'Error Type'\r",
+									"                    }\r",
+									"                }],\r",
+									"                yAxes: [{\r",
+									"                    display: true,\r",
+									"                    scaleLabel: {\r",
+									"                        display: true,\r",
+									"                        labelString: 'Occurrences'\r",
+									"                    }\r",
+									"                }]\r",
+									"            }\r",
+									"        }\r",
+									"\r",
+									"    });\r",
+									"\r",
+									"    // Access the data passed to pm.visualizer.set() from the JavaScript\r",
+									"    // code of the Visualizer template\r",
+									"    pm.getData(function (err, value) {\r",
+									"        errorChart.data.datasets[0].data = value.response.data;\r",
+									"        errorChart.data.labels = value.response.labels;\r",
+									"        errorChart.update();\r",
+									"    });\r",
+									"\r",
+									"</script>`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    var visualizerData = {\r",
+									"        // Labels take an array of strings\r",
+									"        labels: [\"Error Message\"],\r",
+									"        // Data takes an array of numbers\r",
+									"        data: [2]\r",
+									"    };\r",
+									"\r",
+									"    return {response: visualizerData};\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -538,7 +724,7 @@
 							"formdata": [
 								{
 									"key": "product",
-									"value": "{\n  \"code\": \"234htgfbx\",\n  \"name\": \"Laptop Gamer\",\n  \"inOffer\": false,\n  \"price\": 1200.99,\n  \"offerPrice\": 100,\n  \"description\": \"Laptop de alto rendimiento\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 },\n  \"productFeature\": [\n    {\n      \"feature\": { \"name\": \"Procesador 2\" },\n      \"featureValue\": { \"value\": \"Intel Core i8\" }\n    },\n    {\n      \"feature\": { \"name\": \"RAM 2\" },\n      \"featureValue\": { \"value\": \"13GB\" }\n    }\n  ]\n\n}",
+									"value": "{\n  \"code\": \"234htgfbx\",\n  \"name\": \"Laptop Gamer\",\n  \"inOffer\": false,\n  \"price\": 1200.99,\n  \"offerPrice\": 100,\n  \"description\": \"Laptop de alto rendimiento\",\n  \"brand\": { \"id\": 1 },\n  \"category\": { \"id\": 2 },\n  \"productFeature\": [\n    {\n      \"feature\": { \"name\": \"Color\" },\n      \"featureValue\": { \"value\": \"Azul\" }\n    },\n    {\n      \"feature\": { \"name\": \"Tamaño de pantalla\" },\n      \"featureValue\": { \"value\": \"32 pulgadas\" }\n    }\n  ]\n}",
 									"contentType": "application/json",
 									"type": "text"
 								},
@@ -546,7 +732,14 @@
 									"key": "image",
 									"contentType": "image",
 									"type": "file",
-									"src": "/C:/Users/USER/Pictures/Saved Pictures/Deep underwater.jpg"
+									"src": "/C:/Users/USER/Pictures/Saved Pictures/emphy world.jpg"
+								},
+								{
+									"key": "techSheet",
+									"value": "[\n    {\n      \"feature\": { \"name\": \"Procesador 2\" },\n      \"featureValue\": { \"value\": \"Intel Core i8\" }\n    },\n    {\n      \"feature\": { \"name\": \"RAM 2\" },\n      \"featureValue\": { \"value\": \"13GB\" }\n    }\n]",
+									"contentType": "application/json",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
@@ -576,7 +769,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/images/imagen2.png",
+							"raw": "http://localhost:8080/images/Img_1739420461206.png",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -584,7 +777,7 @@
 							"port": "8080",
 							"path": [
 								"images",
-								"imagen2.png"
+								"Img_1739420461206.png"
 							]
 						}
 					},
@@ -702,7 +895,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/features/5/values",
+							"raw": "http://localhost:8080/features/1/values",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -710,7 +903,7 @@
 							"port": "8080",
 							"path": [
 								"features",
-								"5",
+								"1",
 								"values"
 							]
 						}
@@ -724,7 +917,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"value\": \"Negro\"\r\n}",
+							"raw": "{\r\n    \"value\": \"Verde\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -753,7 +946,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/features/3/values/category/1",
+							"raw": "http://localhost:8080/features/1/values/category/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -761,7 +954,7 @@
 							"port": "8080",
 							"path": [
 								"features",
-								"3",
+								"1",
 								"values",
 								"category",
 								"1"
@@ -836,7 +1029,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/product/1/feature/tech-sheet",
+							"raw": "http://localhost:8080/product/207/feature/tech-sheet",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -844,7 +1037,7 @@
 							"port": "8080",
 							"path": [
 								"product",
-								"1",
+								"207",
 								"feature",
 								"tech-sheet"
 							]
@@ -859,7 +1052,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    { \"feature\": \"Tamaño de pantalla\", \"value\": \"15.6 pulgadas\" },\r\n    { \"feature\": \"Memoria RAM\", \"value\": \"16 GB\" },\r\n    { \"feature\": \"Procesador\", \"value\": \"Intel i7\" }\r\n]\r\n",
+							"raw": "[\r\n    { \"feature\": \"Tamaño de pantallazo\", \"value\": \"15.6 pulgadas\" },\r\n    { \"feature\": \"Memoria RAM\", \"value\": \"16 GB\" },\r\n    { \"feature\": \"Procesador\", \"value\": \"Intel i7\" }\r\n]\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -867,7 +1060,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/product/7/feature/tech-sheet",
+							"raw": "http://localhost:8080/product/3/feature/tech-sheet",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -875,7 +1068,7 @@
 							"port": "8080",
 							"path": [
 								"product",
-								"7",
+								"3",
 								"feature",
 								"tech-sheet"
 							]

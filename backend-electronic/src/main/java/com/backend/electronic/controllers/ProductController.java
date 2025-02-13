@@ -103,6 +103,9 @@ public class ProductController {
     // return ResponseEntity.notFound().build();
     // }
 
+    // NOTA IMPORTANTE:
+    // Para que funcione correctamente, todos los productos deben tener su ficha
+    // tecnica (pues solamente muestra los productos que tienen su ficha tecnica)
     @GetMapping("/search")
     public List<ProductsListDto> listFilteredProducts(
             @RequestParam(required = false) String name,
@@ -159,9 +162,10 @@ public class ProductController {
 
     }
 
+    // TODO: ELIMINAR ESTO
     @PostMapping(value = "/createTest", consumes = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> createWithTechSheet(
+    public ResponseEntity<?> createTestWithTechSheet(
             @Valid @RequestPart("product") Product product, BindingResult result,
             @RequestPart(value = "image", required = false) MultipartFile image
     // @RequestPart("techSheet") List<ProductFeature> techSheet
@@ -187,10 +191,12 @@ public class ProductController {
 
     }
 
-    // TODO: POR PRIMERA VEZ SUPERE A CHATGPT, COPILOT Y DEEPSEEK :D
-    @PostMapping(value = "/createTest/services", consumes = { MediaType.APPLICATION_JSON_VALUE,
+    // NOTA: POR PRIMERA VEZ SUPERE A CHATGPT, COPILOT Y DEEPSEEK, PORQUE LA
+    // SOLUCIÓN ESTABA EN EL CONTROLADOR, NO EN EL SERVICIO
+
+    @PostMapping(value = "/new", consumes = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> createWithTechSheet2Services(
+    public ResponseEntity<?> createWithTechSheet(
             @Valid @RequestPart("product") Product product, BindingResult result,
             @RequestPart(value = "image", required = false) MultipartFile image,
             @RequestPart("techSheet") List<TechSheetDto> techSheet
@@ -204,7 +210,7 @@ public class ProductController {
         try {
             ProductDetailDto savedProduct = productService.save(product, image);
 
-            // TODO: INTENTAR ESTO: 2 SERVICIOS EN UN CONTROLADOR
+            // INTENTAR ESTO: 2 SERVICIOS EN UN CONTROLADOR
             Long idProductInDb = savedProduct.getId();
 
             productFeatureService.saveTechSheet(idProductInDb, techSheet);

@@ -106,20 +106,40 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         List<Product> findByFeatureValues(
                         @Param("featureValues") List<Long> featureValues);
 
-        // SUPERCONSULTA A LA BASE DE DATOS GENERAL PARA TODOS LOS FILTROS
-        @Query("SELECT DISTINCT p FROM Product p JOIN FETCH p.brand b JOIN FETCH p.category c JOIN FETCH p.image JOIN FETCH p.productFeature pf "
+        // SUPERCONSULTA A LA BASE DE DATOS PARA OBTENER UNA LISTA DE PRODUCTOS CON
+        // TODOS LOS FILTROS DISPONIBLES
+
+        // @Query("SELECT p FROM Product p JOIN FETCH p.brand b JOIN FETCH p.category c
+        // JOIN FETCH p.image JOIN FETCH p.productFeature pf "
+        // +
+        // "WHERE p.status = true AND p.brand.status = true AND p.category.status = true
+        // " +
+        // "AND (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+        // "AND (:idCategory IS NULL OR c.id = :idCategory) " +
+        // "AND (:idsBrands IS NULL OR b.id IN :idsBrands) " +
+        // "AND (:offer IS NULL OR p.inOffer = :offer)" +
+        // "AND ((:minPrice IS NULL AND :maxPrice IS NULL) OR " +
+        // " (p.offerPrice IS NOT NULL AND (:minPrice is NULL OR p.offerPrice >=
+        // :minPrice)) AND " +
+        // " (:maxPrice IS NULL OR p.offerPrice <= :maxPrice) OR " +
+        // " (p.offerPrice IS NULL AND (:minPrice is NULL OR p.price >= :minPrice)) AND
+        // " +
+        // " (:maxPrice IS NULL OR p.price <= :maxPrice)) " +
+        // "AND pf.featureValue.id IN :featureValues GROUP BY p.id")
+
+        @Query("SELECT DISTINCT p FROM Product p JOIN p.brand b JOIN p.category c JOIN p.image JOIN p.productFeature pf "
                         +
                         "WHERE p.status = true AND p.brand.status = true AND p.category.status = true " +
                         "AND (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
                         "AND (:idCategory IS NULL OR c.id = :idCategory) " +
                         "AND (:idsBrands IS NULL OR b.id IN :idsBrands) " +
-                        "AND (:offer IS NULL OR p.inOffer = :offer)"
-                        + "AND ((:minPrice IS NULL AND :maxPrice IS NULL) OR "
-                        + " (p.offerPrice IS NOT NULL AND (:minPrice is NULL OR p.offerPrice >= :minPrice)) AND "
-                        + " (:maxPrice IS NULL OR p.offerPrice <= :maxPrice) OR "
-                        + " (p.offerPrice IS NULL AND (:minPrice is NULL OR p.price >= :minPrice)) AND "
-                        + " (:maxPrice IS NULL OR p.price <= :maxPrice)) " +
-                        "AND pf.featureValue.id IN :featureValues")
+                        "AND (:offer IS NULL OR p.inOffer = :offer)" +
+                        "AND ((:minPrice IS NULL AND :maxPrice IS NULL) OR " +
+                        " (p.offerPrice IS NOT NULL AND (:minPrice is NULL OR p.offerPrice >= :minPrice)) AND " +
+                        " (:maxPrice IS NULL OR p.offerPrice <= :maxPrice) OR " +
+                        " (p.offerPrice IS NULL AND (:minPrice is NULL OR p.price >= :minPrice)) AND " +
+                        " (:maxPrice IS NULL OR p.price <= :maxPrice)) " +
+                        "AND (:featureValues IS NULL OR pf.featureValue.id IN :featureValues) ")
         List<Product> findAllByFilters(
                         @Param("name") String name,
                         @Param("idCategory") Long idCategory,
@@ -128,6 +148,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                         @Param("minPrice") Double minPrice,
                         @Param("maxPrice") Double maxPrice,
                         @Param("featureValues") List<Long> featureValues);
+
 }
 
 // EL USO DE FETCH EN UN QUERY

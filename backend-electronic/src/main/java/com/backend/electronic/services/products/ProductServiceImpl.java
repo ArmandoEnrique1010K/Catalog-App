@@ -1,7 +1,6 @@
 package com.backend.electronic.services.products;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
-import com.backend.electronic.models.dto.TechSheetDto;
-import com.backend.electronic.models.dto.mapper.ProductDetailTechSheetDtoMapper;
 import com.backend.electronic.models.dto.mapper.ProductDtoMapper;
 import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.models.entities.Category;
@@ -34,9 +31,6 @@ import com.backend.electronic.repositories.ImageRepository;
 import com.backend.electronic.repositories.ProductFeatureRepository;
 import com.backend.electronic.repositories.ProductRepository;
 import com.backend.electronic.services.images.ImageService;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -69,10 +63,6 @@ public class ProductServiceImpl implements ProductService {
 
     // @Autowired
     // private ProductDetailTechSheetDtoMapper productDetailTechSheetDtoMapper;
-
-    // TODO: ¿QUE ES ESO?
-    @PersistenceContext
-    private EntityManager entityManager;
 
     // TODO: SIMPLIFICAR EL CODIGO DE ESTE ARCHIVO
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
@@ -143,6 +133,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<ProductsListDto> findAllBySevenFilters(String name, Long idCategory, List<Long> idsBrands,
+            Boolean offer, Double minPrice, Double maxPrice, List<Long> featureValues) {
+        List<Product> products = productRepository.findAllByFilters(name, idCategory, idsBrands, offer, minPrice,
+                maxPrice, featureValues);
+        return products.stream().map(
+                productDtoMapper::toListDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<ProductDetailDto> findById(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent() && optionalProduct.get().getStatus() == true) {
@@ -195,8 +196,9 @@ public class ProductServiceImpl implements ProductService {
         return productDtoMapper.toDetailDto(savedProduct);
     }
 
-// https://stackoverflow.com/questions/62272205/error-when-it-implements-a-create-hhh000437-attempting-to-save-one-or-more
-// TODO: ESTE PROBLEMA NO TIENE SOLUCIÓN, NO SE PUEDE GUARDAR UN PRODUCTO JUNTO CON SU FICHA TECNICA AL MISMO TIEMPO EN EL MISMO SERVICIO
+    // https://stackoverflow.com/questions/62272205/error-when-it-implements-a-create-hhh000437-attempting-to-save-one-or-more
+    // TODO: ESTE PROBLEMA NO TIENE SOLUCIÓN, NO SE PUEDE GUARDAR UN PRODUCTO JUNTO
+    // CON SU FICHA TECNICA AL MISMO TIEMPO EN EL MISMO SERVICIO
     @Transactional
     @Override
     public ProductDetailDto saveWithTechSheet(Product product, MultipartFile file) {

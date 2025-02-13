@@ -42,6 +42,13 @@ public class BrandController {
         return brandService.findAllByStatusTrue();
     }
 
+    // LISTAR TODAS LAS MARCAS DISTINTAS QUE
+    // CORRESPONDEN A LA MISMA CATEGORIA
+    @GetMapping("/category/{id}")
+    public List<BrandDto> listByCategory(@PathVariable Long id) {
+        return brandService.findAllByCategoryId(id);
+    }
+
     // Guardar una marca
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody Brand brand, BindingResult result) {

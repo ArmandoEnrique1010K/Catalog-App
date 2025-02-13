@@ -3,6 +3,7 @@ package com.backend.electronic.services.products;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.electronic.models.dto.ProductDetailDto;
@@ -25,6 +26,9 @@ public interface ProductService {
     public List<ProductsListDto> findAllByFilters(String name, Long idCategory, List<Long> idsBrands, Boolean offer);
 
     public List<ProductsListDto> findAllByFeatureValues(List<Long> featureValues);
+
+    public List<ProductsListDto> findAllBySevenFilters(String name, Long idCategory, List<Long> idsBrands,
+            Boolean offer, Double minPrice, Double maxPrice, List<Long> featureValues);
 
     public Optional<ProductDetailDto> findById(Long id);
 

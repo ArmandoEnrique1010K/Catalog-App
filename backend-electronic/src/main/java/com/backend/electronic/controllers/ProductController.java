@@ -64,7 +64,7 @@ public class ProductController {
         return productService.findAllByOffer();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/searchByName")
     public List<ProductsListDto> searchListByName(@RequestParam("name") String name) {
         return productService.findAllByName(name);
     }
@@ -102,6 +102,22 @@ public class ProductController {
 
     // return ResponseEntity.notFound().build();
     // }
+
+    @GetMapping("/search")
+    public List<ProductsListDto> listFilteredProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long idCategory,
+            @RequestParam(required = false) List<Long> idsBrands,
+            @RequestParam(required = false) Boolean offer,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) List<Long> featureValues) {
+
+        // List<ProductsListDto> products = productService.findAllByEightFilters(name,
+        // idCategory, idsBrands, offer, minPrice, maxPrice, featureValues);
+        return productService.findAllBySevenFilters(name, idCategory, idsBrands, offer, minPrice, maxPrice,
+                featureValues);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> showById(@PathVariable Long id) {

@@ -39,6 +39,14 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<BrandDto> findAllByCategoryId(Long id) {
+        List<Brand> brands = brandRepository.findDistinctByCategoryId(id);
+        return brands.stream().map(brandDtoMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<BrandDto> findById(Long id) {
         return brandRepository.findById(id).map(brandDtoMapper::toDto);
     }

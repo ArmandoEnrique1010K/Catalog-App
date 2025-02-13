@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    // TODO: INVESTIGAR ESTO SOBRE EL PATRON SOLID
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<?> handleValidationException(ValidationException ex) {
         return ResponseEntity.badRequest().body(ex.getErrors());

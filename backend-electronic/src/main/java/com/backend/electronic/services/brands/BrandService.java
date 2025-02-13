@@ -11,6 +11,10 @@ public interface BrandService {
     // Listar todas las marcas habilitadas
     public List<BrandDto> findAllByStatusTrue();
 
+    // Listar todas las marcas distintas de todos los productos que corresponden a
+    // una misma categoria
+    public List<BrandDto> findAllByCategoryId(Long id);
+
     // Buscar una marca por su id
     public Optional<BrandDto> findById(Long id);
 

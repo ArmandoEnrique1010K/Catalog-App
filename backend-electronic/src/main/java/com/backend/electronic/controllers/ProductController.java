@@ -123,18 +123,12 @@ public class ProductController {
 
         Sort.Direction direction = Sort.Direction.fromString(order);
 
-        // TODO: ARREGLAR ESTO
-        Sort sort;
-        // PARA QUE FILTRE POR EL PRECIO, SI EL PRECIO DE OFERTA ES NULO, DEBE AGARRAR
-        // EL PRECIO (price)
-        if ("price".equals(sortBy)) {
-            sort = Sort.by(new Sort.Order(direction, "offerPrice").nullsLast())
-                    .and(Sort.by(direction, "price"));
-        } else if ("brand".equals(sortBy)) {
-            sort = Sort.by(direction, "brand.name");
-        } else {
-            sort = Sort.by(direction, sortBy); // Default: ordenar por nombre del producto
-        }
+        // POSIBLES VALORES PARA sortBy:
+        // - createdAt: fecha de creación (por defecto)
+        // - name: nombre del producto
+        // - price: precio del producto
+        // - brand.name: nombre de marca
+        Sort sort = Sort.by(direction, sortBy);
 
         List<ProductsListDto> products = productService.findAllBySevenFilters(name,
                 idCategory, idsBrands, offer, minPrice, maxPrice, featureValues, sort);

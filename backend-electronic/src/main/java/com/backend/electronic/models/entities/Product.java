@@ -54,14 +54,14 @@ public class Product {
 
     // Precio original y precio de oferta
     @NotNull(message = "El precio es obligatorio")
-    @Positive(message = "El precio debe ser un valor positivo")
+    @Positive(message = "El precio actual debe ser un valor positivo")
     @Column(nullable = false)
-    private Double price;
+    private Double currentPrice;
 
-    @Positive(message = "El precio de oferta debe ser positivo")
+    @Positive(message = "El precio anterior debe ser positivo")
     @Nullable
     @Column
-    private Double offerPrice;
+    private Double oldPrice;
 
     // Estado (requerido para eliminar productos, de tal manera que solo cambie el
     // estado)

@@ -132,18 +132,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         // "AND pf.featureValue.id IN :featureValues GROUP BY p.id")
 
         // TODO: INVESTIGAR EL USO DE DISTINCT Y GROUP BY EN UNA CONSULTA JDBC
-        @Query("SELECT p FROM Product p JOIN p.brand b JOIN p.category c JOIN p.image JOIN p.productFeature pf "
-                        +
+        @Query("SELECT p FROM Product p JOIN p.brand b JOIN p.category c JOIN p.image JOIN p.productFeature pf " +
                         "WHERE p.status = true AND p.brand.status = true AND p.category.status = true " +
                         "AND (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
                         "AND (:idCategory IS NULL OR c.id = :idCategory) " +
                         "AND (:idsBrands IS NULL OR b.id IN :idsBrands) " +
                         "AND (:offer IS NULL OR p.inOffer = :offer)" +
                         "AND ((:minPrice IS NULL AND :maxPrice IS NULL) OR " +
-                        " (p.offerPrice IS NOT NULL AND (:minPrice is NULL OR p.offerPrice >= :minPrice)) AND " +
-                        " (:maxPrice IS NULL OR p.offerPrice <= :maxPrice) OR " +
-                        " (p.offerPrice IS NULL AND (:minPrice is NULL OR p.price >= :minPrice)) AND " +
-                        " (:maxPrice IS NULL OR p.price <= :maxPrice)) " +
+                        " (:minPrice is NULL OR p.currentPrice >= :minPrice)) AND (:maxPrice IS NULL OR p.currentPrice <= :maxPrice) "
+                        +
+                        // " (p.offerPrice IS NOT NULL AND (:minPrice is NULL OR p.offerPrice >=
+                        // :minPrice)) AND " +
+                        // " (:maxPrice IS NULL OR p.offerPrice <= :maxPrice) OR " +
+                        // " (p.offerPrice IS NULL AND (:minPrice is NULL OR p.price >= :minPrice)) AND
+                        // " +
+                        // " (:maxPrice IS NULL OR p.price <= :maxPrice)) " +
                         "AND (:featureValues IS NULL OR pf.featureValue.id IN :featureValues) GROUP BY p.id ")
         List<Product> findAllByFilters(
                         @Param("name") String name,

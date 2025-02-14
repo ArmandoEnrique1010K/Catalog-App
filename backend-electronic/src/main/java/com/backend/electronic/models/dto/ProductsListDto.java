@@ -15,8 +15,8 @@ public class ProductsListDto {
     private String code;
     private String name;
     private Boolean inOffer;
-    private Double price;
-    private Double offerPrice;
+    private Double currentPrice;
+    private Double oldPrice;
     private String nameImage;
     private String brandName;
 }

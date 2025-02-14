@@ -84,27 +84,27 @@ INSERT INTO image (id, name) VALUES
 -- TRUNCATE TABLE product;
 
 -- Inserta datos en la tabla "product"
-INSERT INTO product (id, code, name, in_offer, price, offer_price, status, description, updated_at, created_at, brand_id, category_id, image_id) VALUES
-(1, 'P001', 'HP Spectre x360', true, 1599.99, 1499.99, true, 'Laptop convertible con pantalla táctil de 13.5" y procesador Intel Core i7', '2025-01-20 15:30:00', '2025-01-01 10:00:00',  1, 1, 1),
+INSERT INTO product (id, code, name, in_offer, current_price, old_price, status, description, updated_at, created_at, brand_id, category_id, image_id) VALUES
+(1, 'P001', 'HP Spectre x360', true, 1499.99, 1599.99,  true, 'Laptop convertible con pantalla táctil de 13.5" y procesador Intel Core i7', '2025-01-20 15:30:00', '2025-01-01 10:00:00',  1, 1, 1),
 (2, 'P002', 'LG OLED TV', false, 1299.99, NULL, true, 'Televisor OLED 4K de 55" con tecnología AI ThinQ.', '2025-01-15 18:45:00', '2025-01-03 12:00:00', 2, 2, 2),
-(3, 'P003', 'Samsung Galaxy S23', true, 999.00, 920.99, true, 'Smartphone con pantalla AMOLED de 6.1" y resistencia al agua IP68.', '2025-01-10 14:20:00', '2025-01-05 09:00:00', 7, 3, 3),
+(3, 'P003', 'Samsung Galaxy S23', true, 920.99, 999.00,  true, 'Smartphone con pantalla AMOLED de 6.1" y resistencia al agua IP68.', '2025-01-10 14:20:00', '2025-01-05 09:00:00', 7, 3, 3),
 (4, 'P004', 'Epson EcoTank L3250', false, 199.99, NULL, true, 'Impresora multifuncional con sistema de tanque de tinta.', '2025-01-17 11:00:00', '2025-01-07 08:30:00', 6, 4, 4),
-(5, 'P005', 'Sony Alpha a7 III', true, 1999.99, 1899.99, true, 'Cámara mirrorless con sensor de fotograma completo y 24 MP.', '2025-01-18 16:00:00', '2025-01-06 15:00:00', 5, 5, 5),
+(5, 'P005', 'Sony Alpha a7 III', true, 1899.99, 1999.99,  true, 'Cámara mirrorless con sensor de fotograma completo y 24 MP.', '2025-01-18 16:00:00', '2025-01-06 15:00:00', 5, 5, 5),
 (6, 'P006', 'Samsung Galaxy Watch 6', false, 299.99, NULL, true, 'Reloj inteligente con seguimiento de salud y GPS integrado.', '2025-01-16 13:00:00', '2025-01-08 14:00:00', 7, 6, 6),
-(7, 'P007', 'Lenovo ThinkPad X1 Carbon', true, 1799.99, 1599.99, false, 'Ultrabook empresarial con pantalla de 14" y procesador Intel Core i7.', '2025-01-14 19:30:00', '2025-01-09 16:00:00', 4, 1, 7),
+(7, 'P007', 'Lenovo ThinkPad X1 Carbon', true, 1599.99, 1799.99,  false, 'Ultrabook empresarial con pantalla de 14" y procesador Intel Core i7.', '2025-01-14 19:30:00', '2025-01-09 16:00:00', 4, 1, 7),
 (8, 'P008', 'LG NanoCell TV', false, 1599.99, NULL, true, 'Televisor NanoCell 4K de 65" con inteligencia artificial.', '2025-01-12 12:00:00', '2025-01-10 10:30:00', 2, 2, 8),
-(9, 'P009', 'iPhone 14', true, 1099.99, 899.99, true, 'Smartphone de Apple con pantalla Super Retina XDR de 6.1".', '2025-01-11 10:15:00', '2025-01-11 09:00:00', 3, 3, 9),
+(9, 'P009', 'iPhone 14', true, 899.99, 1099.99, true, 'Smartphone de Apple con pantalla Super Retina XDR de 6.1".', '2025-01-11 10:15:00', '2025-01-11 09:00:00', 3, 3, 9),
 (10, 'P010', 'HP DeskJet 2722', false, 89.99, NULL, true, 'Impresora todo-en-uno con conectividad inalámbrica.', '2025-01-19 15:00:00', '2025-01-12 11:00:00', 1, 4, 10),
-(11, 'P011', 'Sony ZV-1', true, 799.99, 699.99, true, 'Cámara compacta diseñada para creadores de contenido.', '2025-01-20 16:00:00', '2025-01-01 12:00:00', 5, 5, 11),
+(11, 'P011', 'Sony ZV-1', true, 699.99, 799.99,  true, 'Cámara compacta diseñada para creadores de contenido.', '2025-01-20 16:00:00', '2025-01-01 12:00:00', 5, 5, 11),
 (12, 'P012', 'Garmin Forerunner 945', false, 599.99, NULL, true, 'Reloj inteligente para atletas con mapas y música.', '2025-01-18 14:00:00', '2025-01-02 09:30:00', 6, 6, 12),
-(13, 'P013', 'Toshiba Satellite Pro', true, 749.99, 704.99, true, 'Laptop de 15.6" con procesador AMD Ryzen 5.', '2025-01-17 10:00:00', '2025-01-04 11:00:00', 3, 1, 13),
-(14, 'P014', 'Samsung QLED TV', true, 2999.99, 2799.99, true, 'Televisor QLED 8K de 75" con tecnología Quantum HDR.', '2025-01-15 17:00:00', '2025-01-05 14:30:00', 7, 2, 14),
+(13, 'P013', 'Toshiba Satellite Pro', true, 704.99, 749.99,  true, 'Laptop de 15.6" con procesador AMD Ryzen 5.', '2025-01-17 10:00:00', '2025-01-04 11:00:00', 3, 1, 13),
+(14, 'P014', 'Samsung QLED TV', true, 2799.99, 2999.99,  true, 'Televisor QLED 8K de 75" con tecnología Quantum HDR.', '2025-01-15 17:00:00', '2025-01-05 14:30:00', 7, 2, 14),
 (15, 'P015', 'Google Pixel 7', false, 899.99, NULL, true, 'Smartphone con cámara avanzada y software exclusivo de Google.', '2025-01-13 11:00:00', '2025-01-06 10:00:00', 7, 3, 15),
-(16, 'P016', 'Canon EOS R50', true, 999.99, 949.99, true, 'Cámara mirrorless compacta con lente intercambiable.', '2025-01-12 15:00:00', '2025-01-07 09:00:00', 5, 5, 16),
-(17, 'P017', 'Fitbit Versa 4', true, 229.99, 199.99, true, 'Reloj inteligente con monitor de actividad física y sueño.', '2025-01-14 18:00:00', '2025-01-08 13:00:00', 6, 6, 17),
+(16, 'P016', 'Canon EOS R50', true, 949.99, 999.99, true, 'Cámara mirrorless compacta con lente intercambiable.', '2025-01-12 15:00:00', '2025-01-07 09:00:00', 5, 5, 16),
+(17, 'P017', 'Fitbit Versa 4', true, 199.99, 229.99,  true, 'Reloj inteligente con monitor de actividad física y sueño.', '2025-01-14 18:00:00', '2025-01-08 13:00:00', 6, 6, 17),
 (18, 'P018', 'Dell XPS 13', false, 1299.99, NULL, true, 'Laptop ultraportátil con pantalla InfinityEdge de 13.3.', '2025-01-16 09:00:00', '2025-01-09 12:00:00', 1, 1, 18),
-(19, 'P019', 'Sony Bravia XR', true, 1799.99, 1599.99, true, 'Televisor inteligente 4K con sonido envolvente.', '2025-01-19 14:30:00', '2025-01-10 11:00:00', 5, 2, 19),
-(20, 'P020', 'Huawei Watch GT 3', true, 249.99, 219.99, true, 'Reloj inteligente con diseño elegante y larga duración de batería.', '2025-01-11 13:00:00', '2025-01-11 09:30:00', 6, 6, 20);
+(19, 'P019', 'Sony Bravia XR', true, 1599.99, 1799.99, true, 'Televisor inteligente 4K con sonido envolvente.', '2025-01-19 14:30:00', '2025-01-10 11:00:00', 5, 2, 19),
+(20, 'P020', 'Huawei Watch GT 3', true, 219.99,  249.99, true, 'Reloj inteligente con diseño elegante y larga duración de batería.', '2025-01-11 13:00:00', '2025-01-11 09:30:00', 6, 6, 20);
 
 
 # Selecciona todos los productos

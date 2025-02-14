@@ -15,8 +15,8 @@ public class ProductDetailTechSheetDto {
     private String code;
     private String name;
     private Boolean inOffer;
-    private Double price;
-    private Double offerPrice;
+    private Double currentPrice;
+    private Double oldPrice;
     private String description;
     private Long idCategory;
     private Long idBrand;

@@ -331,13 +331,15 @@ public class ProductServiceImpl implements ProductService {
         productDb.setName(product.getName());
         productDb.setCode(product.getCode());
         productDb.setInOffer(product.getInOffer());
-        productDb.setPrice(product.getPrice());
 
-        if (productDb.getInOffer()) {
-            productDb.setOfferPrice(product.getOfferPrice());
-        } else {
-            productDb.setOfferPrice(null);
-        }
+        // TODO: REPARAR ESTO
+        // productDb.setPrice(product.getPrice());
+
+        // if (productDb.getInOffer()) {
+        // productDb.setOfferPrice(product.getOfferPrice());
+        // } else {
+        // productDb.setOfferPrice(null);
+        // }
 
         productDb.setDescription(product.getDescription());
         productDb.setStatus(true);

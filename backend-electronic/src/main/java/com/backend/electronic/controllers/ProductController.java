@@ -54,6 +54,7 @@ public class ProductController {
 
     // ES NORMAL QUE EN LA CONSOLA SE MUESTRE VARIAS CONSULTAS A LA BASE DE DATOS
     // (SEGUN LA CANTIDAD DE PRODUCTOS)
+    // TODO: DEBERIA DEVOLVER UN RESPONSEENTITY EN LUGAR DE UN LIST
     @GetMapping
     public List<ProductsListDto> listAll() {
         return productService.findAll();

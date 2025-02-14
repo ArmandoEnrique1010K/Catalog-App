@@ -109,6 +109,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         // SUPERCONSULTA A LA BASE DE DATOS PARA OBTENER UNA LISTA DE PRODUCTOS CON
         // TODOS LOS FILTROS DISPONIBLES
 
+        // ADEMAS DEBE CONTAR CON UN PARAMETRO PARA ORDERNAR LOS PRODUCTOS POR FECHA DE
+        // CREACIÓN, NOMBRE, MARCA Y PRECIO, TANTO DE FORMA ASCENDENTE COMO DESCENDENTE
+
         // @Query("SELECT p FROM Product p JOIN FETCH p.brand b JOIN FETCH p.category c
         // JOIN FETCH p.image JOIN FETCH p.productFeature pf "
         // +
@@ -139,7 +142,20 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                         " (:maxPrice IS NULL OR p.offerPrice <= :maxPrice) OR " +
                         " (p.offerPrice IS NULL AND (:minPrice is NULL OR p.price >= :minPrice)) AND " +
                         " (:maxPrice IS NULL OR p.price <= :maxPrice)) " +
-                        "AND (:featureValues IS NULL OR pf.featureValue.id IN :featureValues) ")
+                        "AND (:featureValues IS NULL OR pf.featureValue.id IN :featureValues) " +
+                        "ORDER BY " +
+                        "CASE WHEN :sortBy = 'position' AND :order = 'asc' THEN p.createdAt END ASC, " +
+                        "CASE WHEN :sortBy = 'position' AND :order IS NULL OR :order = 'desc' THEN p.createdAt END DESC, "
+                        +
+                        "CASE WHEN :sortBy = 'name' AND :order = 'asc' THEN p.name END ASC, " +
+                        "CASE WHEN :sortBy = 'name' AND :order IS NULL OR :order = 'desc' THEN p.name END DESC, "
+                        +
+                        "CASE WHEN :sortBy = 'price' AND :order = 'asc' THEN (p.offerPrice IS NOT NULL OR p.price) END ASC, "
+                        +
+                        "CASE WHEN :sortBy = 'price' AND :order IS NULL OR :order = 'desc' THEN (p.offerPrice IS NOT NULL OR p.price) END ASC, "
+                        +
+                        "CASE WHEN :sortBy = 'brand' AND :order = 'asc' THEN p.brand.name END ASC, " +
+                        "CASE WHEN :sortBy = 'brand' AND :order IS NULL OR :order = 'desc' THEN p.brand.name END DESC ")
         List<Product> findAllByFilters(
                         @Param("name") String name,
                         @Param("idCategory") Long idCategory,
@@ -147,7 +163,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                         @Param("offer") Boolean offer,
                         @Param("minPrice") Double minPrice,
                         @Param("maxPrice") Double maxPrice,
-                        @Param("featureValues") List<Long> featureValues);
+                        @Param("featureValues") List<Long> featureValues,
+                        @Param("sortBy") String sort,
+                        @Param("order") String order);
 
 }
 

@@ -70,8 +70,6 @@ Notas:
 
 🗑️ Probablemente sera eliminado
 
-
-
 Listar marcas por categoria
 
 Filtros en productos

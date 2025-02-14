@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -134,9 +135,28 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     @Override
     public List<ProductsListDto> findAllBySevenFilters(String name, Long idCategory, List<Long> idsBrands,
-            Boolean offer, Double minPrice, Double maxPrice, List<Long> featureValues) {
+            Boolean offer, Double minPrice, Double maxPrice, List<Long> featureValues, Sort sort) {
+
+        // ORDENAMIENTO DINAMICO
+        // Sort sort = Sort.by(direction, sortBy);
+        // Sort sort = null;
+
+        // if (sortBy.equals("brandName")) {
+        // if (direction.equals("ASC")) {
+        // sort = Sort.by(Sort.Order.asc("brand.name"));
+        // } else {
+        // sort = Sort.by(Sort.Order.desc("brand.name"));
+        // }
+        // } else {
+        // sort = Sort.by(direction, sortBy);
+        // }
+
+        // Sort sort = Sort.by(Sort.Order.asc("brand.name"),
+        // Sort.Order.asc("offerPrice").nullsLast(), Sort.Order.asc("price"));
+
         List<Product> products = productRepository.findAllByFilters(name, idCategory, idsBrands, offer, minPrice,
-                maxPrice, featureValues);
+                maxPrice, featureValues, sort);
+
         return products.stream().map(
                 productDtoMapper::toListDto)
                 .collect(Collectors.toList());

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -108,19 +109,37 @@ public class ProductController {
     // Para que funcione correctamente, todos los productos deben tener su ficha
     // tecnica (pues solamente muestra los productos que tienen su ficha tecnica)
     @GetMapping("/search")
-    public List<ProductsListDto> listFilteredProducts(
+    public ResponseEntity<List<ProductsListDto>> listFilteredProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long idCategory,
             @RequestParam(required = false) List<Long> idsBrands,
             @RequestParam(required = false) Boolean offer,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) List<Long> featureValues) {
+            @RequestParam(required = false) List<Long> featureValues,
+            @RequestParam(defaultValue = "createdAt") String sortBy, // Orden predeterminado
+            @RequestParam(defaultValue = "DESC") String order // Dirección predeterminada
+    ) {
 
-        // List<ProductsListDto> products = productService.findAllByEightFilters(name,
-        // idCategory, idsBrands, offer, minPrice, maxPrice, featureValues);
-        return productService.findAllBySevenFilters(name, idCategory, idsBrands, offer, minPrice, maxPrice,
-                featureValues);
+        Sort.Direction direction = Sort.Direction.fromString(order);
+
+        // TODO: ARREGLAR ESTO
+        Sort sort;
+        // PARA QUE FILTRE POR EL PRECIO, SI EL PRECIO DE OFERTA ES NULO, DEBE AGARRAR
+        // EL PRECIO (price)
+        if ("price".equals(sortBy)) {
+            sort = Sort.by(new Sort.Order(direction, "offerPrice").nullsLast())
+                    .and(Sort.by(direction, "price"));
+        } else if ("brand".equals(sortBy)) {
+            sort = Sort.by(direction, "brand.name");
+        } else {
+            sort = Sort.by(direction, sortBy); // Default: ordenar por nombre del producto
+        }
+
+        List<ProductsListDto> products = productService.findAllBySevenFilters(name,
+                idCategory, idsBrands, offer, minPrice, maxPrice, featureValues, sort);
+
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")

@@ -3,6 +3,7 @@ package com.backend.electronic.repositories;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -130,7 +131,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         // " (:maxPrice IS NULL OR p.price <= :maxPrice)) " +
         // "AND pf.featureValue.id IN :featureValues GROUP BY p.id")
 
-        @Query("SELECT DISTINCT p FROM Product p JOIN p.brand b JOIN p.category c JOIN p.image JOIN p.productFeature pf "
+        // TODO: INVESTIGAR EL USO DE DISTINCT Y GROUP BY EN UNA CONSULTA JDBC
+        @Query("SELECT p FROM Product p JOIN p.brand b JOIN p.category c JOIN p.image JOIN p.productFeature pf "
                         +
                         "WHERE p.status = true AND p.brand.status = true AND p.category.status = true " +
                         "AND (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
@@ -142,20 +144,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                         " (:maxPrice IS NULL OR p.offerPrice <= :maxPrice) OR " +
                         " (p.offerPrice IS NULL AND (:minPrice is NULL OR p.price >= :minPrice)) AND " +
                         " (:maxPrice IS NULL OR p.price <= :maxPrice)) " +
-                        "AND (:featureValues IS NULL OR pf.featureValue.id IN :featureValues) " +
-                        "ORDER BY " +
-                        "CASE WHEN :sortBy = 'position' AND :order = 'asc' THEN p.createdAt END ASC, " +
-                        "CASE WHEN :sortBy = 'position' AND :order IS NULL OR :order = 'desc' THEN p.createdAt END DESC, "
-                        +
-                        "CASE WHEN :sortBy = 'name' AND :order = 'asc' THEN p.name END ASC, " +
-                        "CASE WHEN :sortBy = 'name' AND :order IS NULL OR :order = 'desc' THEN p.name END DESC, "
-                        +
-                        "CASE WHEN :sortBy = 'price' AND :order = 'asc' THEN (p.offerPrice IS NOT NULL OR p.price) END ASC, "
-                        +
-                        "CASE WHEN :sortBy = 'price' AND :order IS NULL OR :order = 'desc' THEN (p.offerPrice IS NOT NULL OR p.price) END ASC, "
-                        +
-                        "CASE WHEN :sortBy = 'brand' AND :order = 'asc' THEN p.brand.name END ASC, " +
-                        "CASE WHEN :sortBy = 'brand' AND :order IS NULL OR :order = 'desc' THEN p.brand.name END DESC ")
+                        "AND (:featureValues IS NULL OR pf.featureValue.id IN :featureValues) GROUP BY p.id ")
         List<Product> findAllByFilters(
                         @Param("name") String name,
                         @Param("idCategory") Long idCategory,
@@ -164,8 +153,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                         @Param("minPrice") Double minPrice,
                         @Param("maxPrice") Double maxPrice,
                         @Param("featureValues") List<Long> featureValues,
-                        @Param("sortBy") String sort,
-                        @Param("order") String order);
+                        Sort sort);
 
 }
 

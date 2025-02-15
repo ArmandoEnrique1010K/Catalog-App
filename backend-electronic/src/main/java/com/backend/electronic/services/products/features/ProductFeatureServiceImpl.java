@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.backend.electronic.models.dto.ProductTechSheetDto;
 import com.backend.electronic.models.dto.TechSheetDto;
 import com.backend.electronic.models.dto.mapper.TechSheetDtoMapper;
 import com.backend.electronic.models.entities.Feature;
@@ -44,9 +46,12 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
     }
 
     @Override
-    public void saveTechSheet(Long productId, List<TechSheetDto> techSheet) {
+    public ProductTechSheetDto saveTechSheet(Long productId, List<TechSheetDto> techSheet) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+
+        // RESULTADO FINAL
+        ProductFeature result = null;
 
         for (TechSheetDto entry : techSheet) {
             // Buscar si la característica ya existe
@@ -73,38 +78,41 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
                 productFeature.setProduct(product);
                 productFeature.setFeature(feature); // NO CONFIES EN CHATGPT, SIEMPRE MODIFICA EL CODIGO GENERADO CON IA
                 productFeature.setFeatureValue(featureValue);
-                productFeatureRepository.save(productFeature);
+                result = productFeatureRepository.save(productFeature);
             }
 
-            System.out.println("Datos recibidos: " + techSheet); // DEPURACIÓN
+            // System.out.println("Datos recibidos: " + techSheet); // DEPURACIÓN
+            return techSheetDtoMapper.toListDto(result);
         }
     }
 
-    @Override
-    public void saveTechSheet2(Long productId, List<ProductFeature> techSheet) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("El producto con ID " + productId + " no existe"));
+    // @Override
+    // public void saveTechSheet2(Long productId, List<ProductFeature> techSheet) {
+    // Product product = productRepository.findById(productId)
+    // .orElseThrow(() -> new IllegalArgumentException("El producto con ID " +
+    // productId + " no existe"));
 
-        for (ProductFeature pf : techSheet) {
-            Feature feature = featureRepository.findById(pf.getFeature().getId())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "La característica con ID " + pf.getFeature().getId() + " no existe"));
+    // for (ProductFeature pf : techSheet) {
+    // Feature feature = featureRepository.findById(pf.getFeature().getId())
+    // .orElseThrow(() -> new IllegalArgumentException(
+    // "La característica con ID " + pf.getFeature().getId() + " no existe"));
 
-            FeatureValue featureValue = featureValueRepository.findById(pf.getFeatureValue().getId())
-                    .orElseGet(() -> {
-                        FeatureValue newFeatureValue = new FeatureValue();
-                        newFeatureValue.setValue("Nuevo Valor");
-                        newFeatureValue.setFeature(feature);
-                        return featureValueRepository.save(newFeatureValue);
-                    });
+    // FeatureValue featureValue =
+    // featureValueRepository.findById(pf.getFeatureValue().getId())
+    // .orElseGet(() -> {
+    // FeatureValue newFeatureValue = new FeatureValue();
+    // newFeatureValue.setValue("Nuevo Valor");
+    // newFeatureValue.setFeature(feature);
+    // return featureValueRepository.save(newFeatureValue);
+    // });
 
-            ProductFeature productFeature = new ProductFeature();
-            productFeature.setProduct(product);
-            productFeature.setFeature(feature);
-            productFeature.setFeatureValue(featureValue);
+    // ProductFeature productFeature = new ProductFeature();
+    // productFeature.setProduct(product);
+    // productFeature.setFeature(feature);
+    // productFeature.setFeatureValue(featureValue);
 
-            productFeatureRepository.save(productFeature);
-        }
-    }
+    // productFeatureRepository.save(productFeature);
+    // }
+    // }
 
 }

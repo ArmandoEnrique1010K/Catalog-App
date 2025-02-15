@@ -1,20 +1,17 @@
-package com.backend.electronic.models.requests;
+package com.backend.electronic.models.dto;
 
 import java.util.List;
-
-import com.backend.electronic.models.dto.TechSheetDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// TODO: ELIMINAR ESTO
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TechSheetRequestDto {
-    private Long productId;
+public class ProductTechSheetDto {
+    private Long id;
     private List<TechSheetDto> techSheet;
 }

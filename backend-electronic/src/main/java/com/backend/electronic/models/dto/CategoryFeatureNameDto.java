@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class CategoryFeatureDto {
+public class CategoryFeatureNameDto {
     private Long id;
-    private Long idCategory;
+    // private Long idCategory;
     private Long idFeature;
+    private String nameFeature;
 }

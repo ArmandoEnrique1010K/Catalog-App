@@ -28,6 +28,7 @@ public interface ProductService {
 
     public List<ProductsListDto> findAllByFeatureValues(List<Long> featureValues);
 
+    // METODO PARA FILTRAR LOS PRODUCTOS
     public List<ProductsListDto> findAllBySevenFilters(String name, Long idCategory, List<Long> idsBrands,
             Boolean offer, Double minPrice, Double maxPrice, List<Long> featureValues, Sort sort);
 

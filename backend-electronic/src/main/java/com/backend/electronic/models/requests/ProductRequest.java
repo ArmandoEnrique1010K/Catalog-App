@@ -47,15 +47,26 @@ public class ProductRequest {
     private Boolean inOffer;
 
     // Precio original y precio de oferta
-    @NotNull(message = "El precio es obligatorio")
-    @Positive(message = "El precio debe ser un valor positivo")
-    @Column(nullable = false)
-    private Double price;
+    // MODIFICAR ESTO, DEBE SER PRECIO ACTUAL Y PRECIO ANTERIOR
+    // @NotNull(message = "El precio es obligatorio")
+    // @Positive(message = "El precio debe ser un valor positivo")
+    // @Column(nullable = false)
+    // private Double price;
 
-    @Positive(message = "El precio de oferta debe ser positivo")
+    // @Positive(message = "El precio de oferta debe ser positivo")
+    // @Nullable
+    // @Column
+    // private Double offerPrice;
+
+    @NotNull(message = "El precio es obligatorio")
+    @Positive(message = "El precio actual debe ser un valor positivo")
+    @Column(nullable = false)
+    private Double currentPrice;
+
+    @Positive(message = "El precio anterior debe ser positivo")
     @Nullable
     @Column
-    private Double offerPrice;
+    private Double oldPrice;
 
     // Descripción del producto
     @NotBlank(message = "La descripción no puede estar vacía")

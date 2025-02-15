@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -31,7 +30,6 @@ import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.dto.TechSheetDto;
 import com.backend.electronic.models.entities.Image;
 import com.backend.electronic.models.entities.Product;
-import com.backend.electronic.models.entities.ProductFeature;
 import com.backend.electronic.models.requests.ProductRequest;
 import com.backend.electronic.services.products.ProductService;
 import com.backend.electronic.services.products.features.ProductFeatureService;
@@ -244,12 +242,13 @@ public class ProductController {
 
     }
 
-    @PostMapping("/{id}/feature/tech-sheet")
-    public ResponseEntity<String> saveTechSheet(@PathVariable Long id, @RequestBody List<TechSheetDto> techSheet) {
-        productFeatureService.saveTechSheet(id, techSheet);
-        return ResponseEntity.ok("Ficha técnica guardada exitosamente.");
+    // @PostMapping("/{id}/feature/tech-sheet")
+    // public ResponseEntity<String> saveTechSheet(@PathVariable Long id,
+    // @RequestBody List<TechSheetDto> techSheet) {
+    // productFeatureService.saveTechSheet(id, techSheet);
+    // return ResponseEntity.ok("Ficha técnica guardada exitosamente.");
 
-    }
+    // }
 
     // ESPECIFICA EN POSTMAN:
     // key - Value - Content-Type

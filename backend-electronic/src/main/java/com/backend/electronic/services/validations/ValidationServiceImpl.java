@@ -2,6 +2,7 @@ package com.backend.electronic.services.validations;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,15 @@ public class ValidationServiceImpl implements ValidationService {
                 errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
             });
             throw new ValidationException("Error de validación de campos", errors);
+        }
+    }
+
+    public void validateExistingRelation(Boolean existingRelation) {
+        if (existingRelation.equals(true)) {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("field", "La relación entre la categoria y caracteristica ya existe...");
+            throw new ValidationException("Error de validación de campos", errors);
+
         }
     }
 }

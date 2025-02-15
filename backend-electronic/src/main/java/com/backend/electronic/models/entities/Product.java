@@ -52,6 +52,7 @@ public class Product {
     @Column
     private Boolean inOffer;
 
+    // VOLVI A SUPERAR A LA I.A.
     // Precio original y precio de oferta
     @NotNull(message = "El precio es obligatorio")
     @Positive(message = "El precio actual debe ser un valor positivo")

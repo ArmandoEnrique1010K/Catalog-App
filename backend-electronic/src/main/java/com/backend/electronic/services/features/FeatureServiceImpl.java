@@ -33,7 +33,13 @@ public class FeatureServiceImpl implements FeatureService {
     @Override
     @Transactional(readOnly = true)
     public Optional<FeatureDto> findById(Long id) {
-        return featureRepository.findById(id).map(featureDtoMapper::toDto);
+        Optional<Feature> optionalFeature = featureRepository.findById(id);
+        if (optionalFeature.isPresent() && optionalFeature.get().getStatus().equals(true)) {
+            return optionalFeature.map(featureDtoMapper::toDto);
+        } else {
+            return Optional.empty();
+        }
+
     }
 
     @Override

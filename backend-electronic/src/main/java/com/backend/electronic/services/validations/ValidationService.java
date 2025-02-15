@@ -7,4 +7,6 @@ public interface ValidationService {
     public void validateImage(MultipartFile image);
 
     public void validateFields(BindingResult result);
+
+    public void validateExistingRelation(Boolean existingRelation);
 }

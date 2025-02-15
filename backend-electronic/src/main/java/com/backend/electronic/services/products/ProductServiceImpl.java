@@ -333,6 +333,9 @@ public class ProductServiceImpl implements ProductService {
         productDb.setInOffer(product.getInOffer());
 
         // TODO: REPARAR ESTO
+        productDb.setCurrentPrice(product.getCurrentPrice());
+        productDb.setOldPrice(product.getOldPrice());
+
         // productDb.setPrice(product.getPrice());
 
         // if (productDb.getInOffer()) {

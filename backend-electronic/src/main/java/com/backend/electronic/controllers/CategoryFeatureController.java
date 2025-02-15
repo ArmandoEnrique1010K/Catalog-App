@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.electronic.models.dto.CategoryFeatureDto;
+import com.backend.electronic.models.dto.CategoryFeatureNameDto;
+import com.backend.electronic.models.dto.CategoryFeaturesIdsDto;
 import com.backend.electronic.models.entities.CategoryFeature;
 import com.backend.electronic.services.categories.features.CategoryFeatureService;
 import com.backend.electronic.services.validations.ValidationService;
@@ -35,26 +36,30 @@ public class CategoryFeatureController {
 
     // TODO: ¿MODIFICAR ESTO?
     @GetMapping("/{id}/features")
-    public List<CategoryFeatureDto> list(@PathVariable Long id) {
+    public List<CategoryFeatureNameDto> list(@PathVariable Long id) {
         return categoryFeatureService.findAllByCategoryId(id);
     }
 
     // ENDPOINT PARA AGREGAR UN NUEVO VALOR A UNA CARACTERISTICA CORRESPONDIENTE AL
     // ID
+
+    // TODO: ARREGLAR EL MENSAJE DE ERROR
     @PostMapping("/features")
-    public ResponseEntity<?> create(@Valid @RequestBody CategoryFeature categoryFeature,
+    public ResponseEntity<?> create(@Valid @RequestBody CategoryFeaturesIdsDto categoryFeaturesIdsDto,
             BindingResult result) {
 
         validationService.validateFields(result);
 
+        CategoryFeaturesIdsDto savedCategoryFeature = categoryFeatureService
+                .save(categoryFeaturesIdsDto);
+
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(categoryFeatureService
-                    .save(categoryFeature.getCategory().getId(), categoryFeature.getFeature().getId()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoryFeature);
         } catch (DataIntegrityViolationException ex) {
             throw ex;
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al guardar el producto: " + ex.getMessage());
+                    .body("Error al asignar categoria con caracteristica : " + ex.getMessage());
         }
     }
 }

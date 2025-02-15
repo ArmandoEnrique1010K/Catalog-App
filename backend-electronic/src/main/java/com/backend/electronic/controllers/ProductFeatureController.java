@@ -27,7 +27,14 @@ public class ProductFeatureController {
     // OBTIENE LA FICHA TECNICA DE UN PRODUCTO POR SU ID
     @GetMapping("/{id}/feature/tech-sheet")
     public ResponseEntity<List<TechSheetDto>> getTechSheet(@PathVariable Long id) {
-        return ResponseEntity.ok(productFeatureService.getTechSheet(id));
+
+        // CAMBIA EL STATUS A 204, NO CONTENT
+        if (productFeatureService.getTechSheet(id).isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(productFeatureService.getTechSheet(id));
+        }
+
     }
 
     // TODO: MODIFICAR ESTO
@@ -39,15 +46,14 @@ public class ProductFeatureController {
     public ResponseEntity<String> saveTechSheet(@PathVariable Long id, @RequestBody List<TechSheetDto> techSheet) {
         productFeatureService.saveTechSheet(id, techSheet);
         return ResponseEntity.ok("Ficha técnica guardada exitosamente.");
-
     }
 
-    @PostMapping("/{id}/feature/tech-sheet/test2")
-    public ResponseEntity<String> testsaveTechSheet2(@PathVariable Long id,
-            @RequestBody List<ProductFeature> techSheet) {
-        productFeatureService.saveTechSheet2(id, techSheet);
-        return ResponseEntity.ok("Ficha técnica guardada exitosamente.");
-
-    }
+    // No conviene exponer la entidad
+    // @PostMapping("/{id}/feature/tech-sheet/test2")
+    // public ResponseEntity<String> testsaveTechSheet2(@PathVariable Long id,
+    // @RequestBody List<ProductFeature> techSheet) {
+    // productFeatureService.saveTechSheet2(id, techSheet);
+    // return ResponseEntity.ok("Ficha técnica guardada exitosamente.");
+    // }
 
 }

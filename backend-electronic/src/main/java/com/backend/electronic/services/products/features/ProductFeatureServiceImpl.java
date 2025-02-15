@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.backend.electronic.models.dto.ProductTechSheetDto;
 import com.backend.electronic.models.dto.TechSheetDto;
+import com.backend.electronic.models.dto.mapper.ProductTechSheetDtoMapper;
 import com.backend.electronic.models.dto.mapper.TechSheetDtoMapper;
 import com.backend.electronic.models.entities.Feature;
 import com.backend.electronic.models.entities.FeatureValue;
@@ -35,6 +36,9 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
     @Autowired
     private TechSheetDtoMapper techSheetDtoMapper;
 
+    @Autowired
+    private ProductTechSheetDtoMapper productTechSheetDtoMapper;
+
     @Override
     public List<TechSheetDto> getTechSheet(Long productId) {
 
@@ -45,6 +49,7 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
 
     }
 
+    // REPARAR ESTE SERVICIO
     @Override
     public ProductTechSheetDto saveTechSheet(Long productId, List<TechSheetDto> techSheet) {
         Product product = productRepository.findById(productId)
@@ -82,8 +87,8 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
             }
 
             // System.out.println("Datos recibidos: " + techSheet); // DEPURACIÓN
-            return techSheetDtoMapper.toListDto(result);
         }
+        return productTechSheetDtoMapper.toDto(result);
     }
 
     // @Override

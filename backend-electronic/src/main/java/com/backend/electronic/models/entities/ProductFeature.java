@@ -49,6 +49,4 @@ public class ProductFeature {
     @JoinColumn(name = "feature_value_id", nullable = false)
     // @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private FeatureValue featureValue;
-
-    // Getters and Setters
 }

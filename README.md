@@ -62,10 +62,6 @@ Se consideran las entidades: Brand, Category, Image, Product, Feature, FeatureVa
 
 En una aplicación web con React conviene usar 2 servicios cuando se va a obtener un producto: los datos y su ficha tecnica.
 
-
-
-
-
 Notas:
 
 ✅ Listo

@@ -26,12 +26,14 @@ import com.backend.electronic.models.entities.ProductFeature;
 public interface ProductTechSheetDtoMapper {
 
     // UTILIZAR LA ENTIDAD PRODUCT EN LUGAR DE PRODUCTFEATURE
+    // Campos: id del producto y una lista con los campos feature y featureValue
+    // para la ficha tecnica
     @Mapping(target = "id", source = "id")
     @Mapping(target = "techSheet", source = "productFeature", qualifiedByName = "mapFeatureValuesToTechSheetDto")
     ProductTechSheetDto toDto(Product product);
 
     @Named("mapFeatureValuesToTechSheetDto")
-    default Map<Object, Object> mapFeatureValuesToTechSheetDto(List<ProductFeature> productFeatures) {
+    default Map<String, String> mapFeatureValuesToTechSheetDto(List<ProductFeature> productFeatures) {
 
         return productFeatures.stream()
                 .collect(Collectors.toMap(

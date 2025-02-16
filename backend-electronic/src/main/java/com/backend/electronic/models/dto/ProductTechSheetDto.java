@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductTechSheetDto {
     private Long id;
-    private Map<Object, Object> techSheet;
+    private Map<String, String> techSheet;
 }

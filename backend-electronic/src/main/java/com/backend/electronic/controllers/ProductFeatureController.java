@@ -1,6 +1,7 @@
 package com.backend.electronic.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,6 +52,19 @@ public class ProductFeatureController {
         return ResponseEntity.ok(result);
     }
 
+    @PutMapping("/{id}/feature/tech-sheet")
+    public ResponseEntity<Optional<ProductTechSheetDto>> updateTechSheet(@PathVariable Long id,
+            @RequestBody List<TechSheetDto> techSheet) {
+        Optional<ProductTechSheetDto> result = productFeatureService.updateTechSheet(id, techSheet);
+
+        if (result.isPresent()) {
+            return ResponseEntity.ok(result);
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
     // No conviene exponer la entidad
     // @PostMapping("/{id}/feature/tech-sheet/test2")
     // public ResponseEntity<String> testsaveTechSheet2(@PathVariable Long id,

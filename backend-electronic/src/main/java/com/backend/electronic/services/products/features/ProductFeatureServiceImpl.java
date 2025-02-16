@@ -1,5 +1,6 @@
 package com.backend.electronic.services.products.features;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +56,9 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
 
-        // RESULTADO FINAL
+        // RESULTADO POR CADA UNO Y FINAL
         ProductFeature result = null;
+        List<ProductFeature> finalResult = new ArrayList<>();
 
         for (TechSheetDto entry : techSheet) {
             // Buscar si la característica ya existe
@@ -84,13 +86,17 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
                 productFeature.setFeature(feature); // NO CONFIES EN CHATGPT, SIEMPRE MODIFICA EL CODIGO GENERADO CON IA
                 productFeature.setFeatureValue(featureValue);
                 result = productFeatureRepository.save(productFeature);
+
+                // AÑADIR EL RESULTADO
+                finalResult.add(result);
             }
 
             // System.out.println("Datos recibidos: " + techSheet); // DEPURACIÓN
         }
 
-        // TODO: ESTOY AQUI
-        return productTechSheetDtoMapper.toDto(result);
+        // System.out.println(result);
+
+        return productTechSheetDtoMapper.toDto(finalResult);
     }
 
     // @Override

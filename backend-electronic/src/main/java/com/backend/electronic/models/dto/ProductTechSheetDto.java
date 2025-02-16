@@ -1,6 +1,7 @@
 package com.backend.electronic.models.dto;
 
 import java.util.List;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,5 +14,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductTechSheetDto {
     private Long id;
-    private List<TechSheetDto> techSheet;
+    private Map<Object, Object> techSheet;
 }

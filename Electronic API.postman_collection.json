@@ -404,7 +404,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/search",
+							"raw": "http://localhost:8080/products/search?sortBy=currentPrice&order=DESC",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -449,6 +449,14 @@
 									"key": "featureValues",
 									"value": "1,2,3",
 									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "currentPrice"
+								},
+								{
+									"key": "order",
+									"value": "DESC"
 								}
 							]
 						}
@@ -946,7 +954,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/features/1/values/category/1",
+							"raw": "http://localhost:8080/features/1/values/category/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -957,7 +965,7 @@
 								"1",
 								"values",
 								"category",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -996,7 +1004,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"category\": {\r\n        \"id\": \"1\"\r\n    },\r\n    \"feature\": {\r\n        \"id\": \"8\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"idCategory\": \"5\",\r\n    \"idFeature\": \"2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1029,7 +1037,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/product/207/feature/tech-sheet",
+							"raw": "http://localhost:8080/product/200/feature/tech-sheet",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1037,7 +1045,7 @@
 							"port": "8080",
 							"path": [
 								"product",
-								"207",
+								"200",
 								"feature",
 								"tech-sheet"
 							]
@@ -1103,6 +1111,37 @@
 								"feature",
 								"tech-sheet",
 								"test2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateTechSheet",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    { \"feature\": \"Memoria RAM interna\", \"value\": \"32 GB\" },\r\n    { \"feature\": \"Procesador\", \"value\": \"Intel I12\" },\r\n    { \"feature\": \"Almacenamiento\", \"value\": \"1 TB HHD\" },\r\n    { \"feature\": \"Tarjeta de graficos\", \"value\": \"NVIDIA GeForce RTX 3080\" },\r\n    { \"feature\": \"Sistema Operativo\", \"value\": \"Windows 12 Pro\" },\r\n    { \"feature\": \"Pantalla en pulgadas\", \"value\": \"20.6 pulgadas, 4K UHD\" },\r\n    { \"feature\": \"# de Puertos\", \"value\": \"3 x USB-C, 1 x HDMI, 2 x USB-A\" }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/product/6/feature/tech-sheet",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"6",
+								"feature",
+								"tech-sheet"
 							]
 						}
 					},

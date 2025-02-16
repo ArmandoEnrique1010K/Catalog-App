@@ -15,4 +15,6 @@ public interface ProductFeatureService {
     public Optional<ProductTechSheetDto> updateTechSheet(Long productId, List<TechSheetDto> techSheet);
     // public void saveTechSheet2(Long productId, List<ProductFeature> techSheet);
 
+    public void deleteObsoleteTechSheet(Long productId, List<TechSheetDto> techSheet);
+
 }

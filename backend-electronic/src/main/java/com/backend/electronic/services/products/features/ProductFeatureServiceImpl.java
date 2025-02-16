@@ -105,6 +105,7 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
     }
 
     // TODO: CONSTRUIR ESTE SERVICIO PARA ACTUALIZAR LA FICHA TECNICA
+
     @Transactional
     @Override
     public Optional<ProductTechSheetDto> updateTechSheet(Long productId, List<TechSheetDto> techSheet) {
@@ -135,6 +136,14 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
         // el último valor
         // ));
 
+        // // Eliminar las características que ya no están en la nueva ficha técnica
+        // existingFeatures.forEach(pf -> {
+        // String featureName = pf.getFeature().getName();
+        // if (!newFeaturesMap.containsKey(featureName)) {
+        // productFeatureRepository.delete(pf); // Eliminar la relación si la
+        // característica ya no está
+        // }
+        // });
         // Eliminar las características que ya no están en la nueva ficha técnica
         existingFeatures.forEach(pf -> {
             String featureName = pf.getFeature().getName();
@@ -170,23 +179,12 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
                         return featureValueRepository.save(newFeatureValue);
                     });
 
-            // Verificar si ya existe la relación producto-feature-value
-            // boolean exists = existingFeatures.stream()
-            // .anyMatch(pf -> pf.getFeature().equals(feature) &&
-            // pf.getFeatureValue().equals(featureValue));
-
-            // if (!exists) {
-            // ProductFeature productFeature = new ProductFeature();
-            // productFeature.setProduct(product);
-            // productFeature.setFeature(feature);
-            // productFeature.setFeatureValue(featureValue);
-            // productFeatureRepository.save(productFeature);
-            // }
             // Buscar si ya existe una relación ProductFeature para esta característica
             Optional<ProductFeature> existingProductFeature = existingFeatures.stream()
                     .filter(pf -> pf.getFeature().getName().equals(featureName))
                     .findFirst();
 
+            // Verifica la relación
             if (existingProductFeature.isPresent()) {
                 // Si existe, actualizar el FeatureValue
                 ProductFeature productFeature = existingProductFeature.get();
@@ -204,7 +202,6 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
         }
 
         return Optional.of(productTechSheetDtoMapper.toDto(product));
-
     }
 
 }

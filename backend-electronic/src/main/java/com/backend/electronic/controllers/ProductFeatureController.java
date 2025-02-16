@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.electronic.models.dto.ProductTechSheetDto;
 import com.backend.electronic.models.dto.TechSheetDto;
 import com.backend.electronic.models.entities.ProductFeature;
 import com.backend.electronic.services.products.features.ProductFeatureService;
@@ -43,9 +44,10 @@ public class ProductFeatureController {
     // ESTO ESTA DE PRUEBA, PUES LA FICHA TECNICA SE DEBE GUARDAR CUANDO SE GUARDA
     // UN PRODUCTO O SE ACTUALIZA UN PRODUCTO
     @PostMapping("/{id}/feature/tech-sheet")
-    public ResponseEntity<String> saveTechSheet(@PathVariable Long id, @RequestBody List<TechSheetDto> techSheet) {
-        productFeatureService.saveTechSheet(id, techSheet);
-        return ResponseEntity.ok("Ficha técnica guardada exitosamente.");
+    public ResponseEntity<ProductTechSheetDto> saveTechSheet(@PathVariable Long id,
+            @RequestBody List<TechSheetDto> techSheet) {
+        ProductTechSheetDto result = productFeatureService.saveTechSheet(id, techSheet);
+        return ResponseEntity.ok(result);
     }
 
     // No conviene exponer la entidad

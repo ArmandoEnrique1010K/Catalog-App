@@ -19,25 +19,29 @@ import com.backend.electronic.models.entities.ProductFeature;
 
 public interface ProductTechSheetDtoMapper {
 
-    // DEBE RETORNAR UN PRODUCTFEATURE
+    // DEBE CONTENER UN PRODUCTFEATURE
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "techSheet", source = "featureValue", qualifiedByName = "mapProductFeatureToTechSheetDto")
+    @Mapping(target = "techSheet", source = "featureValue", qualifiedByName = "mapFeatureValuesToTechSheetDto")
     ProductTechSheetDto toDto(ProductFeature productFeature);
 
+    // La entidad ProductFeature tiene el campo featureValue para la lista de
+    // caracteristicas y valores
+
     // INTENTAR ESTO
-    @Named("mapProductFeatureToTechSheetDto")
-    default List<TechSheetDto> mapProductFeatureToTechSheetDto(List<FeatureValue> featureValues) {
-        if (featureValues == null) {
+    @Named("mapFeatureValuesToTechSheetDto")
+    default List<TechSheetDto> mapFeatureValueToTechSheetDto(FeatureValue featureValue) {
+        if (featureValue == null) {
             return new ArrayList<>();
         }
-        return featureValues.stream()
-                .map(pf -> new TechSheetDto(
-                        pf.getFeature().getName(), // Nombre de la característica
-                        pf.getValue() // Valor de la característica
-                ))
-                .collect(Collectors.toList());
-    }
 
+        // Convertir un solo FeatureValue en una lista con un solo elemento
+        List<TechSheetDto> techSheetDtos = new ArrayList<>();
+        techSheetDtos.add(new TechSheetDto(
+                featureValue.getFeature().getName(), // Nombre de la característica
+                featureValue.getValue() // Valor de la característica
+        ));
+        return techSheetDtos;
+    }
 }
 // En la entidad Product, el campo productFeature sirve para relacionar un
 // producto con la ficha tecnica

@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import com.backend.electronic.models.dto.ProductTechSheetDto;
 import com.backend.electronic.models.dto.TechSheetDto;
-import com.backend.electronic.models.entities.ProductFeature;
 
 public interface ProductFeatureService {
     public List<TechSheetDto> getTechSheet(Long productId);
@@ -15,6 +14,6 @@ public interface ProductFeatureService {
     public Optional<ProductTechSheetDto> updateTechSheet(Long productId, List<TechSheetDto> techSheet);
     // public void saveTechSheet2(Long productId, List<ProductFeature> techSheet);
 
-    public void deleteObsoleteTechSheet(Long productId, List<TechSheetDto> techSheet);
+    public void deleteObsoleteTechSheet(Long productId, List<String> newFeatureNames);
 
 }

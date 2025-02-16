@@ -104,8 +104,8 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
         return productTechSheetDtoMapper.toDto(product);
     }
 
-    // TODO: CONSTRUIR ESTE SERVICIO PARA ACTUALIZAR LA FICHA TECNICA
-
+    // SERVICIO PARA ACTUALIZAR LA FICHA TECNICA
+    // SI UN PRODUCTO NO TIENE SU FICHA TECNICA, LO CREA
     @Transactional
     @Override
     public Optional<ProductTechSheetDto> updateTechSheet(Long productId, List<TechSheetDto> techSheet) {
@@ -113,83 +113,57 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
 
-        // Obtener las características actuales del producto
-        List<ProductFeature> existingFeatures = productFeatureRepository.findTechSheetByProductId(productId);
-
-        // Crear un mapa para evitar duplicados y asegurar la última actualización
-
         // Crear un mapa para almacenar las nuevas características
-        Map<String, String> newFeaturesMap = new HashMap<>();
+        Map<String, String> newFeaturesMap = techSheet.stream()
+                .collect(Collectors.toMap(
+                        TechSheetDto::getFeature,
+                        TechSheetDto::getValue,
+                        (existingValue, newValue) -> newValue // Si hay duplicados, se actualiza con el último valor
+                ));
 
-        // Procesar el JSON y manejar duplicados (actualizar el valor si la clave ya
-        // existe)
-        for (TechSheetDto dto : techSheet) {
-            newFeaturesMap.put(dto.getFeature(), dto.getValue());
-        }
+        // Llama al servicio de eliminación de ficha tecnica antes de continuar.
+        deleteObsoleteTechSheet(productId, new ArrayList<>(newFeaturesMap.keySet()));
 
-        // MAP evita duplicados
-        // Map<String, String> newFeaturesMap = techSheet.stream()
-        // .collect(Collectors.toMap(
-        // TechSheetDto::getFeature,
-        // TechSheetDto::getValue,
-        // (existingValue, newValue) -> newValue // Si hay duplicados, se actualiza con
-        // el último valor
-        // ));
-
-        // // Eliminar las características que ya no están en la nueva ficha técnica
-        // existingFeatures.forEach(pf -> {
-        // String featureName = pf.getFeature().getName();
-        // if (!newFeaturesMap.containsKey(featureName)) {
-        // productFeatureRepository.delete(pf); // Eliminar la relación si la
-        // característica ya no está
-        // }
-        // });
-        // Eliminar las características que ya no están en la nueva ficha técnica
-        existingFeatures.forEach(pf -> {
-            String featureName = pf.getFeature().getName();
-            if (!newFeaturesMap.containsKey(featureName)) {
-                productFeatureRepository.delete(pf); // Eliminar la relación si la característica ya no está
-            }
-        });
+        // Ahora recargar las características existentes
+        List<ProductFeature> existingFeatures = productFeatureRepository.findTechSheetByProductId(productId);
 
         // Procesar cada característica de la nueva ficha técnica
         for (Map.Entry<String, String> entry : newFeaturesMap.entrySet()) {
             String featureName = entry.getKey();
             String featureValueStr = entry.getValue();
 
-            // Buscar la Feature existente
-            // TODO: En el caso de que no exista el feature, lo debe crear uno nuevo
-
-            // Buscar o crear la Feature si no existe
+            // Buscar o crear la Feature
             Feature feature = featureRepository.findByName(featureName)
                     .orElseGet(() -> {
                         Feature newFeature = new Feature();
                         newFeature.setName(featureName);
-                        newFeature.setStatus(true); // Asignar un valor predeterminado
+                        newFeature.setStatus(true);
                         return featureRepository.save(newFeature);
                     });
 
-            // Buscar el FeatureValue existente para la Feature dada
-            // Buscar o crear el FeatureValue si no existe
+            // Buscar o crear el FeatureValue
             FeatureValue featureValue = featureValueRepository.findByFeatureAndValue(feature, featureValueStr)
                     .orElseGet(() -> {
                         FeatureValue newFeatureValue = new FeatureValue();
-                        newFeatureValue.setFeature(feature); // Asignar la Feature
+                        newFeatureValue.setFeature(feature);
                         newFeatureValue.setValue(featureValueStr);
                         return featureValueRepository.save(newFeatureValue);
                     });
 
-            // Buscar si ya existe una relación ProductFeature para esta característica
+            // Buscar si ya existe una relación `ProductFeature` con este `Feature`
             Optional<ProductFeature> existingProductFeature = existingFeatures.stream()
-                    .filter(pf -> pf.getFeature().getName().equals(featureName))
+                    .filter(pf -> pf.getFeature().equals(feature))
                     .findFirst();
 
-            // Verifica la relación
             if (existingProductFeature.isPresent()) {
-                // Si existe, actualizar el FeatureValue
                 ProductFeature productFeature = existingProductFeature.get();
-                productFeature.setFeatureValue(featureValue);
-                productFeatureRepository.save(productFeature);
+
+                // 📌 Si el `FeatureValue` es diferente, actualizarlo
+                if (!productFeature.getFeatureValue().equals(featureValue)) {
+                    productFeature.setFeatureValue(featureValue);
+                    productFeatureRepository.save(productFeature);
+                }
+
             } else {
                 // Si no existe, crear una nueva relación ProductFeature
                 ProductFeature productFeature = new ProductFeature();
@@ -202,6 +176,24 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
         }
 
         return Optional.of(productTechSheetDtoMapper.toDto(product));
+
+    }
+
+    // Servicio para eliminar datos de la ficha tecnica
+    @Transactional
+    public void deleteObsoleteTechSheet(Long productId, List<String> newFeatureNames) {
+        // Obtener las características actuales del producto
+        List<ProductFeature> existingFeatures = productFeatureRepository.findTechSheetByProductId(productId);
+
+        // Filtrar las características que ya no están en la nueva ficha técnica
+        List<ProductFeature> toRemove = existingFeatures.stream()
+                .filter(pf -> !newFeatureNames.contains(pf.getFeature().getName()))
+                .collect(Collectors.toList());
+
+        // Si hay características que eliminar, eliminarlas en batch
+        if (!toRemove.isEmpty()) {
+            productFeatureRepository.deleteAllInBatch(toRemove);
+        }
     }
 
 }

@@ -28,12 +28,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.dto.TechSheetDto;
-import com.backend.electronic.models.entities.Image;
+import com.backend.electronic.models.entities.ProductImage;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.models.requests.ProductRequest;
-import com.backend.electronic.services.products.ProductService;
-import com.backend.electronic.services.products.features.ProductFeatureService;
-import com.backend.electronic.services.validations.ValidationService;
+import com.backend.electronic.services.ProductFeatureService;
+import com.backend.electronic.services.ProductService;
+import com.backend.electronic.validators.CustomValidator;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -45,7 +46,7 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    private ValidationService validationService;
+    private CustomValidator validationService;
     @Autowired
     private ProductFeatureService productFeatureService;
 
@@ -269,8 +270,8 @@ public class ProductController {
         validationService.validateFields(result);
 
         if (image != null && !image.isEmpty()) {
-            product.setImage(new Image());
-            product.getImage().setFile(image);
+            product.setProductImage(new ProductImage());
+            product.getProductImage().setFile(image);
         }
 
         try {

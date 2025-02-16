@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.electronic.services.images.ImageService;
+import com.backend.electronic.services.ProductImageService;
 
 @RestController
 @RequestMapping("/images")
 @CrossOrigin(originPatterns = "http://localhost:5173")
-public class ImageController {
+public class ProductImageController {
 
     @Autowired
-    private ImageService imageService;
+    private ProductImageService imageService;
 
     // SOLAMENTE FUNCIONA CON POSTMAN, PUES THUNDERCLIENT NO SOPORTA EL MANEJO DE
     // IMAGENES EN EL RESPONSE

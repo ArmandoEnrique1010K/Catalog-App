@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.electronic.models.dto.FeatureDto;
 import com.backend.electronic.models.entities.Feature;
-import com.backend.electronic.services.features.FeatureService;
-import com.backend.electronic.services.validations.ValidationService;
+import com.backend.electronic.services.FeatureService;
+import com.backend.electronic.validators.CustomValidator;
 
 import jakarta.validation.Valid;
 
@@ -34,7 +34,7 @@ public class FeatureController {
     private FeatureService featureService;
 
     @Autowired
-    private ValidationService validationService;
+    private CustomValidator validationService;
 
     @GetMapping
     public List<FeatureDto> list() {

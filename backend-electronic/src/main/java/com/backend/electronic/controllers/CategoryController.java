@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.electronic.models.dto.CategoryDto;
 import com.backend.electronic.models.entities.Category;
-import com.backend.electronic.services.categories.CategoryService;
-import com.backend.electronic.services.validations.ValidationService;
+import com.backend.electronic.services.CategoryService;
+import com.backend.electronic.validators.CustomValidator;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -34,7 +35,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @Autowired
-    private ValidationService validationService;
+    private CustomValidator validationService;
 
     @GetMapping
     public List<CategoryDto> list() {

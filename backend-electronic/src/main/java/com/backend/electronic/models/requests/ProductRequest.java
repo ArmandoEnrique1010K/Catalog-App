@@ -2,7 +2,7 @@ package com.backend.electronic.models.requests;
 
 import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.models.entities.Category;
-import com.backend.electronic.models.entities.Image;
+import com.backend.electronic.models.entities.ProductImage;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
@@ -90,6 +90,6 @@ public class ProductRequest {
     // Relacion hacia imagen
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private Image image;
+    private ProductImage productImage;
 
 }

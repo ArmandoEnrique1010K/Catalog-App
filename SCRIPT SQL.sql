@@ -53,7 +53,7 @@ INSERT INTO category_feature (category_id, feature_id) VALUES
 (6, 9);
 
 
-INSERT INTO image (id, name) VALUES
+INSERT INTO product_image (id, name) VALUES
 (1, 'https://example.com/images/product1.jpg'),
 (2, 'https://example.com/images/product2.jpg'),
 (3, 'https://example.com/images/product3.jpg'),
@@ -66,7 +66,7 @@ INSERT INTO image (id, name) VALUES
 (10, 'https://example.com/images/product10.jpg');
 
 
-INSERT INTO image (id, name) VALUES
+INSERT INTO product_image (id, name) VALUES
 (11, 'https://example.com/images/product11.jpg'),
 (12, 'https://example.com/images/product12.jpg'),
 (13, 'https://example.com/images/product13.jpg'),
@@ -84,7 +84,7 @@ INSERT INTO image (id, name) VALUES
 -- TRUNCATE TABLE product;
 
 -- Inserta datos en la tabla "product"
-INSERT INTO product (id, code, name, in_offer, current_price, old_price, status, description, updated_at, created_at, brand_id, category_id, image_id) VALUES
+INSERT INTO product (id, code, name, in_offer, current_price, old_price, status, description, updated_at, created_at, brand_id, category_id, product_image_id) VALUES
 (1, 'P001', 'HP Spectre x360', true, 1499.99, 1599.99,  true, 'Laptop convertible con pantalla táctil de 13.5" y procesador Intel Core i7', '2025-01-20 15:30:00', '2025-01-01 10:00:00',  1, 1, 1),
 (2, 'P002', 'LG OLED TV', false, 1299.99, NULL, true, 'Televisor OLED 4K de 55" con tecnología AI ThinQ.', '2025-01-15 18:45:00', '2025-01-03 12:00:00', 2, 2, 2),
 (3, 'P003', 'Samsung Galaxy S23', true, 920.99, 999.00,  true, 'Smartphone con pantalla AMOLED de 6.1" y resistencia al agua IP68.', '2025-01-10 14:20:00', '2025-01-05 09:00:00', 7, 3, 3),
@@ -113,8 +113,8 @@ SELECT
     p.code AS product_code,
     p.name AS product_name,
     p.in_offer AS product_in_offer,
-    p.price AS product_price,
-    p.offer_price AS product_offer_price,
+    p.current_price AS product_current_price,
+    p.old_price AS product_old_price,
     p.status AS product_status,
     p.description AS product_description,
     p.updated_at AS product_updated_at,
@@ -125,22 +125,22 @@ SELECT
     b.id AS brand_id,
     b.name AS brand_name,
     b.status AS brand_status,
-    i.id AS image_id,
-    i.name AS image_name
+    i.id AS product_image_id,
+    i.name AS product_image_name
 FROM product p
 LEFT JOIN category c ON p.category_id = c.id
 LEFT JOIN brand b ON p.brand_id = b.id
-LEFT JOIN image i ON p.image_id = i.id;
+LEFT JOIN product_image i ON p.product_image_id = i.id;
 
 
-
+# NO SIRVE ESTA CONSULTA
 SELECT 
     p.id AS product_id,
     p.code AS product_code,
     p.name AS product_name,
     p.in_offer AS product_in_offer,
-    p.price AS product_price,
-    p.offer_price AS product_offer_price,
+    p.current_price AS product_current_price,
+    p.old_price AS product_old_price,
     p.status AS product_status,
     p.description AS product_description,
     p.updated_at AS product_updated_at,
@@ -204,7 +204,7 @@ JOIN
 JOIN 
     feature_value fv ON pf.feature_value_id = fv.id
 WHERE 
-    pf.product_id = 1;
+    pf.product_id = 2;
     
     
 
@@ -231,7 +231,8 @@ INSERT INTO feature_value (id, value, feature_id) VALUES
 (5, '32 pulgadas', 2),
 (6, '40 pulgadas', 2),
 (7, '50 pulgadas', 2),
-(8, '65 pulgadas', 2);
+(8, '65 pulgadas', 2),
+(30, '13.5 pulgadas', 2);
 
 -- Valores para la característica "Tipo de pantalla" (id: 3)
 INSERT INTO feature_value (id, value, feature_id) VALUES 
@@ -283,7 +284,7 @@ INSERT INTO feature_value (id, value, feature_id) VALUES
 
 INSERT INTO product_feature (id, product_id, feature_value_id, feature_id) VALUES
 (1, 1, 1, 1), -- HP Spectre x360, Color: Rojo
-(2, 1, 3, 2), -- HP Spectre x360, Tamaño de pantalla: 13.5"
+(2, 1, 30, 2), -- HP Spectre x360, Tamaño de pantalla: 13.5"
 (3, 1, 10, 3), -- HP Spectre x360, Tipo de pantalla: LED
 (4, 1, 16, 5), -- HP Spectre x360, Memoria RAM: 12 GB
 
@@ -295,9 +296,10 @@ INSERT INTO product_feature (id, product_id, feature_value_id, feature_id) VALUE
 # NUEVAS CONSULTAS
 # FICHA TECNICA DE UN PRODUCTO (SE INCLUYEN CARACTERSITICAS)
 
-# OBTIENE LOS VALORES DE UNA CARACTERISTICA
+# OBTIENE LOS VALORES ASIGNADOS HASTA EL MOMENTO DE UNA CARACTERISTICA
 SELECT * FROM db_electronic.feature_value WHERE feature_id = 2;
 
+# UTIL PARA MOSTRAR SOLAMENTE LAS DISTINTAS CARACTERISTICAS DE TODOS LOS PRODUCTOS POR UNA CATEGORIA
 # OBTIENE LOS VALORES DISTINTOS QUE CORRESPONDEN A UNA CARACTERISTICA POR SU CATEGORIA
 SELECT DISTINCT fv.id, fv.value
 FROM feature_value fv
@@ -305,8 +307,6 @@ JOIN product_feature pf ON fv.id = pf.feature_value_id
 JOIN product p ON pf.product_id = p.id
 WHERE p.category_id = 1  -- ID de la categoría
 AND fv.feature_id = 1;  -- ID de la característica
-
-
 
 # CREAR UNA CONSULTA PARA SELECCIONAR TODOS LOS PRODUCTOS CUYO VALOR DE LA CARACTERISTICA (feature_value_id) COINCIDA
 SELECT * FROM db_electronic.product_feature;

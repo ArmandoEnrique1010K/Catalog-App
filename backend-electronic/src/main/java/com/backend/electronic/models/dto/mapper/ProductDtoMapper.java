@@ -14,12 +14,12 @@ public interface ProductDtoMapper {
 
     // En algunos casos se tiene que mapear de forma manual los campos que se
     // relacionan con otras entidades
-    @Mapping(source = "image.name", target = "nameImage")
+    @Mapping(source = "productImage.name", target = "nameImage")
     @Mapping(source = "brand.name", target = "brandName")
     ProductsListDto toListDto(Product product);
 
     @Mapping(source = "brand.id", target = "idBrand")
     @Mapping(source = "category.id", target = "idCategory")
-    @Mapping(source = "image.name", target = "nameImage")
+    @Mapping(source = "productImage.name", target = "nameImage")
     ProductDetailDto toDetailDto(Product product);
 }

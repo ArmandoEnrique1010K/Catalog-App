@@ -1,4 +1,4 @@
-package com.backend.electronic.services.products.features;
+package com.backend.electronic.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +22,7 @@ import com.backend.electronic.repositories.FeatureRepository;
 import com.backend.electronic.repositories.FeatureValueRepository;
 import com.backend.electronic.repositories.ProductFeatureRepository;
 import com.backend.electronic.repositories.ProductRepository;
+import com.backend.electronic.validators.CustomValidator;
 
 import jakarta.transaction.Transactional;
 
@@ -46,11 +47,14 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
     @Autowired
     private ProductTechSheetDtoMapper productTechSheetDtoMapper;
 
+    @Autowired
+    private CustomValidator customValidator;
+
     @Override
     public List<TechSheetDto> getTechSheet(Long productId) {
 
-        List<ProductFeature> productFeature = productFeatureRepository.findTechSheetByProductId(productId);
-        return productFeature.stream().map(
+        List<ProductFeature> productFeatures = productFeatureRepository.findTechSheetByProductId(productId);
+        return productFeatures.stream().map(
                 techSheetDtoMapper::toListDto)
                 .toList();
 
@@ -106,9 +110,18 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
 
     // SERVICIO PARA ACTUALIZAR LA FICHA TECNICA
     // SI UN PRODUCTO NO TIENE SU FICHA TECNICA, LO CREA
+
+    // ES POSIBLE SOLUCIONAR EL PROBLEMA CUANDO SE PASA EN LA PETICIÓN ALGUN
+    // PAR CUYO FEATURE YA EXISTA. NORMALMENTE TOMA EL VALUE DEL ULTIMO FEATURE PARA
+    // ASIGNARLO AL PRODUCTO
     @Transactional
     @Override
     public Optional<ProductTechSheetDto> updateTechSheet(Long productId, List<TechSheetDto> techSheet) {
+
+        // Llama a la validación si un feature se repite en la peticion con valores
+        // distintos
+        customValidator.validateExistingPairFeatureValue(techSheet);
+
         // Buscar el producto en la base de datos
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));

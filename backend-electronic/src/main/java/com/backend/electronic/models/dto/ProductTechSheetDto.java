@@ -1,6 +1,5 @@
 package com.backend.electronic.models.dto;
 
-import java.util.List;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;

@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.electronic.models.dto.BrandDto;
 import com.backend.electronic.models.entities.Brand;
-import com.backend.electronic.services.brands.BrandService;
-import com.backend.electronic.services.validations.ValidationService;
+import com.backend.electronic.services.BrandService;
+import com.backend.electronic.validators.CustomValidator;
+
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ public class BrandController {
     private BrandService brandService;
 
     @Autowired
-    private ValidationService validationService;
+    private CustomValidator validationService;
 
     // Endpoint para todas las categorias habilitadas
     @GetMapping
@@ -55,6 +56,7 @@ public class BrandController {
         // if (result.hasErrors()) {
         // return validation(result);
         // }
+
         validationService.validateFields(result);
 
         try {

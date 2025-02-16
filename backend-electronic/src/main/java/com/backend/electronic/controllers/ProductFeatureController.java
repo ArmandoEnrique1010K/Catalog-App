@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.electronic.models.dto.ProductTechSheetDto;
 import com.backend.electronic.models.dto.TechSheetDto;
 import com.backend.electronic.models.entities.ProductFeature;
-import com.backend.electronic.services.products.features.ProductFeatureService;
+import com.backend.electronic.services.ProductFeatureService;
 
 @RestController
 @RequestMapping("/product")

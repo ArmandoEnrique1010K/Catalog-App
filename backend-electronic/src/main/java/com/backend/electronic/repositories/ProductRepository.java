@@ -43,7 +43,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         // List<Product> findAllProductsByCategoryId(@Param("id") Long id);
 
         // SIMPLIFICAR EL CODIGO REPETITIVO
-        @Query("SELECT p FROM Product p JOIN FETCH p.brand JOIN FETCH p.category JOIN FETCH p.image WHERE p.status = true AND p.brand.status = true AND p.category.status = true")
+        @Query("SELECT p FROM Product p JOIN FETCH p.brand JOIN FETCH p.category JOIN FETCH p.productImage WHERE p.status = true AND p.brand.status = true AND p.category.status = true")
         List<Product> findActiveProducts();
 
         // Métodos que reutilizan la consulta base
@@ -87,7 +87,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         // .collect(Collectors.toList());
         // }
 
-        @Query("SELECT p FROM Product p JOIN FETCH p.brand b JOIN FETCH p.category c JOIN FETCH p.image " +
+        @Query("SELECT p FROM Product p JOIN FETCH p.brand b JOIN FETCH p.category c JOIN FETCH p.productImage " +
                         "WHERE p.status = true AND p.brand.status = true AND p.category.status = true " +
                         "AND (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
                         "AND (:idCategory IS NULL OR c.id = :idCategory) " +
@@ -101,7 +101,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
         // TODO: MODIFICAR ESTO PARA UNA SUPERCONSULTA
         @Query("SELECT p FROM Product p " +
-                        "JOIN p.productFeature pf " +
+                        "JOIN p.productFeatures pf " +
                         "WHERE pf.featureValue.id IN :featureValues " +
                         "GROUP BY p.id")
         List<Product> findByFeatureValues(
@@ -132,7 +132,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         // "AND pf.featureValue.id IN :featureValues GROUP BY p.id")
 
         // TODO: INVESTIGAR EL USO DE DISTINCT Y GROUP BY EN UNA CONSULTA JDBC
-        @Query("SELECT p FROM Product p JOIN p.brand b JOIN p.category c JOIN p.image JOIN p.productFeature pf " +
+        @Query("SELECT p FROM Product p JOIN p.brand b JOIN p.category c JOIN p.productImage JOIN p.productFeatures pf "
+                        +
                         "WHERE p.status = true AND p.brand.status = true AND p.category.status = true " +
                         "AND (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
                         "AND (:idCategory IS NULL OR c.id = :idCategory) " +

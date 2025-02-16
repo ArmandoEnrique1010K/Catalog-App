@@ -1,4 +1,4 @@
-package com.backend.electronic.services.images;
+package com.backend.electronic.services;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.annotation.PostConstruct;
 
 @Service
-public class ImageServiceImpl implements ImageService {
+public class ProductImageServiceImpl implements ProductImageService {
 
     // private static final Logger logger =
     // LoggerFactory.getLogger(ImageServiceImpl.class);

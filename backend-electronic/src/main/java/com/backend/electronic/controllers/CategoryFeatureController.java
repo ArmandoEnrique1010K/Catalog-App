@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.electronic.models.dto.CategoryFeatureNameDto;
 import com.backend.electronic.models.dto.CategoryFeaturesIdsDto;
-import com.backend.electronic.models.entities.CategoryFeature;
-import com.backend.electronic.services.categories.features.CategoryFeatureService;
-import com.backend.electronic.services.validations.ValidationService;
+import com.backend.electronic.services.CategoryFeatureService;
+import com.backend.electronic.validators.CustomValidator;
 
 import jakarta.validation.Valid;
 
@@ -32,7 +31,7 @@ public class CategoryFeatureController {
     private CategoryFeatureService categoryFeatureService;
 
     @Autowired
-    private ValidationService validationService;
+    private CustomValidator validationService;
 
     // TODO: ¿MODIFICAR ESTO?
     @GetMapping("/{id}/features")

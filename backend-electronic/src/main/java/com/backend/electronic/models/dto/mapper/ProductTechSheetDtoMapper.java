@@ -29,7 +29,9 @@ public interface ProductTechSheetDtoMapper {
     // Campos: id del producto y una lista con los campos feature y featureValue
     // para la ficha tecnica
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "techSheet", source = "productFeature", qualifiedByName = "mapFeatureValuesToTechSheetDto")
+
+    // CASO CUANDO SE QUIERE HACER MAPEAR UNA LISTA
+    @Mapping(target = "techSheet", source = "productFeatures", qualifiedByName = "mapFeatureValuesToTechSheetDto")
     ProductTechSheetDto toDto(Product product);
 
     @Named("mapFeatureValuesToTechSheetDto")

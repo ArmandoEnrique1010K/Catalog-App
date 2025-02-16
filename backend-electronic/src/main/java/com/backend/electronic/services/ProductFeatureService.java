@@ -1,4 +1,4 @@
-package com.backend.electronic.services.products.features;
+package com.backend.electronic.services;
 
 import java.util.List;
 import java.util.Optional;

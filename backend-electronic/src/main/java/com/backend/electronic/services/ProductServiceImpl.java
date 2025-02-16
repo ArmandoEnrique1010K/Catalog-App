@@ -1,4 +1,4 @@
-package com.backend.electronic.services.products;
+package com.backend.electronic.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +20,7 @@ import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.models.entities.Category;
 import com.backend.electronic.models.entities.Feature;
 import com.backend.electronic.models.entities.FeatureValue;
-import com.backend.electronic.models.entities.Image;
+import com.backend.electronic.models.entities.ProductImage;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.models.entities.ProductFeature;
 import com.backend.electronic.models.requests.ProductRequest;
@@ -28,10 +28,9 @@ import com.backend.electronic.repositories.BrandRepository;
 import com.backend.electronic.repositories.CategoryRepository;
 import com.backend.electronic.repositories.FeatureRepository;
 import com.backend.electronic.repositories.FeatureValueRepository;
-import com.backend.electronic.repositories.ImageRepository;
+import com.backend.electronic.repositories.ProductImageRepository;
 import com.backend.electronic.repositories.ProductFeatureRepository;
 import com.backend.electronic.repositories.ProductRepository;
-import com.backend.electronic.services.images.ImageService;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -46,13 +45,14 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private ImageRepository imageRepository;
+    private ProductImageRepository imageRepository;
 
     @Autowired
     private FeatureRepository featureRepository;
 
     @Autowired
     private FeatureValueRepository featureValueRepository;
+
     @Autowired
     private ProductFeatureRepository productFeatureRepository;
 
@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductDtoMapper productDtoMapper;
 
     @Autowired
-    private ImageService imageService;
+    private ProductImageService imageService;
 
     // @Autowired
     // private ProductDetailTechSheetDtoMapper productDetailTechSheetDtoMapper;
@@ -205,12 +205,12 @@ public class ProductServiceImpl implements ProductService {
         // 🔹 Ahora guardamos la imagen, porque ya sabemos que el producto se guardó
         // bien
         String nameImage = imageService.storeImage(file);
-        Image image = new Image();
+        ProductImage image = new ProductImage();
         image.setName(nameImage);
         image = imageRepository.save(image);
 
         // 🔹 Ahora asignamos la imagen al producto y guardamos de nuevo
-        savedProduct.setImage(image);
+        savedProduct.setProductImage(image);
         productRepository.save(savedProduct); // Segunda actualización con imagen
 
         return productDtoMapper.toDetailDto(savedProduct);
@@ -246,12 +246,12 @@ public class ProductServiceImpl implements ProductService {
         // 🔹 Ahora guardamos la imagen, porque ya sabemos que el producto se guardó
         // bien
         String nameImage = imageService.storeImage(file);
-        Image image = new Image();
+        ProductImage image = new ProductImage();
         image.setName(nameImage);
         image = imageRepository.save(image);
 
         // 🔹 Ahora asignamos la imagen al producto y guardamos de nuevo
-        product.setImage(image);
+        product.setProductImage(image);
 
         // Guardar el producto primero
         Product savedProduct = productRepository.save(product);
@@ -262,11 +262,11 @@ public class ProductServiceImpl implements ProductService {
 
         // TODO: MODIFICAR LA FICHA TECNICA, DE TAL MANERA QUE SOLAMENTE ACEPTE VALORES
         // QUE SE ENCUENTRAN REGISTRADOS
-        if (product.getProductFeature() == null || product.getProductFeature().isEmpty()) {
+        if (product.getProductFeatures() == null || product.getProductFeatures().isEmpty()) {
             throw new IllegalArgumentException("No se recibieron características para el producto.");
         }
 
-        for (ProductFeature eachProductFeature : product.getProductFeature()) {
+        for (ProductFeature eachProductFeature : product.getProductFeatures()) {
             if (eachProductFeature.getFeature() == null || eachProductFeature.getFeatureValue() == null) {
                 throw new IllegalArgumentException("Cada ProductFeature debe contener una Feature y un FeatureValue.");
             }
@@ -356,11 +356,11 @@ public class ProductServiceImpl implements ProductService {
             System.out.println("SUBIENDO UNA NUEVA IMAGEN...");
             String nameImage = imageService.storeImage(file);
 
-            Image image = new Image();
+            ProductImage image = new ProductImage();
             image.setName(nameImage);
             image = imageRepository.save(image);
 
-            updatedProduct.setImage(image);
+            updatedProduct.setProductImage(image);
             productRepository.save(updatedProduct); // Segunda actualización con imagen
         } else {
             System.out.println("NO SE SUBIÓ UNA NUEVA IMAGEN, SE MANTIENE LA ACTUAL.");

@@ -71,6 +71,7 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 		<!-- MapStruct para el mapeo de Entidad a DTO -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -83,13 +84,8 @@
 			<version>1.5.5.Final</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- ELIMINAR ESTO dependencia tika (para pruebas), verifica el tipo MIME -->
-		<!-- <dependency>
-			<groupId>org.apache.tika</groupId>
-			<artifactId>tika-core</artifactId>
-			<version>0.7</version>
-		</dependency> -->
 
+		<!-- En algun momento, se incluiran las dependencias de Spring Security y JWT -->
 	</dependencies>
 
 	<build>

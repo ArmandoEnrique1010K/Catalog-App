@@ -1,4 +1,4 @@
-package com.backend.electronic.services.categories.features;
+package com.backend.electronic.services;
 
 import java.util.List;
 

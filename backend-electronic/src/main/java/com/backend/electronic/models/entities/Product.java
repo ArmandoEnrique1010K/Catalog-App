@@ -100,12 +100,12 @@ public class Product {
 
     // Relacion hacia imagen
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private Image image;
+    @JoinColumn(name = "product_image_id", referencedColumnName = "id")
+    private ProductImage productImage;
 
     // TODO: ESTO DEBERIA CONTAR?
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductFeature> productFeature = new ArrayList<>();
+    private List<ProductFeature> productFeatures = new ArrayList<>();
 }
 
 // EAGER VS LAZY

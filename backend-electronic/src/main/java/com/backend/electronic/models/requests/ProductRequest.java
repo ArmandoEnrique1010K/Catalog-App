@@ -1,10 +1,15 @@
 package com.backend.electronic.models.requests;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.backend.electronic.models.entities.Brand;
 import com.backend.electronic.models.entities.Category;
+import com.backend.electronic.models.entities.ProductFeature;
 import com.backend.electronic.models.entities.ProductImage;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -91,5 +97,8 @@ public class ProductRequest {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private ProductImage productImage;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductFeature> productFeatures = new ArrayList<>();
 
 }

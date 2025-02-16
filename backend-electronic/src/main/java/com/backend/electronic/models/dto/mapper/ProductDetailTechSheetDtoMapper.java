@@ -9,41 +9,29 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
-import com.backend.electronic.models.dto.ProductTechSheetDto;
+import com.backend.electronic.models.dto.ProductDetailTechSheetDto;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.models.entities.ProductFeature;
 
-// public class ProductTechSheetDto {
-//     private Long id;
-//     private Map<String, String> techSheet;
-// }
-
 @Component
 @Mapper(componentModel = "spring")
-public interface ProductTechSheetDtoMapper {
+public interface ProductDetailTechSheetDtoMapper {
 
-    // UTILIZAR LA ENTIDAD PRODUCT EN LUGAR DE PRODUCTFEATURE
-    // Campos: id del producto y una lista con los campos feature y featureValue
-    // para la ficha tecnica
-    @Mapping(target = "id", source = "id")
-
-    // CASO CUANDO SE QUIERE HACER MAPEAR UNA LISTA
+    // @Mapping(target = "id", source = "id")
+    @Mapping(target = "idBrand", source = "product.brand.id")
+    @Mapping(target = "idCategory", source = "product.category.id")
+    @Mapping(target = "nameImage", source = "product.productImage.name")
+    // EL MISMO CUANDO SE QUIERE HACER MAPEAR UNA LISTA
     @Mapping(target = "techSheet", source = "productFeatures", qualifiedByName = "mapFeatureValuesToTechSheetDto")
-    ProductTechSheetDto toDto(Product product);
+    ProductDetailTechSheetDto toDto(Product product);
 
     @Named("mapFeatureValuesToTechSheetDto")
     default Map<String, String> mapFeatureValuesToTechSheetDto(List<ProductFeature> productFeatures) {
-
         return productFeatures.stream()
                 .collect(Collectors.toMap(
                         pf -> pf.getFeature().getName(), // Key: Feature name
                         pf -> pf.getFeatureValue().getValue() // Value: Feature value
                 ));
-
-        // .collect(Collectors.toMap(
-        // pf -> pf.getFeature().getName(), // Clave: Nombre de la característica
-        // pf -> pf.getValue(), // Valor: Valor de la característica
-        // (existing, replacement) -> existing // Si hay duplicados, mantener el primero
-        // ));
     }
+
 }

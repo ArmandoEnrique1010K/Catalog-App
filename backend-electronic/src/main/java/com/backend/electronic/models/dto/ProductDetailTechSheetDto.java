@@ -1,5 +1,7 @@
 package com.backend.electronic.models.dto;
 
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +24,10 @@ public class ProductDetailTechSheetDto {
     private Long idBrand;
     private String nameImage;
 
-    // CAMPOS PARA FICHA TECNICA
-    private String feature;
-    private String value;
+    // CAMPOS PARA FICHA TECNICA (variante de ProductTechSheetDto)
+    // private String feature;
+    // private String value;
+    // private Long id;
+    private Map<String, String> techSheet;
 
 }

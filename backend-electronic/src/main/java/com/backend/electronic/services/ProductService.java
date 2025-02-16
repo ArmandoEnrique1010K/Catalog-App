@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.electronic.models.dto.ProductDetailDto;
+import com.backend.electronic.models.dto.ProductDetailTechSheetDto;
 import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.entities.Product;
 import com.backend.electronic.models.entities.ProductFeature;
@@ -34,12 +35,16 @@ public interface ProductService {
 
     public Optional<ProductDetailDto> findById(Long id);
 
+    public Optional<ProductDetailTechSheetDto> findFullProductById(Long id);
+
     public ProductDetailDto save(Product product, MultipartFile file);
 
     // METODO PARA GUARDAR UN PRODUCTO INCLUYENDO SU FICHA TECNICA
     public ProductDetailDto saveWithTechSheet(Product product, MultipartFile file);
 
     public Optional<ProductDetailDto> update(ProductRequest product, MultipartFile file, Long id);
+
+    public Optional<ProductDetailTechSheetDto> update2(ProductRequest product, MultipartFile file, Long id);
 
     public void disable(Long id);
 

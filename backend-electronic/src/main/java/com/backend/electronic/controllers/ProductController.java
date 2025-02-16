@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.apache.catalina.connector.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.electronic.models.dto.ProductDetailDto;
+import com.backend.electronic.models.dto.ProductDetailTechSheetDto;
 import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.dto.TechSheetDto;
 import com.backend.electronic.models.entities.ProductImage;
@@ -36,6 +39,7 @@ import com.backend.electronic.services.ProductService;
 import com.backend.electronic.validators.CustomValidator;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/products")
@@ -149,6 +153,21 @@ public class ProductController {
         }
     }
 
+    // ENDPOINT PARA ENCONTRAR UN PRODUCTO INCLUYENDO SU FICHA TECNICA
+    @GetMapping("/full/{id}")
+    public ResponseEntity<?> showFullById(@PathVariable Long id) {
+        Optional<ProductDetailTechSheetDto> product = productService.findFullProductById(id);
+
+        if (product.isPresent()) {
+
+            // Si el status es false, no lo debe mostrar
+
+            return ResponseEntity.ok(product.get()); // Retorna 200 OK con el producto
+        } else {
+            return ResponseEntity.notFound().build(); // Retorna 404 Not Found
+        }
+    }
+
     // TODO: USAR UN ModelAttribute Y RequestParam por separado, uno para el JSON
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> create(
@@ -176,33 +195,35 @@ public class ProductController {
     }
 
     // TODO: ELIMINAR ESTO
-    @PostMapping(value = "/createTest", consumes = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> createTestWithTechSheet(
-            @Valid @RequestPart("product") Product product, BindingResult result,
-            @RequestPart(value = "image", required = false) MultipartFile image
-    // @RequestPart("techSheet") List<ProductFeature> techSheet
-    ) { // ✅ Nueva clave para ficha técnica
+    // @PostMapping(value = "/createTest", consumes = {
+    // MediaType.APPLICATION_JSON_VALUE,
+    // MediaType.MULTIPART_FORM_DATA_VALUE })
+    // public ResponseEntity<?> createTestWithTechSheet(
+    // @Valid @RequestPart("product") Product product, BindingResult result,
+    // @RequestPart(value = "image", required = false) MultipartFile image
+    // // @RequestPart("techSheet") List<ProductFeature> techSheet
+    // ) { // ✅ Nueva clave para ficha técnica
 
-        // Validaciones (si fallan, lanzarán excepciones y se detendrá el flujo)
-        validationService.validateFields(result);
-        validationService.validateImage(image);
+    // // Validaciones (si fallan, lanzarán excepciones y se detendrá el flujo)
+    // validationService.validateFields(result);
+    // validationService.validateImage(image);
 
-        try {
-            ProductDetailDto savedProduct = productService.saveWithTechSheet(product, image);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
-        } catch (DataIntegrityViolationException ex) {
-            // Solamente si hay un registro duplicado en uno de los campos, devolvera el
-            // error definido en GlobalExceptionHandler
+    // try {
+    // ProductDetailDto savedProduct = productService.saveWithTechSheet(product,
+    // image);
+    // return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+    // } catch (DataIntegrityViolationException ex) {
+    // // Solamente si hay un registro duplicado en uno de los campos, devolvera el
+    // // error definido en GlobalExceptionHandler
 
-            throw ex;
-        } catch (Exception ex) {
-            // Manejar otros errores
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al guardar el producto: " + ex.getMessage());
-        }
+    // throw ex;
+    // } catch (Exception ex) {
+    // // Manejar otros errores
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    // .body("Error al guardar el producto: " + ex.getMessage());
+    // }
 
-    }
+    // }
 
     // NOTA: POR PRIMERA VEZ SUPERE A CHATGPT, COPILOT Y DEEPSEEK, PORQUE LA
     // SOLUCIÓN ESTABA EN EL CONTROLADOR, NO EN EL SERVICIO
@@ -287,6 +308,47 @@ public class ProductController {
         }
     }
 
+    @PutMapping(value = "update/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE })
+
+    public ResponseEntity<?> updateWithTechSheet(@Valid @RequestPart("product") ProductRequest product,
+            BindingResult result,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart("techSheet") List<TechSheetDto> techSheet,
+            @PathVariable Long id) {
+
+        validationService.validateFields(result);
+
+        if (image != null && !image.isEmpty()) {
+            product.setProductImage(new ProductImage());
+            product.getProductImage().setFile(image);
+        }
+
+        try {
+
+            Optional<ProductDetailTechSheetDto> updatedProduct = productService.update2(product, image, id);
+
+            // INTENTAR ESTO: 2 SERVICIOS EN UN CONTROLADOR
+            Long idProductInDb = updatedProduct.get().getId();
+
+            productFeatureService.updateTechSheet(idProductInDb, techSheet);
+
+            // return ResponseEntity.status(HttpStatus.CREATED).body(updatedProduct);
+
+            // return updatedProduct.map(ResponseEntity::ok)
+            // .orElseGet(() -> ResponseEntity.notFound().build());
+
+            return updatedProduct.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
+        } catch (DataIntegrityViolationException ex) {
+            // Violación de datos al insertar un registro duplicado
+            throw ex;
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar el producto: " + e.getMessage());
+        }
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<ProductDetailDto> o = productService.findById(id);
@@ -298,13 +360,13 @@ public class ProductController {
         return ResponseEntity.notFound().build(); // 404
     }
 
-    private ResponseEntity<?> validation(BindingResult result) {
-        Map<String, String> errors = new HashMap<>();
-        result.getFieldErrors().forEach(err -> {
-            errors.put(err.getField(), err.getDefaultMessage());
-        });
-        return ResponseEntity.badRequest().body(errors);
-    }
+    // private ResponseEntity<?> validation(BindingResult result) {
+    // Map<String, String> errors = new HashMap<>();
+    // result.getFieldErrors().forEach(err -> {
+    // errors.put(err.getField(), err.getDefaultMessage());
+    // });
+    // return ResponseEntity.badRequest().body(errors);
+    // }
 
     // TODO: Tener en cuenta los siguientes endpoints
 

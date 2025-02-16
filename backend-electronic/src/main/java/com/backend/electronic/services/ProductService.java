@@ -35,6 +35,8 @@ public interface ProductService {
 
     public Optional<ProductDetailDto> findById(Long id);
 
+    // public Optional<ProductDetailTechSheetDto> findFullDataById(Long id);
+
     public Optional<ProductDetailTechSheetDto> findFullProductById(Long id);
 
     public ProductDetailDto save(Product product, MultipartFile file);

@@ -325,20 +325,23 @@ public class ProductController {
         }
 
         try {
-
+            // 1️⃣ Actualiza el producto (sin la ficha técnica aún)
             Optional<ProductDetailTechSheetDto> updatedProduct = productService.update2(product, image, id);
 
-            // INTENTAR ESTO: 2 SERVICIOS EN UN CONTROLADOR
-            Long idProductInDb = updatedProduct.get().getId();
+            if (updatedProduct.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
 
-            productFeatureService.updateTechSheet(idProductInDb, techSheet);
+            // 2️⃣ Actualiza la ficha técnica
+            productFeatureService.updateTechSheet(id, techSheet);
 
-            // return ResponseEntity.status(HttpStatus.CREATED).body(updatedProduct);
+            // 3️⃣ Recuperar el producto con la ficha técnica actualizada
+            Optional<ProductDetailTechSheetDto> updatedProductWithTechSheet = productService
+                    .findFullProductById(id);
 
-            // return updatedProduct.map(ResponseEntity::ok)
-            // .orElseGet(() -> ResponseEntity.notFound().build());
-
-            return updatedProduct.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+            return updatedProductWithTechSheet
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
 
         } catch (DataIntegrityViolationException ex) {
             // Violación de datos al insertar un registro duplicado

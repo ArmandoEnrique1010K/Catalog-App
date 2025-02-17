@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.electronic.models.dto.ProductDetailDto;
 import com.backend.electronic.models.dto.ProductDetailTechSheetDto;
+import com.backend.electronic.models.dto.ProductTechSheetDto;
 import com.backend.electronic.models.dto.ProductsListDto;
 import com.backend.electronic.models.dto.TechSheetDto;
 import com.backend.electronic.models.entities.ProductImage;
@@ -247,9 +248,16 @@ public class ProductController {
             // INTENTAR ESTO: 2 SERVICIOS EN UN CONTROLADOR
             Long idProductInDb = savedProduct.getId();
 
-            productFeatureService.saveTechSheet(idProductInDb, techSheet);
+            ProductTechSheetDto savedTechSheet = productFeatureService.saveTechSheet(idProductInDb, techSheet);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+            System.out.println("ProductTechSheetDto: " + savedTechSheet);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("product", savedProduct);
+            // TODO: ARREGLAR ESTO, CONTIENE UN OBJETO CON EL ID DEL PRODUCTO Y LA PROPIEDAD
+            // techSheetProduct CON UN OBJETO VACIO
+            response.put("techSheetProduct", savedTechSheet);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
         } catch (DataIntegrityViolationException ex) {
             // Solamente si hay un registro duplicado en uno de los campos, devolvera el

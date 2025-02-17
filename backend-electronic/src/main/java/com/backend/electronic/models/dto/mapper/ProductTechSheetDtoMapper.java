@@ -1,5 +1,6 @@
 package com.backend.electronic.models.dto.mapper;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,11 +34,15 @@ public interface ProductTechSheetDtoMapper {
 
     @Named("mapFeatureValuesToTechSheetDto")
     default Map<String, String> mapFeatureValuesToTechSheetDto(List<ProductFeature> productFeatures) {
+        if (productFeatures == null) {
+            return Collections.emptyMap();
+        }
 
         return productFeatures.stream()
                 .collect(Collectors.toMap(
                         pf -> pf.getFeature().getName(), // Key: Feature name
-                        pf -> pf.getFeatureValue().getValue() // Value: Feature value
+                        pf -> pf.getFeatureValue().getValue(), // Value: Feature value
+                        (existing, replacement) -> existing // If duplicates, keep the first
                 ));
 
         // .collect(Collectors.toMap(

@@ -237,90 +237,106 @@ public class ProductServiceImpl implements ProductService {
     // https://stackoverflow.com/questions/62272205/error-when-it-implements-a-create-hhh000437-attempting-to-save-one-or-more
     // TODO: ESTE PROBLEMA NO TIENE SOLUCIÓN, NO SE PUEDE GUARDAR UN PRODUCTO JUNTO
     // CON SU FICHA TECNICA AL MISMO TIEMPO EN EL MISMO SERVICIO
-    @Transactional
-    @Override
-    public ProductDetailDto saveWithTechSheet(Product product, MultipartFile file) {
+    // @Transactional
+    // @Override
+    // public ProductDetailDto saveWithTechSheet(Product product, MultipartFile
+    // file) {
 
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("La imagen del producto no puede estar vacía");
-        }
+    // if (file == null || file.isEmpty()) {
+    // throw new IllegalArgumentException("La imagen del producto no puede estar
+    // vacía");
+    // }
 
-        Brand brand = brandRepository.findById(product.getBrand().getId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "La marca con ID " + product.getBrand().getId() + " no existe"));
-        product.setBrand(brand);
+    // Brand brand = brandRepository.findById(product.getBrand().getId())
+    // .orElseThrow(() -> new IllegalArgumentException(
+    // "La marca con ID " + product.getBrand().getId() + " no existe"));
+    // product.setBrand(brand);
 
-        Category category = categoryRepository.findById(product.getCategory().getId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "La categoría con ID " + product.getCategory().getId() + " no existe"));
-        product.setCategory(category);
+    // Category category =
+    // categoryRepository.findById(product.getCategory().getId())
+    // .orElseThrow(() -> new IllegalArgumentException(
+    // "La categoría con ID " + product.getCategory().getId() + " no existe"));
+    // product.setCategory(category);
 
-        // Asignar valores directos al producto (solamente los campos que no seran
-        // llenados por el usuario)
-        product.setStatus(true);
-        product.setCreatedAt(LocalDateTime.now());
-        product.setUpdatedAt(LocalDateTime.now());
+    // // Asignar valores directos al producto (solamente los campos que no seran
+    // // llenados por el usuario)
+    // product.setStatus(true);
+    // product.setCreatedAt(LocalDateTime.now());
+    // product.setUpdatedAt(LocalDateTime.now());
 
-        // 🔹 Ahora guardamos la imagen, porque ya sabemos que el producto se guardó
-        // bien
-        String nameImage = imageService.storeImage(file);
-        ProductImage image = new ProductImage();
-        image.setName(nameImage);
-        image = imageRepository.save(image);
+    // // 🔹 Ahora guardamos la imagen, porque ya sabemos que el producto se guardó
+    // // bien
+    // String nameImage = imageService.storeImage(file);
+    // ProductImage image = new ProductImage();
+    // image.setName(nameImage);
+    // image = imageRepository.save(image);
 
-        // 🔹 Ahora asignamos la imagen al producto y guardamos de nuevo
-        product.setProductImage(image);
+    // // 🔹 Ahora asignamos la imagen al producto y guardamos de nuevo
+    // product.setProductImage(image);
 
-        // Guardar el producto primero
-        Product savedProduct = productRepository.save(product);
-        Long idSavedProduct = savedProduct.getId();
-        System.out.println("EL PRODUCTO VA A TENER EL ID: " + idSavedProduct);
+    // // Guardar el producto primero
+    // Product savedProduct = productRepository.save(product);
 
-        // 🔹 Validar ficha técnica
+    // Long idSavedProduct = savedProduct.getId();
+    // System.out.println("EL PRODUCTO VA A TENER EL ID: " + idSavedProduct);
 
-        // TODO: MODIFICAR LA FICHA TECNICA, DE TAL MANERA QUE SOLAMENTE ACEPTE VALORES
-        // QUE SE ENCUENTRAN REGISTRADOS
-        if (product.getProductFeatures() == null || product.getProductFeatures().isEmpty()) {
-            throw new IllegalArgumentException("No se recibieron características para el producto.");
-        }
+    // // 🔹 Validar ficha técnica
 
-        for (ProductFeature eachProductFeature : product.getProductFeatures()) {
-            if (eachProductFeature.getFeature() == null || eachProductFeature.getFeatureValue() == null) {
-                throw new IllegalArgumentException("Cada ProductFeature debe contener una Feature y un FeatureValue.");
-            }
+    // // TODO: MODIFICAR LA FICHA TECNICA, DE TAL MANERA QUE SOLAMENTE ACEPTE
+    // VALORES
+    // // QUE SE ENCUENTRAN REGISTRADOS
+    // if (product.getProductFeatures() == null ||
+    // product.getProductFeatures().isEmpty()) {
+    // throw new IllegalArgumentException("No se recibieron características para el
+    // producto.");
+    // }
 
-            String featureName = eachProductFeature.getFeature().getName();
-            String featureValueName = eachProductFeature.getFeatureValue().getValue();
+    // for (ProductFeature eachProductFeature : product.getProductFeatures()) {
+    // if (eachProductFeature.getFeature() == null ||
+    // eachProductFeature.getFeatureValue() == null) {
+    // throw new IllegalArgumentException("Cada ProductFeature debe contener una
+    // Feature y un FeatureValue.");
+    // }
 
-            // 🔹 Buscar Feature en BD
-            Feature feature = featureRepository.findByName(featureName)
-                    .orElseThrow(
-                            () -> new IllegalArgumentException("La característica '" + featureName + "' no existe."));
+    // String featureName = eachProductFeature.getFeature().getName();
+    // String featureValueName = eachProductFeature.getFeatureValue().getValue();
 
-            // 🔹 Buscar FeatureValue en BD
-            FeatureValue featureValue = featureValueRepository.findByFeatureAndValue(feature, featureValueName)
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "El valor '" + featureValueName + "' no existe para la característica '" + featureName
-                                    + "'."));
+    // // 🔹 Buscar Feature en BD
+    // Feature feature = featureRepository.findByName(featureName)
+    // .orElseThrow(
+    // () -> new IllegalArgumentException("La característica '" + featureName + "'
+    // no existe."));
 
-            // 🔥 **Forzar la persistencia de Feature y FeatureValue**
-            feature = featureRepository.save(feature); // 🔥 Hibernate ahora maneja Feature correctamente
-            featureValue = featureValueRepository.save(featureValue); // 🔥 Hibernate maneja FeatureValue correctamente
+    // // 🔹 Buscar FeatureValue en BD
+    // FeatureValue featureValue =
+    // featureValueRepository.findByFeatureAndValue(feature, featureValueName)
+    // .orElseThrow(() -> new IllegalArgumentException(
+    // "El valor '" + featureValueName + "' no existe para la característica '" +
+    // featureName
+    // + "'."));
 
-            // 🔹 Verificar que no exista un registro duplicado en ProductFeature
-            boolean exists = productFeatureRepository.findByProductAndFeatureValue(savedProduct, featureValue)
-                    .isPresent();
-            if (!exists) {
-                ProductFeature productFeature = new ProductFeature();
-                productFeature.setProduct(savedProduct); // ✅ Producto ya guardado
-                productFeature.setFeature(feature); // ✅ Feature ya guardado
-                productFeature.setFeatureValue(featureValue); // ✅ FeatureValue ya guardado
-                productFeatureRepository.save(productFeature);
-            }
-        }
+    // // 🔥 **Forzar la persistencia de Feature y FeatureValue**
+    // feature = featureRepository.save(feature); // 🔥 Hibernate ahora maneja
+    // Feature correctamente
+    // featureValue = featureValueRepository.save(featureValue); // 🔥 Hibernate
+    // maneja FeatureValue correctamente
 
-        return productDtoMapper.toDetailDto(savedProduct);
-    }
+    // // 🔹 Verificar que no exista un registro duplicado en ProductFeature
+    // boolean exists =
+    // productFeatureRepository.findByProductAndFeatureValue(savedProduct,
+    // featureValue)
+    // .isPresent();
+    // if (!exists) {
+    // ProductFeature productFeature = new ProductFeature();
+    // productFeature.setProduct(savedProduct); // ✅ Producto ya guardado
+    // productFeature.setFeature(feature); // ✅ Feature ya guardado
+    // productFeature.setFeatureValue(featureValue); // ✅ FeatureValue ya guardado
+    // productFeatureRepository.save(productFeature);
+    // }
+    // }
+
+    // return productDtoMapper.toDetailDto(savedProduct);
+    // }
 
     @Transactional
     @Override
@@ -353,14 +369,6 @@ public class ProductServiceImpl implements ProductService {
         // TODO: REPARAR ESTO
         productDb.setCurrentPrice(product.getCurrentPrice());
         productDb.setOldPrice(product.getOldPrice());
-
-        // productDb.setPrice(product.getPrice());
-
-        // if (productDb.getInOffer()) {
-        // productDb.setOfferPrice(product.getOfferPrice());
-        // } else {
-        // productDb.setOfferPrice(null);
-        // }
 
         productDb.setDescription(product.getDescription());
         productDb.setStatus(true);

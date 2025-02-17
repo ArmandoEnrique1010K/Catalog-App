@@ -42,7 +42,8 @@ public interface ProductService {
     public ProductDetailDto save(Product product, MultipartFile file);
 
     // METODO PARA GUARDAR UN PRODUCTO INCLUYENDO SU FICHA TECNICA
-    public ProductDetailDto saveWithTechSheet(Product product, MultipartFile file);
+    // public ProductDetailDto saveWithTechSheet(Product product, MultipartFile
+    // file);
 
     public Optional<ProductDetailDto> update(ProductRequest product, MultipartFile file, Long id);
 

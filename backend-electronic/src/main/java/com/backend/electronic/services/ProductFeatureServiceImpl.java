@@ -66,8 +66,8 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
 
         // RESULTADO POR CADA UNO Y FINAL
-        ProductFeature result = null;
-        List<ProductFeature> finalResult = new ArrayList<>();
+        // ProductFeature result = null;
+        // List<ProductFeature> finalResult = new ArrayList<>();
 
         for (TechSheetDto entry : techSheet) {
             // Buscar si la característica ya existe
@@ -92,12 +92,12 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
             if (!exists) {
                 ProductFeature productFeature = new ProductFeature();
                 productFeature.setProduct(product);
-                productFeature.setFeature(feature); // NO CONFIES EN CHATGPT, SIEMPRE MODIFICA EL CODIGO GENERADO CON IA
+                productFeature.setFeature(feature);
                 productFeature.setFeatureValue(featureValue);
-                result = productFeatureRepository.save(productFeature);
+                productFeatureRepository.save(productFeature);
 
                 // AÑADIR EL RESULTADO
-                finalResult.add(result);
+                // finalResult.add(result);
             }
 
             // System.out.println("Datos recibidos: " + techSheet); // DEPURACIÓN
@@ -105,7 +105,21 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
 
         // System.out.println(result);
 
-        return productTechSheetDtoMapper.toDto(product);
+        // Map<String, Object> resultado = new HashMap<>();
+        // resultado.put("id", productId);
+        // resultado.put("", finalResult);
+        // // TODO: ARREGLAR ESTO, POSIBLE SOLUCION???
+
+        // Recuperar las características del producto guardadas
+        List<ProductFeature> productFeatures = productFeatureRepository.findTechSheetByProductId(productId);
+
+        // NOTA: SOLAMENTE SE ASIGNA LOS CAMPOS NECESARIOS
+        // POSIBLE SOLUCION
+        Product result = new Product();
+        result.setId(productId);
+        result.setProductFeatures(productFeatures);
+        // ESPERA UN ARGUMENTO DE TIPO Product
+        return productTechSheetDtoMapper.toDto(result);
     }
 
     // SERVICIO PARA ACTUALIZAR LA FICHA TECNICA

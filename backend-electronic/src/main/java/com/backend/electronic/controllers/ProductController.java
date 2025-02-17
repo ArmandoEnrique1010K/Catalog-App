@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,6 @@ import com.backend.electronic.services.ProductService;
 import com.backend.electronic.validators.CustomValidator;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/products")
@@ -334,22 +332,32 @@ public class ProductController {
 
         try {
             // 1️⃣ Actualiza el producto (sin la ficha técnica aún)
-            Optional<ProductDetailTechSheetDto> updatedProduct = productService.update2(product, image, id);
+
+            // La solucion era utilizar el metodo update
+            Optional<ProductDetailDto> updatedProduct = productService.update(product, image, id);
 
             if (updatedProduct.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
 
             // 2️⃣ Actualiza la ficha técnica
-            productFeatureService.updateTechSheet(id, techSheet);
+
+            Optional<ProductTechSheetDto> updatedTechSheet = productFeatureService.updateTechSheet(id, techSheet);
 
             // 3️⃣ Recuperar el producto con la ficha técnica actualizada
-            Optional<ProductDetailTechSheetDto> updatedProductWithTechSheet = productService
-                    .findFullProductById(id);
+            // Optional<ProductDetailTechSheetDto> updatedProductWithTechSheet =
+            // productService.findFullProductById(id);
 
-            return updatedProductWithTechSheet
-                    .map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.notFound().build());
+            Map<String, Object> response = new HashMap<>();
+            response.put("product", updatedProduct);
+            // TODO: ARREGLAR ESTO, CONTIENE UN OBJETO CON EL ID DEL PRODUCTO Y LA PROPIEDAD
+            // techSheetProduct CON UN OBJETO VACIO
+            response.put("techSheetProduct", updatedTechSheet);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+            // return updatedProductWithTechSheet
+            // .map(ResponseEntity::ok)
+            // .orElseGet(() -> ResponseEntity.notFound().build());
 
         } catch (DataIntegrityViolationException ex) {
             // Violación de datos al insertar un registro duplicado

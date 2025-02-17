@@ -202,7 +202,15 @@ public class ProductFeatureServiceImpl implements ProductFeatureService {
 
         }
 
-        return Optional.of(productTechSheetDtoMapper.toDto(product));
+        // TODO: DEBERIA RETORNAR LOS DATOS DEL PRODUCTO ACTUALIZADO
+        // List<ProductFeature> productFeatures2 =
+        // productFeatureRepository.findTechSheetByProductId(productId);
+        // Product result = new Product();
+        // result.setId(productId);
+        // result.setProductFeatures(productFeatures2);
+        // return Optional.of(productTechSheetDtoMapper.toDto(result));
+        return productRepository.findById(productId)
+                .map(productTechSheetDtoMapper::toDto);
 
     }
 
